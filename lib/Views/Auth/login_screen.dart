@@ -12,6 +12,7 @@ import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/forgot_password_screen.dart';
 import 'package:trustbridge/Views/Auth/sign_up_screen.dart';
+import 'package:trustbridge/Views/bottom_nav.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -192,14 +193,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           pwdError == true) {
                         showCustomErrorToast(
                             context, 'Make sure all fields are filled');
-                      } else {}
+                      } else {
+                        goTo(context, BottomNav(chosenmyIndex: 0));
+                      }
                     },
                   ),
                   biometricApi.isBiometricSupported
                       ? Width(w: 2)
                       : SizedBox.shrink(),
                   biometricApi.isBiometricSupported
-                      ? BiometricScan()
+                      ? GestureDetector(
+                          onTap: () {
+                            goTo(context, BottomNav(chosenmyIndex: 0));
+                          },
+                          child: BiometricScan(),
+                        )
                       : SizedBox.shrink(),
                 ],
               ),
