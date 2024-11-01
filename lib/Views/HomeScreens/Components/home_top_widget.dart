@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/Functions/greetings_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
@@ -27,14 +28,19 @@ class HomeTopWidget extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(100),
               child: Container(
-                height: 5 * size.height / 100,
-                width: 11 * size.width / 100,
+                height: 4 * size.height / 100,
+                width: 8.8 * size.width / 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(100),
+                  color: kColors.textGrey,
                 ),
-                child: Image.asset(
-                  img,
-                  fit: BoxFit.cover,
+                child: Center(
+                  child: kTxt(
+                    text: getFirstTwoLetters(name),
+                    size: 12,
+                    weight: FontWeight.w600,
+                    color: kColors.whiteColor,
+                  ),
                 ),
               ),
             ),

@@ -25,6 +25,11 @@ class kImages {
   //////////////////////////******** SVGS*************/////////////////
 
   static const String notifbell = '$_baseIconAsset/notifbell.svg';
+  static const String accounticon = '$_baseIconAsset/accountusericon.svg';
+  static const String callcentericon = '$_baseIconAsset/callcentericon.svg';
+  static const String infoicon = '$_baseIconAsset/infoicon.svg';
+  static const String securityicon = '$_baseIconAsset/securityicon.svg';
+  static const String shopicon = '$_baseIconAsset/shop.svg';
 
   //////////////////////////******** SVGS*************/////////////////
 }

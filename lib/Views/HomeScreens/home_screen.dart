@@ -40,12 +40,15 @@ class _HomeScreenState extends State<HomeScreen> {
     'Royce Black watch diamond',
     'Figo belt',
   ];
+  List typeT = ['1', '2', '3', '4'];
+  List status = ['1', '2', '3', '4'];
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      //   backgroundColor: kColors.primaryAccent.withOpacity(0.1),
+      backgroundColor: kColors.whitishGrey.withOpacity(0.2),
       appBar: AppBar(
         backgroundColor: kColors.primaryColor,
         toolbarHeight: 0.001,
@@ -76,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 5,
                     btnColor: kColors.blackColor,
                     txtColor: kColors.whiteColor,
-                    btnText: 'Add Funds',
+                    btnText: 'Fund Wallet',
                     textSize: 13,
                   ),
                   Width(w: 3),
@@ -135,6 +138,49 @@ class _HomeScreenState extends State<HomeScreen> {
                         amount: amount[index],
                         img: img[index],
                         type: type[index],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Height(h: 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  kTxt(
+                    text: '  Recent Transactions',
+                    size: 13,
+                    weight: FontWeight.w500,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      kTxt(
+                        text: 'View all',
+                        size: 13,
+                        weight: FontWeight.w500,
+                        color: kColors.textGrey,
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: kColors.textGrey,
+                        size: 14,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Height(h: 1),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: status.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
+                      child: RecentTransactionTile(
+                        status: status[index],
+                        type: typeT[index],
+                        amount: amount[index],
                       ),
                     );
                   },
