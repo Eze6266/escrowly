@@ -1,13 +1,18 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
+import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/Components/profile_tiles.dart';
+import 'package:trustbridge/Views/SettingsScreens/account_details_screen.dart';
+import 'package:trustbridge/Views/SettingsScreens/change_pwd_screen.dart';
+import 'package:trustbridge/Views/SettingsScreens/preference_screen.dart';
 import 'package:trustbridge/Views/bottom_nav.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -70,36 +75,41 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ProfileScreenTile(
               txt: 'Account',
               img: kImages.accounticon,
-              onTap: () {},
+              onTap: () {
+                goTo(context, AccountProfileScreen());
+              },
+            ),
+            Height(h: 1.5),
+            ToggleDarkModeScreenTile(
+              txt: 'Enable Dark Mode',
+              img: kImages.shopicon,
+              onTap: () {
+                //  goTo(context, PreferenceScreen());
+              },
             ),
             Height(h: 1.5),
             ProfileScreenTile(
-              txt: 'Preference',
-              img: kImages.shopicon,
-              onTap: () {},
-            ),
-            Height(h: 1.5),
-            ProfileScreenTile(
-              txt: 'Security',
-              img: kImages.shopicon,
-              onTap: () {},
+              txt: 'Change Password',
+              img: kImages.securityicon,
+              onTap: () {
+                goTo(context, ChangePasswordScreen());
+              },
             ),
             Height(h: 1.5),
             ProfileScreenTile(
               txt: 'Help',
               img: kImages.callcentericon,
               onTap: () async {
-                goTo(context, BottomNav(chosenmyIndex: 2));
-                // String email = Uri.encodeComponent("fastfastsocials@gmail.com");
+                String email = Uri.encodeComponent("eze6266@gmail.com");
 
-                // //output: Hello%20Flutter
-                // Uri mail = Uri.parse("mailto:$email?subject=&body=");
-                // if (await launchUrl(mail)) {
-                //   //email app opened
-                // } else {
-                //   showCustomErrorToast(context, 'Unable to open Email App');
-                //   //email app is not opened
-                // }
+                //output: Hello%20Flutter
+                Uri mail = Uri.parse("mailto:$email?subject=&body=");
+                if (await launchUrl(mail)) {
+                  //email app opened
+                } else {
+                  showCustomErrorToast(context, 'Unable to open Email App');
+                  //email app is not opened
+                }
               },
             ),
             // Height(h: 1.5),
@@ -131,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Height(h: 2),
             kTxt(
-              text: 'Version 2.1',
+              text: 'Version 1.0',
               color: kColors.textGrey,
               weight: FontWeight.w400,
             ),

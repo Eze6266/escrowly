@@ -17,6 +17,11 @@ class kImages {
   static const String settings = '$_baseImageAsset/settings.png';
   static const String settings2 = '$_baseImageAsset/settings2.png';
   static const String emmy = '$_baseImageAsset/emmy.jpg';
+  static const String supportimg = '$_baseImageAsset/supportimg.jpg';
+  static const String facebook = '$_baseImageAsset/facebook.jpg';
+  static const String livechat = '$_baseImageAsset/livechat.jpg';
+  static const String twitter = '$_baseImageAsset/twitter.jpg';
+  static const String instagram = '$_baseImageAsset/instagram.jpg';
 
   static const String onboard2 = '$_baseImageAsset/onboard2.jpg';
 
