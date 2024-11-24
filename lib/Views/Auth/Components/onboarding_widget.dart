@@ -24,9 +24,9 @@ class OnboardingContent extends StatelessWidget {
         Image.asset(
           imgUrl,
           height: 30 * size.height / 100,
-          width: 50 * size.width / 100,
+          width: 80 * size.width / 100,
         ),
-        Height(h: 2),
+        Height(h: 10),
         SizedBox(
           width: 80 * size.width / 100,
           child: kTxt(

@@ -63,12 +63,23 @@ class HomeTopWidget extends StatelessWidget {
             )
           ],
         ),
-        GestureDetector(
-          onTap: bellTap,
-          child: SvgPicture.asset(
-            kImages.notifbell,
-            color: kColors.blackColor,
-          ),
+        Stack(
+          children: [
+            GestureDetector(
+              onTap: bellTap,
+              child: SvgPicture.asset(
+                kImages.notifbell,
+                color: kColors.blackColor,
+              ),
+            ),
+            Positioned(
+              left: 3.2 * size.width / 100,
+              child: CircleAvatar(
+                radius: 2.5,
+                backgroundColor: kColors.red,
+              ),
+            ),
+          ],
         ),
       ],
     );

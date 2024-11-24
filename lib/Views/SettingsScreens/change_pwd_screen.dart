@@ -31,7 +31,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         toolbarHeight: 0.001,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+        padding: EdgeInsets.symmetric(horizontal: 5 * size.width / 100),
         child: Column(
           children: [
             Height(h: 2),

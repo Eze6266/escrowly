@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
+import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
 import 'package:trustbridge/Views/Auth/onboarding_screen.dart'; // Import shared_preferences
@@ -59,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         backgroundColor: kColors.primaryColor,
         toolbarHeight: 0.0001 * size.height / 100,
@@ -68,16 +70,20 @@ class _SplashScreenState extends State<SplashScreen> {
           height: 100 * size.height / 100,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: kColors.greenAccent,
+            color: kColors.whiteColor,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Height(h: 0.5),
+              Image.asset(
+                kImages.appicon,
+                height: 15 * size.height / 100,
+              ),
               Text(
                 'Escrowly',
                 style: GoogleFonts.acme(
-                  fontSize: 24,
+                  fontSize: 30,
                   color: kColors.primaryColor,
                   fontWeight: FontWeight.w700,
                 ),

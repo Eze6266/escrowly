@@ -25,10 +25,10 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+            padding: EdgeInsets.symmetric(horizontal: 5 * size.width / 100),
             child: Column(
               children: [
-                Height(h: 1),
+                Height(h: 2),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [

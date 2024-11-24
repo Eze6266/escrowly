@@ -4,9 +4,20 @@ class kImages {
 
   //////////////////////////******** IMAGES*************/////////////////
   static const String escrow = '$_baseImageAsset/escrow.png';
+  static const String appicon = '$_baseImageAsset/appicon.png';
+  static const String appiconwhite = '$_baseImageAsset/appiconwhite.png';
+  static const String appword = '$_baseImageAsset/appword.png';
+  static const String appwordwhite = '$_baseImageAsset/appwordwhite.png';
+
   static const String escrow2 = '$_baseImageAsset/escrow2.png';
   static const String onboard = '$_baseImageAsset/onboard.jpg';
   static const String onboard1 = '$_baseImageAsset/onboard1.jpg';
+  static const String board1 = '$_baseImageAsset/board1.jpg';
+  static const String board1png = '$_baseImageAsset/board1.png';
+  static const String board2png = '$_baseImageAsset/board1.png';
+
+  static const String board2 = '$_baseImageAsset/onboard2.jpg';
+
   static const String fingerprint = '$_baseImageAsset/fingerprint.png';
   static const String home = '$_baseImageAsset/home.png';
   static const String home2 = '$_baseImageAsset/home2.png';
@@ -24,6 +35,10 @@ class kImages {
   static const String instagram = '$_baseImageAsset/instagram.jpg';
 
   static const String onboard2 = '$_baseImageAsset/onboard2.jpg';
+  static const String onboard4 = '$_baseImageAsset/onboard4.png';
+  static const String onboard5 = '$_baseImageAsset/onboard5.png';
+  static const String buyer = '$_baseImageAsset/buyer.png';
+  static const String seller = '$_baseImageAsset/seller.png';
 
   //////////////////////////******** IMAGES*************/////////////////
 
@@ -35,6 +50,9 @@ class kImages {
   static const String infoicon = '$_baseIconAsset/infoicon.svg';
   static const String securityicon = '$_baseIconAsset/securityicon.svg';
   static const String shopicon = '$_baseIconAsset/shop.svg';
+  static const String copyIcon = '$_baseIconAsset/copy.svg';
+  static const String addicon = '$_baseIconAsset/addicon.svg';
+  static const String moniepointsvg = '$_baseIconAsset/moniepointsvg.svg';
 
   //////////////////////////******** SVGS*************/////////////////
 }

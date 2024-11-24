@@ -87,7 +87,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 ),
                 Height(h: 2),
                 Container(
-                  height: 55 * size.height / 100,
+                  height: 65 * size.height / 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(5),
                   ),
@@ -98,14 +98,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         size: size,
                         subText:
                             'From Start to Finish, We Protect Your Payments and Ensure Peace of Mind on Every Deal!.',
-                        imgUrl: kImages.onboard,
+                        imgUrl: kImages.onboard4,
                       ),
                       OnboardingContent(
                         align: TextAlign.center,
                         size: size,
                         subText:
                             'An Escrow Experience Designed for Safety—Protecting Your Transactions Every Step of the Way!.',
-                        imgUrl: kImages.onboard2,
+                        imgUrl: kImages.onboard5,
                       ),
                     ],
                   ),

@@ -54,7 +54,7 @@ class TitleTField extends StatelessWidget {
                         text: title ?? '',
                         weight: FontWeight.w500,
                         size: 13,
-                        color: kColors.textGrey,
+                        color: kColors.blackColor.withOpacity(0.8),
                       ),
                       important ?? false
                           ? kTxt(
@@ -69,7 +69,7 @@ class TitleTField extends StatelessWidget {
           hasTitle ?? true ? Height(h: 0.3) : SizedBox.shrink(),
           Material(
             elevation: elevated ?? false ? 1 : 0,
-            borderRadius: BorderRadius.circular(5),
+            borderRadius: BorderRadius.circular(radius ?? 5),
             child: SizedBox(
               //  height: height ?? 7 * size.height / 100,
               child: TextField(

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
+import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 
 class HomeBalanceCard extends StatefulWidget {
@@ -29,9 +30,14 @@ class _HomeBalanceCardState extends State<HomeBalanceCard> {
         vertical: 1 * size.height / 100,
       ),
       height: 16 * size.height / 100,
-      width: double.infinity,
+      width: 95 * size.width / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
+        image: DecorationImage(
+          image: AssetImage(kImages.appword),
+          opacity: 0.13,
+          alignment: Alignment.topRight,
+        ),
         gradient: LinearGradient(
           colors: [
             kColors.primaryColor,
@@ -115,6 +121,129 @@ class _HomeBalanceCardState extends State<HomeBalanceCard> {
                   tap: widget.withdraw,
                 ),
               ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class HomePayoutBalanceCard extends StatefulWidget {
+  HomePayoutBalanceCard({
+    super.key,
+    required this.amount,
+    required this.withdraw,
+  });
+  String amount;
+  Function() withdraw;
+  @override
+  State<HomePayoutBalanceCard> createState() => _HomePayoutBalanceCardState();
+}
+
+class _HomePayoutBalanceCardState extends State<HomePayoutBalanceCard> {
+  bool hideBal = false;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 4 * size.width / 100,
+        vertical: 1 * size.height / 100,
+      ),
+      height: 16 * size.height / 100,
+      width: 95 * size.width / 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(13),
+        image: DecorationImage(
+          image: AssetImage(kImages.appword),
+          opacity: 0.13,
+          alignment: Alignment.topRight,
+        ),
+        gradient: LinearGradient(
+          colors: [
+            kColors.primaryColor,
+            kColors.darkPrimaryColor,
+          ],
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: kTxt(
+              text: 'Escrow Balance',
+              color: kColors.whiteColor,
+              weight: FontWeight.w400,
+            ),
+          ),
+          Height(h: 1),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              kTxt(
+                text: hideBal
+                    ? '******'
+                    : 'N${formatNumberWithCommas(widget.amount)}',
+                color: kColors.whiteColor,
+                size: 18,
+                weight: FontWeight.w600,
+              ),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    hideBal = !hideBal;
+                  });
+                },
+                child: Icon(
+                  hideBal
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: kColors.whiteColor,
+                  size: 20,
+                ),
+              ),
+            ],
+          ),
+          Height(h: 2),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Center(
+                child: Shimmer.fromColors(
+                  period: Duration(seconds: 8),
+                  baseColor: kColors.red,
+                  highlightColor: kColors.starYellow,
+                  child: Text(
+                    'ESCROWLY',
+                    style: GoogleFonts.acme(
+                      textStyle: TextStyle(
+                        color: kColors.whiteColor,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              // Material(
+              //   borderRadius: BorderRadius.circular(5),
+              //   elevation: 2,
+              //   child: GenBtn(
+              //     size: size,
+              //     width: 30,
+              //     borderRadius: 5,
+              //     height: 3.5,
+              //     btnColor: kColors.darkGreenColor,
+              //     btnText: 'Withdraw',
+              //     textSize: 14,
+              //     txtWeight: FontWeight.w500,
+              //     txtColor: kColors.whiteColor,
+              //     tap: widget.withdraw,
+              //   ),
+              // ),
             ],
           ),
         ],

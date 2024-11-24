@@ -9,6 +9,7 @@ import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/biometric_scanner_img.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
+import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/forgot_password_screen.dart';
 import 'package:trustbridge/Views/Auth/sign_up_screen.dart';
@@ -43,24 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
-              Height(h: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  kTxt(
-                    text: 'Escr',
-                    size: 20,
-                    weight: FontWeight.w500,
-                  ),
-                  kTxt(
-                    text: 'owly',
-                    size: 20,
-                    color: kColors.primaryAccent,
-                    weight: FontWeight.w500,
-                  ),
-                ],
+              Image.asset(
+                kImages.appwordwhite,
+                height: 8 * size.height / 100,
               ),
-              Height(h: 5),
               kTxt(
                 text: 'Login To Your Account',
                 size: 19,

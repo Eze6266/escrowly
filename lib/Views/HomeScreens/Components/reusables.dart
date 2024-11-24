@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
@@ -235,5 +236,106 @@ String getTitleTxt(String type) {
     return 'Account Topup';
   } else {
     return 'Cancelled Escrow';
+  }
+}
+
+class AddFundsWithdrawBtn extends StatelessWidget {
+  AddFundsWithdrawBtn({
+    super.key,
+    required this.img,
+    required this.onTap,
+    required this.txt,
+    this.contentColor,
+    this.width,
+    this.txtSize,
+    this.height,
+    this.radius,
+  });
+  Function() onTap;
+  String txt, img;
+  double? width, txtSize, radius, height;
+  Color? contentColor;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height ?? 6 * size.height / 100,
+        width: width ?? 45 * size.width / 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(radius ?? 20),
+          border: Border.all(color: kColors.whitishGrey),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              img,
+              height: 2 * size.height / 100,
+              color: contentColor ?? kColors.blackColor,
+            ),
+            Width(w: 3),
+            kTxt(
+              text: '$txt',
+              size: txtSize ?? 16,
+              color: contentColor ?? kColors.blackColor,
+              weight: FontWeight.w500,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RowTxtWitUnderline extends StatelessWidget {
+  RowTxtWitUnderline({
+    super.key,
+    required this.lTxt,
+    required this.rtxt,
+    this.rColor,
+  });
+  String lTxt, rtxt;
+  Color? rColor;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: kColors.textGrey.withOpacity(0.2),
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: 30 * size.width / 100,
+            child: kTxt(
+              text: lTxt,
+              size: 13,
+              maxLine: 1,
+            ),
+          ),
+          SizedBox(
+            width: 63 * size.width / 100,
+            child: kTxt(
+              text: rtxt,
+              color: rColor ?? kColors.blackColor,
+              weight: FontWeight.w500,
+              textalign: TextAlign.end,
+              maxLine: 1,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

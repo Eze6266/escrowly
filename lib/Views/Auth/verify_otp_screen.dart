@@ -65,6 +65,10 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0.001,
+        backgroundColor: kColors.primaryColor,
+      ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
         child: Column(

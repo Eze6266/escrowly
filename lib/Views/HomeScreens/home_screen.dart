@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/greetings_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
@@ -12,6 +13,16 @@ import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/home_balance_widget.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/home_top_widget.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/select_bank_sheet.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/show_add_new_bank_dialog.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/show_withdraw_dialog.dart';
+import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/EscrowScreens/select_type_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/notification_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
+import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/top_up_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +32,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final pageviewController = PageController();
+
   List img = [
     kImages.onboard,
     kImages.onboard2,
@@ -40,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Royce Black watch diamond',
     'Figo belt',
   ];
+
   List typeT = ['1', '2', '3', '4'];
   List status = ['1', '2', '3', '4'];
 
@@ -62,26 +76,63 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeTopWidget(
                 name: 'Emmanuel',
                 img: kImages.onboard,
-                bellTap: () {},
+                bellTap: () {
+                  goTo(context, NotificationScreen());
+                },
               ),
               Height(h: 2),
-              HomeBalanceCard(
-                amount: '350000',
-                withdraw: () {},
+              SizedBox(
+                height: 16 * size.height / 100,
+                child: PageView(
+                  controller: pageviewController,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 2 * size.width / 100),
+                      child: HomeBalanceCard(
+                        amount: '350000',
+                        withdraw: () {
+                          showWithdrawFundsDialog(context);
+                        },
+                      ),
+                    ),
+                    HomePayoutBalanceCard(
+                      amount: '350000',
+                      withdraw: () {
+                        showWithdrawFundsDialog(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              Height(h: 1),
+              SmoothPageIndicator(
+                effect: WormEffect(
+                  dotColor: Color.fromARGB(255, 214, 212, 212),
+                  dotHeight: 8,
+                  dotWidth: 8,
+                  spacing: 4,
+                  radius: 100,
+                  activeDotColor: kColors.primaryColor,
+                  type: WormType.normal,
+                ),
+                count: 2,
+                controller: pageviewController,
               ),
               Height(h: 2),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   GenBtn(
-                    size: size,
-                    width: 43,
-                    height: 5,
-                    btnColor: kColors.blackColor,
-                    txtColor: kColors.whiteColor,
-                    btnText: 'Fund Wallet',
-                    textSize: 13,
-                  ),
+                      size: size,
+                      width: 43,
+                      height: 5,
+                      btnColor: kColors.blackColor,
+                      txtColor: kColors.whiteColor,
+                      btnText: 'Fund Wallet',
+                      textSize: 13,
+                      tap: () {
+                        goTo(context, TopUpScreen());
+                      }),
                   Width(w: 3),
                   GenBtn(
                     size: size,
@@ -91,6 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     txtColor: kColors.whiteColor,
                     btnText: 'Create Escrow',
                     textSize: 13,
+                    tap: () {
+                      goTo(context, SelectTypeScreen());
+                    },
                   ),
                 ],
               ),
@@ -103,21 +157,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     size: 13,
                     weight: FontWeight.w500,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      kTxt(
-                        text: 'View all',
-                        size: 13,
-                        weight: FontWeight.w500,
-                        color: kColors.textGrey,
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: kColors.textGrey,
-                        size: 14,
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      goTo(context, SeeAllescrowsScreen());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        kTxt(
+                          text: 'View all',
+                          size: 13,
+                          weight: FontWeight.w500,
+                          color: kColors.textGrey,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: kColors.textGrey,
+                          size: 14,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -133,11 +192,16 @@ class _HomeScreenState extends State<HomeScreen> {
                         right: 1.5 * size.width / 100,
                         bottom: 1 * size.height / 100,
                       ),
-                      child: PendingEscrowsBox(
-                        product: product[index],
-                        amount: amount[index],
-                        img: img[index],
-                        type: type[index],
+                      child: GestureDetector(
+                        onTap: () {
+                          goTo(context, FullEscrowDetailScreen());
+                        },
+                        child: PendingEscrowsBox(
+                          product: product[index],
+                          amount: amount[index],
+                          img: img[index],
+                          type: type[index],
+                        ),
                       ),
                     );
                   },
@@ -152,21 +216,26 @@ class _HomeScreenState extends State<HomeScreen> {
                     size: 13,
                     weight: FontWeight.w500,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      kTxt(
-                        text: 'View all',
-                        size: 13,
-                        weight: FontWeight.w500,
-                        color: kColors.textGrey,
-                      ),
-                      Icon(
-                        Icons.arrow_forward,
-                        color: kColors.textGrey,
-                        size: 14,
-                      ),
-                    ],
+                  GestureDetector(
+                    onTap: () {
+                      goTo(context, SeeAllTrxnScreen());
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        kTxt(
+                          text: 'View all',
+                          size: 13,
+                          weight: FontWeight.w500,
+                          color: kColors.textGrey,
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          color: kColors.textGrey,
+                          size: 14,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -177,10 +246,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
-                      child: RecentTransactionTile(
-                        status: status[index],
-                        type: typeT[index],
-                        amount: amount[index],
+                      child: GestureDetector(
+                        onTap: () {
+                          goTo(context, TrxnFullDetailScreen());
+                        },
+                        child: RecentTransactionTile(
+                          status: status[index],
+                          type: typeT[index],
+                          amount: amount[index],
+                        ),
                       ),
                     );
                   },
