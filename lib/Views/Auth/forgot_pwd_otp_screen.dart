@@ -5,6 +5,8 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
@@ -63,6 +65,9 @@ class _ForgotPasswordOtpScrenState extends State<ForgotPasswordOtpScren> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
+    isLoading = Provider.of<AuthProvider>(context).verifyOtpIsLoading;
+    otpIsLoading = Provider.of<AuthProvider>(context).sendPwdOtpIsLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -130,7 +135,7 @@ class _ForgotPasswordOtpScrenState extends State<ForgotPasswordOtpScren> {
             Height(h: 3),
             TitleTField(
               inputFormatters: [
-                LengthLimitingTextInputFormatter(4),
+                LengthLimitingTextInputFormatter(5),
               ],
               isLoading: isLoading,
               width: 93 * size.width / 100,
@@ -148,16 +153,28 @@ class _ForgotPasswordOtpScrenState extends State<ForgotPasswordOtpScren> {
                     width: 27,
                     height: 4,
                     btnColor: kColors.whiteColor,
-                    isLoading: sendCodeIsLoading,
+                    isLoading: otpIsLoading,
                     btnText: 'Resend code',
                     txtColor: kColors.primaryColor,
                     textSize: 14,
                     txtWeight: FontWeight.w600,
                     borderRadius: 10,
                     tap: () {
-                      setState(() {
-                        start = 60;
-                        startTimer();
+                      authProvider
+                          .sendPwdOtp(email: widget.email, context: context)
+                          .then((value) {
+                        if (value == 'success') {
+                          sendcodeagain = true;
+                          showCustomSuccessToast(
+                              context, 'Otp sent successfully');
+                          setState(() {
+                            start = 60;
+                            startTimer();
+                          });
+                        } else {
+                          showCustomErrorToast(
+                              context, authProvider.senOtpMessage);
+                        }
                       });
                     },
                   ),
@@ -177,7 +194,23 @@ class _ForgotPasswordOtpScrenState extends State<ForgotPasswordOtpScren> {
                 if (otpCtrler.text.isEmpty || otpCtrler.text.length < 4) {
                   showCustomErrorToast(context, 'Enter a valid code');
                 } else {
-                  goTo(context, EnterNewPasswordScreen(email: widget.email));
+                  authProvider.verifyOtp(
+                      email: widget.email,
+                      otp: otpCtrler.text,
+                      context: context)
+                    ..then((value) {
+                      if (value == 'success') {
+                        goTo(
+                            context,
+                            EnterNewPasswordScreen(
+                              email: widget.email,
+                              otp: otpCtrler.text,
+                            ));
+                      } else {
+                        showCustomErrorToast(
+                            context, authProvider.verifyOtpMessage);
+                      }
+                    });
                 }
               },
             ),

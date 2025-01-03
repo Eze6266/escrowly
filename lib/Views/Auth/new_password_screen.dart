@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
@@ -11,8 +13,9 @@ class EnterNewPasswordScreen extends StatefulWidget {
   EnterNewPasswordScreen({
     super.key,
     required this.email,
+    required this.otp,
   });
-  String email;
+  String email, otp;
   @override
   State<EnterNewPasswordScreen> createState() => _EnterNewPasswordScreenState();
 }
@@ -29,7 +32,8 @@ class _EnterNewPasswordScreenState extends State<EnterNewPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    var authProvider = Provider.of<AuthProvider>(context);
+    isLoading = Provider.of<AuthProvider>(context).resetPwdIsLoading;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0.001,
@@ -177,7 +181,20 @@ class _EnterNewPasswordScreenState extends State<EnterNewPasswordScreen> {
                       context, 'Make sure all fields are filled');
                 } else {
                   if (pwdCtrler.text == confPwdCtrler.text) {
-                    goTo(context, LoginScreen());
+                    authProvider
+                        .resetPwd(
+                            email: widget.email,
+                            password: pwdCtrler.text,
+                            otp: widget.otp,
+                            context: context)
+                        .then((value) {
+                      if (value == 'success') {
+                        goTo(context, LoginScreen());
+                      } else {
+                        showCustomErrorToast(
+                            context, authProvider.resetPwdMessage);
+                      }
+                    });
                   } else {
                     showCustomErrorToast(context, 'Passwords don\'t match');
                   }

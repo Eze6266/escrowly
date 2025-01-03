@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
+import 'package:trustbridge/Controllers/Providers/TransactionProviders/transaction_provider.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
@@ -17,58 +19,56 @@ class _SelectBankSheetState extends State<SelectBankSheet> {
   TextEditingController searchController = TextEditingController();
   List<Map<String, String>> filteredBanks = [];
   FocusNode searchFocusNode = FocusNode();
-  List dummyBank = [
-    'Moniepoint',
-    'Opay',
-    'Zenith Bank',
-    'Access Bank',
-    'First Bank'
-  ];
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((_) {
-  //     FocusScope.of(context).requestFocus(searchFocusNode);
-  //   });
-  //   // Initialize filteredBanks with the fetched bank list
-  //   var trxnProvider = Provider.of<TransactionProvider>(context, listen: false);
-  //   filteredBanks = trxnProvider.fetchedBanksList
-  //       .map((e) => {
-  //             'name': e['name'] as String,
-  //             'code':
-  //                 e['code'].toString(), // Ensure code is converted to String
-  //           })
-  //       .toList();
-  // }
 
-  // void filterBanks(String query) {
-  //   var trxnProvider = Provider.of<TransactionProvider>(context, listen: false);
-  //   if (query.isEmpty) {
-  //     setState(() {
-  //       filteredBanks = trxnProvider.fetchedBanksList
-  //           .map((e) => {
-  //                 'name': e['name'] as String,
-  //                 'code': e['code'].toString(), // Convert code to String
-  //               })
-  //           .toList();
-  //     });
-  //   } else {
-  //     setState(() {
-  //       filteredBanks = trxnProvider.fetchedBanksList
-  //           .map((e) => {
-  //                 'name': e['name'] as String,
-  //                 'code': e['code'].toString(), // Convert code to String
-  //               })
-  //           .where((bank) =>
-  //               bank['name']!.toLowerCase().contains(query.toLowerCase()))
-  //           .toList();
-  //     });
-  //   }
-  // }
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(searchFocusNode);
+    });
+    // Initialize filteredBanks with the fetched bank list
+    var trxnProvider = Provider.of<TransactionProvider>(context, listen: false);
+    filteredBanks = trxnProvider.banks
+        .map((e) => {
+              'name': e['name'] as String,
+              'bankcode': e['bankcode']
+                  .toString(), // Ensure code is converted to String
+            })
+        .toList();
+  }
+
+  void filterBanks(String query) {
+    var trxnProvider = Provider.of<TransactionProvider>(context, listen: false);
+    if (query.isEmpty) {
+      setState(() {
+        filteredBanks = trxnProvider.banks
+            .map((e) => {
+                  'name': e['name'] as String,
+                  'bankcode':
+                      e['bankcode'].toString(), // Convert code to String
+                })
+            .toList();
+      });
+    } else {
+      setState(() {
+        filteredBanks = trxnProvider.banks
+            .map((e) => {
+                  'name': e['name'] as String,
+                  'bankcode':
+                      e['bankcode'].toString(), // Convert code to String
+                })
+            .where((bank) =>
+                bank['name']!.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var trxnProvider = Provider.of<TransactionProvider>(context);
+    var authProvider = Provider.of<AuthProvider>(context);
     return Container(
       height: 95 * size.height / 100,
       width: double.infinity,
@@ -113,28 +113,27 @@ class _SelectBankSheetState extends State<SelectBankSheet> {
             height: 6.5 * size.height / 100,
             controller: searchController,
             onChanged: (value) {
-              // filterBanks(value); // Call filter function on every input change
+              filterBanks(value); // Call filter function on every input change
             },
           ),
           Height(h: 3),
           // Display the filtered list of banks
           Expanded(
             child: ListView.builder(
-              itemCount: dummyBank.length,
+              itemCount: filteredBanks.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 1.5 * size.height / 100),
                   child: GestureDetector(
                     onTap: () {
-                      // trxnProvider.selectedBankName =
-                      //     filteredBanks[index]['name']!;
-                      // trxnProvider.selectedBankCode =
-                      //     filteredBanks[index]['code']!;
-                      // trxnProvider.trxnNotifier();
+                      trxnProvider.selectedBank = filteredBanks[index]['name']!;
+                      trxnProvider.selectedCode =
+                          filteredBanks[index]['bankcode']!;
+                      trxnProvider.trxnNotifier();
                       goBack(context);
                     },
                     child: SelectBankTile(
-                      bankName: dummyBank[index],
+                      bankName: filteredBanks[index]['name'].toString(),
                       img: kImages.moniepointsvg,
                     ),
                   ),
@@ -177,8 +176,8 @@ class SelectBankTile extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SvgPicture.asset(img),
-              Width(w: 2),
+              // SvgPicture.asset(img),
+              Width(w: 1),
               SizedBox(
                 width: 78 * size.width / 100,
                 child: kTxt(

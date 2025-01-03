@@ -1,14 +1,18 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
+import 'package:trustbridge/Controllers/Providers/TransactionProviders/transaction_provider.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/select_bank_sheet.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/show_add_new_bank_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/withdraw_processing.dart';
 
@@ -47,11 +51,14 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
   var selectedBankAccountId = '';
   bool isLoading = false;
   bool isLessThan100 = false;
+  TextEditingController accNumCtrler = TextEditingController();
+  bool verifiedName = false;
+  bool accNumberError = false;
 
   void _validateInput() {
     final enteredValue = double.tryParse(amountCtrler.text);
 
-    if (enteredValue != null && enteredValue >= 100) {
+    if (enteredValue != null && enteredValue >= 1000) {
       setState(() {
         isLessThan100 = false;
       });
@@ -73,10 +80,11 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    var trxnProvider = Provider.of<TransactionProvider>(context);
+    var authProvider = Provider.of<AuthProvider>(context);
     return Container(
       width: 95 * widget.size.width / 100,
-      height: 50 * widget.size.height / 100,
+      height: 60 * widget.size.height / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: kColors.whiteColor,
@@ -113,66 +121,182 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
                 });
               },
             ),
-            Height(h: 2.5),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: kTxt(
-                text: 'Select account',
-                color: kColors.textGrey,
-                size: 13,
-                weight: FontWeight.w500,
-              ),
-            ),
-            Height(h: 2),
-            bankList.isEmpty
-                ? Padding(
-                    padding: EdgeInsets.only(bottom: 2 * size.height / 100),
+            isLessThan100
+                ? Align(
+                    alignment: Alignment.centerLeft,
                     child: kTxt(
-                      size: 14,
-                      weight: FontWeight.w500,
-                      text: 'You Have No Saved Accounts',
+                      text: 'Minimum withdrawal amount is N1,000',
+                      size: 10,
+                      color: kColors.red,
+                      weight: FontWeight.w600,
                     ),
                   )
-                : Expanded(
-                    child: ListView.builder(
-                      itemCount: bankList.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(bottom: 1 * size.height / 100),
-                          child: SelectBankAccountTile(
-                            name: 'Emmanuel Eze',
-                            accNumber: '7067581951',
-                            value: index,
-                            groupValue: selectedAccount,
-                            onChanged: (int? newValue) {
-                              setState(() {
-                                // selectedBankAccountId = trxnProvider
-                                //     .savedAccountList[index]['id']
-                                //     .toString();
-                                // selectedAccount = newValue!;
-                              });
-                            },
-                          ),
-                        );
-                      },
+                : SizedBox.shrink(),
+            Height(h: 2.5),
+            RowDropDown(
+              txtColor: kColors.blackColor,
+              size: size,
+              onTap: () {
+                accNumCtrler.clear();
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(25.0)),
+                  ),
+                  builder: (BuildContext context) {
+                    return SelectBankSheet();
+                  },
+                );
+              },
+              txt: trxnProvider.selectedBank == ''
+                  ? 'Please select bank'
+                  : trxnProvider.selectedBank,
+              title: 'Select Bank',
+            ),
+            Height(h: 3),
+            TitleTField(
+              hint: 'Account number',
+              title: 'Enter account number',
+              isLoading: isLoading,
+              elevated: true,
+              controller: accNumCtrler,
+              keyType: TextInputType.number,
+              onChanged: (value) {
+                // if (accNumCtrler.text.length == 10) {
+                //   setState(() {
+                //     accNumberError = false;
+                //   });
+                //   if (trxnProvider.selectedBankName == '') {
+                //   } else {
+                //     setState(() {
+                //       trxnProvider
+                //           .validateAccName(
+                //         token: authProvider.token,
+                //         accNumber: accNumCtrler.text,
+                //         bankCode: trxnProvider.selectedBankCode,
+                //         context: context,
+                //       )
+                //           .then((value) {
+                //         if (value == 'true') {
+                //           setState(() {});
+                //         } else {
+                //           showCustomErrorToast(
+                //               context, trxnProvider.validateAccNameMessage);
+                //         }
+                //       });
+                //     });
+                //   }
+                // } else {
+                //   setState(() {
+                //     accNumberError = true;
+                //     trxnProvider.accName = '';
+                //   });
+                // }
+              },
+            ),
+            accNumberError
+                ? Align(
+                    alignment: Alignment.centerLeft,
+                    child: kTxt(
+                      text: 'Account number must be 10 digits',
+                      size: 10,
+                      color: kColors.red,
+                      weight: FontWeight.w600,
+                    ),
+                  )
+                : SizedBox.shrink(),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: kTxt(
+            //     text: 'Select account',
+            //     color: kColors.textGrey,
+            //     size: 13,
+            //     weight: FontWeight.w500,
+            //   ),
+            // ),
+            // Height(h: 2),
+            // bankList.isEmpty
+            //     ? Padding(
+            //         padding: EdgeInsets.only(bottom: 2 * size.height / 100),
+            //         child: kTxt(
+            //           size: 14,
+            //           weight: FontWeight.w500,
+            //           text: 'You Have No Saved Accounts',
+            //         ),
+            //       )
+            //     : Expanded(
+            //         child: ListView.builder(
+            //           itemCount: bankList.length,
+            //           itemBuilder: (context, index) {
+            //             return Padding(
+            //               padding:
+            //                   EdgeInsets.only(bottom: 1 * size.height / 100),
+            //               child: SelectBankAccountTile(
+            //                 name: 'Emmanuel Eze',
+            //                 accNumber: '7067581951',
+            //                 value: index,
+            //                 groupValue: selectedAccount,
+            //                 onChanged: (int? newValue) {
+            //                   setState(() {
+            //                     // selectedBankAccountId = trxnProvider
+            //                     //     .savedAccountList[index]['id']
+            //                     //     .toString();
+            //                     // selectedAccount = newValue!;
+            //                   });
+            //                 },
+            //               ),
+            //             );
+            //           },
+            //         ),
+            //       ),
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: AddFundsWithdrawBtn(
+            //     txt: 'Add new bank account',
+            //     width: 45 * size.width / 100,
+            //     contentColor: kColors.primaryColor,
+            //     radius: 25,
+            //     txtSize: 11,
+            //     height: 4 * size.height / 100,
+            //     img: kImages.addicon,
+            //     onTap: () {
+            //       showAddNewBankDialog(context);
+            //     },
+            //   ),
+            // ),
+
+            Height(h: trxnProvider.accName == '' ? 1.5 : 0.2),
+            trxnProvider.validateAccNameIsLoading
+                ? Padding(
+                    padding: EdgeInsets.only(left: 2 * size.width / 100),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SpinKitFadingCube(
+                          color: kColors.primaryColor,
+                          size: 15,
+                        ),
+                      ],
+                    ),
+                  )
+                : SizedBox.shrink(),
+            trxnProvider.accName == ''
+                ? SizedBox.shrink()
+                : Align(
+                    alignment: Alignment.centerLeft,
+                    child: SizedBox(
+                      width: 80 * size.width / 100,
+                      child: kTxt(
+                        text: '${trxnProvider.accName}',
+                        color: kColors.primaryColor,
+                        maxLine: 2,
+                        weight: FontWeight.w600,
+                        size: 10,
+                      ),
                     ),
                   ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: AddFundsWithdrawBtn(
-                txt: 'Add new bank account',
-                width: 45 * size.width / 100,
-                contentColor: kColors.primaryColor,
-                radius: 25,
-                txtSize: 11,
-                height: 4 * size.height / 100,
-                img: kImages.addicon,
-                onTap: () {
-                  showAddNewBankDialog(context);
-                },
-              ),
-            ),
             Height(h: 4),
             GenBtn(
               size: widget.size,

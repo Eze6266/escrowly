@@ -40,25 +40,25 @@ class PendingEscrowsBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: Container(
-                    height: 3 * size.height / 100,
-                    width: 6.4 * size.width / 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: kColors.blackColor,
-                    ),
-                    child: Center(
-                      child: kTxt(
-                        text: getFirstTwoLetters(product),
-                        size: 8,
-                        weight: FontWeight.w600,
-                        color: kColors.whiteColor,
-                      ),
-                    ),
-                  ),
-                ),
+                // ClipRRect(
+                //   borderRadius: BorderRadius.circular(100),
+                //   child: Container(
+                //     height: 2.5 * size.height / 100,
+                //     width: 5.5 * size.width / 100,
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(100),
+                //       color: kColors.blackColor,
+                //     ),
+                //     child: Center(
+                //       child: kTxt(
+                //         text: getFirstTwoLetters(product),
+                //         size: 8,
+                //         weight: FontWeight.w600,
+                //         color: kColors.whiteColor,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Shimmer.fromColors(
                   period: Duration(seconds: 2),
                   baseColor: type == '1' ? kColors.red : kColors.primaryColor,
@@ -72,50 +72,54 @@ class PendingEscrowsBox extends StatelessWidget {
                 ),
               ],
             ),
-            Height(h: 1),
-            kTxt(
-              text: '$product',
-              size: 12,
-              weight: FontWeight.w500,
-              maxLine: 1,
+            Height(h: 0.5),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: kTxt(
+                text: '$product',
+                size: 12,
+                weight: FontWeight.w500,
+                maxLine: 1,
+                textalign: TextAlign.left,
+              ),
             ),
-            Height(h: 1),
+            Height(h: 0.5),
             Text(
               'N${formatNumberWithCommas(amount)}',
               style: GoogleFonts.acme(
                 textStyle: TextStyle(
-                  fontSize: 15,
+                  fontSize: 13,
                   color: kColors.primaryColor,
                   fontWeight: FontWeight.w800,
                 ),
               ),
             ),
-            Divider(
-              color: kColors.textGrey,
-              thickness: 0.5,
-            ),
-            Height(h: 2),
-            type == '1'
-                ? GenBtn(
-                    size: size,
-                    width: 35,
-                    borderRadius: 5,
-                    height: 3.5,
-                    btnColor: kColors.blackColor,
-                    btnText: 'Send reminder',
-                    textSize: 10,
-                    txtColor: kColors.whiteColor,
-                  )
-                : GenBtn(
-                    size: size,
-                    width: 35,
-                    borderRadius: 5,
-                    height: 3.5,
-                    btnColor: kColors.greenColor,
-                    btnText: 'Pay seller',
-                    txtColor: kColors.whiteColor,
-                    textSize: 11,
-                  ),
+            // Divider(
+            //   color: kColors.textGrey,
+            //   thickness: 0.5,
+            // ),
+            // Height(h: 2),
+            // type == '1'
+            //     ? GenBtn(
+            //         size: size,
+            //         width: 35,
+            //         borderRadius: 5,
+            //         height: 3.5,
+            //         btnColor: kColors.blackColor,
+            //         btnText: 'Send reminder',
+            //         textSize: 10,
+            //         txtColor: kColors.whiteColor,
+            //       )
+            //     : GenBtn(
+            //         size: size,
+            //         width: 35,
+            //         borderRadius: 5,
+            //         height: 3.5,
+            //         btnColor: kColors.greenColor,
+            //         btnText: 'Pay seller',
+            //         txtColor: kColors.whiteColor,
+            //         textSize: 11,
+            //       ),
           ],
         ),
       ),
@@ -335,6 +339,155 @@ class RowTxtWitUnderline extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class IncomingOrdersBox extends StatelessWidget {
+  IncomingOrdersBox({
+    super.key,
+    required this.amount,
+    required this.fee,
+    required this.date,
+    required this.acceptTap,
+    required this.rejectTap,
+    required this.viewTap,
+  });
+  String date, amount, fee;
+  Function() acceptTap, rejectTap, viewTap;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Material(
+      borderRadius: BorderRadius.circular(8),
+      elevation: 1,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 2 * size.width / 100,
+          vertical: 0.7 * size.height / 100,
+        ),
+        // height: 18 * size.height / 100,
+        width: 84 * size.width / 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: kColors.whiteColor,
+          border: Border.all(
+            color: kColors.whitishGrey,
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 18,
+                      backgroundColor: kColors.primaryColor.withOpacity(0.2),
+                      child: Icon(
+                        Icons.shopping_cart,
+                        color: kColors.primaryColor,
+                        size: 18,
+                      ),
+                    ),
+                    Width(w: 3),
+                    kTxt(
+                      text: 'ORD-67272736362727',
+                      maxLine: 1,
+                      color: kColors.textGrey,
+                      size: 14,
+                      weight: FontWeight.w500,
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: viewTap,
+                  child: kTxt(
+                    text: 'View',
+                    maxLine: 1,
+                    color: kColors.textGrey,
+                    size: 14,
+                    weight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            Height(h: 1),
+            kTxt(
+              text:
+                  'You have an order invitation to join, From Dev Text/Selling',
+              maxLine: 2,
+              color: kColors.blackColor,
+              size: 14,
+              textalign: TextAlign.left,
+              weight: FontWeight.w500,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: kTxt(
+                text: 'Amount: N${formatNumberWithCommas(amount)}',
+                maxLine: 1,
+                color: kColors.textGrey,
+                size: 14,
+                textalign: TextAlign.left,
+                weight: FontWeight.w500,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: kTxt(
+                text: 'Order Fee: N${formatNumberWithCommas(fee)}',
+                maxLine: 1,
+                color: kColors.textGrey,
+                size: 14,
+                textalign: TextAlign.left,
+                weight: FontWeight.w500,
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: kTxt(
+                text: 'Sent on $date',
+                maxLine: 1,
+                color: kColors.textGrey,
+                size: 14,
+                textalign: TextAlign.left,
+                weight: FontWeight.w500,
+              ),
+            ),
+            Height(h: 1),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: acceptTap,
+                  child: kTxt(
+                    text: '  Accept',
+                    size: 15,
+                    color: kColors.primaryColor,
+                    weight: FontWeight.w500,
+                    maxLine: 1,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: rejectTap,
+                  child: kTxt(
+                    text: 'Reject  ',
+                    size: 15,
+                    color: kColors.red,
+                    weight: FontWeight.w500,
+                    maxLine: 1,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
