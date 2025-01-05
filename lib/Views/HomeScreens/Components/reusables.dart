@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:text_scroll/text_scroll.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
@@ -85,7 +86,7 @@ class PendingEscrowsBox extends StatelessWidget {
             ),
             Height(h: 0.5),
             Text(
-              'N${formatNumberWithCommas(amount)}',
+              'N$amount',
               style: GoogleFonts.acme(
                 textStyle: TextStyle(
                   fontSize: 13,
@@ -353,9 +354,17 @@ class IncomingOrdersBox extends StatelessWidget {
     required this.acceptTap,
     required this.rejectTap,
     required this.viewTap,
+    required this.sender,
+    required this.type,
+    required this.orderID,
+    required this.acceptIsLoading,
+    required this.rejectIsLoading,
+    this.width,
   });
-  String date, amount, fee;
+  bool acceptIsLoading, rejectIsLoading;
+  String date, amount, fee, sender, type, orderID;
   Function() acceptTap, rejectTap, viewTap;
+  double? width;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -369,7 +378,7 @@ class IncomingOrdersBox extends StatelessWidget {
           vertical: 0.7 * size.height / 100,
         ),
         // height: 18 * size.height / 100,
-        width: 84 * size.width / 100,
+        width: (width ?? 84) * size.width / 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: kColors.whiteColor,
@@ -397,7 +406,7 @@ class IncomingOrdersBox extends StatelessWidget {
                     ),
                     Width(w: 3),
                     kTxt(
-                      text: 'ORD-67272736362727',
+                      text: '$orderID',
                       maxLine: 1,
                       color: kColors.textGrey,
                       size: 14,
@@ -419,8 +428,7 @@ class IncomingOrdersBox extends StatelessWidget {
             ),
             Height(h: 1),
             kTxt(
-              text:
-                  'You have an order invitation to join, From Dev Text/Selling',
+              text: 'You have an order invitation to join, From $sender',
               maxLine: 2,
               color: kColors.blackColor,
               size: 14,
@@ -464,30 +472,140 @@ class IncomingOrdersBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(
-                  onTap: acceptTap,
-                  child: kTxt(
-                    text: '  Accept',
-                    size: 15,
-                    color: kColors.primaryColor,
-                    weight: FontWeight.w500,
-                    maxLine: 1,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: rejectTap,
-                  child: kTxt(
-                    text: 'Reject  ',
-                    size: 15,
-                    color: kColors.red,
-                    weight: FontWeight.w500,
-                    maxLine: 1,
-                  ),
-                ),
+                acceptIsLoading
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 2 * size.width / 100),
+                        child: Center(
+                          child: SizedBox(
+                            height: 1.8 * size.height / 100,
+                            width: 4.2 * size.width / 100,
+                            child: CircularProgressIndicator(
+                              color: kColors.primaryColor,
+                            ),
+                          ),
+                        ),
+                      )
+                    : rejectIsLoading
+                        ? kTxt(
+                            text: '  Accept',
+                            size: 15,
+                            color: kColors.textGrey,
+                            weight: FontWeight.w500,
+                            maxLine: 1,
+                          )
+                        : GestureDetector(
+                            onTap: acceptTap,
+                            child: kTxt(
+                              text: '  Accept',
+                              size: 15,
+                              color: kColors.primaryColor,
+                              weight: FontWeight.w500,
+                              maxLine: 1,
+                            ),
+                          ),
+                rejectIsLoading
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 2 * size.width / 100),
+                        child: Center(
+                          child: SizedBox(
+                            height: 1.8 * size.height / 100,
+                            width: 4.2 * size.width / 100,
+                            child: CircularProgressIndicator(
+                              color: kColors.red,
+                            ),
+                          ),
+                        ),
+                      )
+                    : acceptIsLoading
+                        ? kTxt(
+                            text: 'Reject  ',
+                            size: 15,
+                            color: kColors.textGrey,
+                            weight: FontWeight.w500,
+                            maxLine: 1,
+                          )
+                        : GestureDetector(
+                            onTap: rejectTap,
+                            child: kTxt(
+                              text: 'Reject  ',
+                              size: 15,
+                              color: kColors.red,
+                              weight: FontWeight.w500,
+                              maxLine: 1,
+                            ),
+                          ),
               ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class RowTxtWitUnderlineScrolling extends StatelessWidget {
+  RowTxtWitUnderlineScrolling({
+    super.key,
+    required this.lTxt,
+    required this.rtxt,
+    this.rColor,
+  });
+  String lTxt, rtxt;
+  Color? rColor;
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: kColors.textGrey.withOpacity(0.2),
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: 30 * size.width / 100,
+            child: kTxt(
+              text: lTxt,
+              size: 13,
+              maxLine: 1,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(
+              width: 63 * size.width / 100,
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: TextScroll(
+                  rtxt,
+                  mode: TextScrollMode.endless,
+                  velocity: Velocity(pixelsPerSecond: Offset(70, 0)),
+                  delayBefore: Duration(seconds: 4),
+                  numberOfReps: null,
+                  pauseBetween: Duration(seconds: 5),
+                  style: GoogleFonts.acme(
+                    textStyle: TextStyle(
+                      color: rColor ?? kColors.blackColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  textAlign: TextAlign.end,
+                  selectable: true,
+                  fadedBorder: true,
+                  fadedBorderWidth: 0.05,
+                  fadeBorderVisibility: FadeBorderVisibility.auto,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

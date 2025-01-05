@@ -493,6 +493,7 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> generateToken() async {
     try {
       getTokenisLoading = true;
+      notifyListeners();
       // var apiKey = '${subzApiKey}';
       // var secretKey = '${subzSecretKey}';
       var credentials = base64.encode(

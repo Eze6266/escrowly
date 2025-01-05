@@ -10,6 +10,7 @@ import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.da
 import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
 import 'package:trustbridge/Controllers/Providers/TransactionProviders/transaction_provider.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
+import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/Functions/greetings_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
@@ -22,6 +23,7 @@ import 'package:trustbridge/Views/HomeScreens/Components/show_add_new_bank_dialo
 import 'package:trustbridge/Views/HomeScreens/Components/show_withdraw_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/select_type_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/full_incoming_trxn.dart';
 import 'package:trustbridge/Views/HomeScreens/notification_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
@@ -83,8 +85,12 @@ class _HomeScreenState extends State<HomeScreen> {
       trxnProvider.fetchBalances(context: context);
       trxnProvider.fetchBankList(context: context);
       orderProvider.fetchIncomingOrder(context: context);
+      orderProvider.fetchTrxns(context: context);
     });
   }
+
+  bool acceptOrderIsLoading = false;
+  bool rejectOrderIsLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
     var trxnProvider = Provider.of<TransactionProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
     var orderProvider = Provider.of<OrderProvider>(context);
+    acceptOrderIsLoading =
+        Provider.of<OrderProvider>(context).acceptOrderIsLoading;
+    rejectOrderIsLoading =
+        Provider.of<OrderProvider>(context).rejectOrderIsLoading;
 
     return RefreshIndicator(
       onRefresh: () {
@@ -100,6 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
         trxnProvider.fetchBalances(context: context);
         trxnProvider.fetchBankList(context: context);
         orderProvider.fetchIncomingOrder(context: context);
+        orderProvider.fetchTrxns(context: context);
 
         return Future.value(false);
       },
@@ -223,34 +234,72 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Height(h: 1),
-                SizedBox(
-                  height: 24 * size.height / 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: product.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(
-                          right: 1.5 * size.width / 100,
-                          bottom: 1 * size.height / 100,
-                        ),
-                        child: GestureDetector(
-                          onTap: () {
-                            goTo(context, FullEscrowDetailScreen());
+                orderProvider.incomingOrders.isEmpty
+                    ? kTxt(text: 'You have no incoming order')
+                    : SizedBox(
+                        height: 24 * size.height / 100,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: orderProvider.incomingOrders.length,
+                          itemBuilder: (context, index) {
+                            var order = orderProvider.incomingOrders[index];
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                right: 1.5 * size.width / 100,
+                                bottom: 1 * size.height / 100,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  goTo(context, FullEscrowDetailScreen());
+                                },
+                                child: IncomingOrdersBox(
+                                  acceptIsLoading: acceptOrderIsLoading,
+                                  rejectIsLoading: rejectOrderIsLoading,
+                                  width:
+                                      orderProvider.incomingOrders.length == 1
+                                          ? 93
+                                          : null,
+                                  orderID: order['reference_code'].toString(),
+                                  amount: formatNumberWithCommas(
+                                      order['amount'].toString()),
+                                  fee: formatNumberWithCommas(
+                                      order['fee'].toString()),
+                                  date: formatDateTime(order['created_at']),
+                                  sender: order['created_by'].toString(),
+                                  type: order['role'],
+                                  viewTap: () {
+                                    goTo(
+                                        context,
+                                        FullIncomingOrderScreen(
+                                          orderid: order['id'].toString(),
+                                          amount: formatNumberWithCommas(
+                                              order['amount'].toString()),
+                                          fee: formatNumberWithCommas(
+                                              order['fee'].toString()),
+                                          date: formatDateTime(
+                                              order['created_at']),
+                                          name: order['role'] == 'Selling'
+                                              ? order['seller']['firstname']
+                                              : order['buyer']['firstname'],
+                                          phone: order['role'] == 'Selling'
+                                              ? order['seller']['firstname']
+                                              : order['buyer']['phone']
+                                                  .toString(),
+                                          total: formatNumberWithCommas(
+                                              order['total_amount'].toString()),
+                                          feepayer: order['escrow_fee_payer'],
+                                          type: order['role'],
+                                          description: order['description'],
+                                        ));
+                                  },
+                                  acceptTap: () {},
+                                  rejectTap: () {},
+                                ),
+                              ),
+                            );
                           },
-                          child: IncomingOrdersBox(
-                            amount: amount[index],
-                            fee: fee[index],
-                            date: date[index],
-                            viewTap: () {},
-                            acceptTap: () {},
-                            rejectTap: () {},
-                          ),
                         ),
-                      );
-                    },
-                  ),
-                ),
+                      ),
                 Height(h: 0.3),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -311,8 +360,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 10 * size.height / 100,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: product.length,
+                          itemCount: orderProvider.runningOrders.length,
                           itemBuilder: (context, index) {
+                            var order = orderProvider.runningOrders[index];
                             return Padding(
                               padding: EdgeInsets.only(
                                 right: 1.5 * size.width / 100,
@@ -323,10 +373,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   goTo(context, FullEscrowDetailScreen());
                                 },
                                 child: PendingEscrowsBox(
-                                  product: product[index],
-                                  amount: amount[index],
+                                  product: order['description'].toString(),
+                                  amount: formatNumberWithCommas(
+                                    order['amount'].toString(),
+                                  ),
                                   img: img[index],
-                                  type: type[index],
+                                  type: order['role'].toString(),
                                 ),
                               ),
                             );
@@ -339,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     kTxt(
-                      text: '  Recent Transactions',
+                      text: '  Recent Orders',
                       size: 13,
                       weight: FontWeight.w500,
                     ),

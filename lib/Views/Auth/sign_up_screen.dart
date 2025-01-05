@@ -47,7 +47,8 @@ class _SignupScreenState extends State<SignupScreen> {
     Size size = MediaQuery.of(context).size;
     var authProvider = Provider.of<AuthProvider>(context);
     isLoading = (Provider.of<AuthProvider>(context).senOtpIsLoading ||
-        Provider.of<AuthProvider>(context).verifyNinisLoading);
+        Provider.of<AuthProvider>(context).verifyNinisLoading ||
+        Provider.of<AuthProvider>(context).getTokenisLoading);
 
     return Scaffold(
       appBar: AppBar(
