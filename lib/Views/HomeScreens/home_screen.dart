@@ -25,6 +25,7 @@ import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_s
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/select_type_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/full_incoming_trxn.dart';
 import 'package:trustbridge/Views/HomeScreens/notification_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/running_orders_full_detail.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/top_up_screen.dart';
@@ -121,326 +122,367 @@ class _HomeScreenState extends State<HomeScreen> {
           toolbarHeight: 0.001,
         ),
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
-            child: Column(
-              children: [
-                Height(h: 1.3),
-                HomeTopWidget(
-                  name: authProvider.userName ?? 'User',
-                  img: kImages.onboard,
-                  bellTap: () {
-                    goTo(context, NotificationScreen());
-                  },
-                ),
-                Height(h: 1.2),
-                SizedBox(
-                  height: 16 * size.height / 100,
-                  child: PageView(
-                    controller: pageviewController,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 2 * size.width / 100),
-                        child: HomeBalanceCard(
-                          amount: trxnProvider.walletBalance ?? '---',
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+              child: Column(
+                children: [
+                  Height(h: 1.3),
+                  HomeTopWidget(
+                    name: authProvider.userName ?? 'User',
+                    img: kImages.onboard,
+                    bellTap: () {
+                      goTo(context, NotificationScreen());
+                    },
+                  ),
+                  Height(h: 1.2),
+                  SizedBox(
+                    height: 16 * size.height / 100,
+                    child: PageView(
+                      controller: pageviewController,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 2 * size.width / 100),
+                          child: HomeBalanceCard(
+                            amount: trxnProvider.walletBalance ?? '---',
+                            withdraw: () {
+                              showWithdrawFundsDialog(context);
+                            },
+                          ),
+                        ),
+                        HomePayoutBalanceCard(
+                          amount: trxnProvider.payoutBalance ?? '---',
                           withdraw: () {
                             showWithdrawFundsDialog(context);
                           },
                         ),
-                      ),
-                      HomePayoutBalanceCard(
-                        amount: trxnProvider.payoutBalance ?? '---',
-                        withdraw: () {
-                          showWithdrawFundsDialog(context);
+                      ],
+                    ),
+                  ),
+                  Height(h: 1),
+                  SmoothPageIndicator(
+                    effect: WormEffect(
+                      dotColor: Color.fromARGB(255, 214, 212, 212),
+                      dotHeight: 8,
+                      dotWidth: 8,
+                      spacing: 4,
+                      radius: 100,
+                      activeDotColor: kColors.primaryColor,
+                      type: WormType.normal,
+                    ),
+                    count: 2,
+                    controller: pageviewController,
+                  ),
+                  Height(h: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GenBtn(
+                          size: size,
+                          width: 43,
+                          height: 5,
+                          btnColor: kColors.blackColor,
+                          txtColor: kColors.whiteColor,
+                          btnText: 'Fund Wallet',
+                          textSize: 13,
+                          tap: () {
+                            goTo(context, TopUpScreen());
+                          }),
+                      Width(w: 3),
+                      GenBtn(
+                        size: size,
+                        width: 43,
+                        height: 5,
+                        btnColor: kColors.primaryColor,
+                        txtColor: kColors.whiteColor,
+                        btnText: 'Create Escrow',
+                        textSize: 13,
+                        tap: () {
+                          goTo(context, SelectTypeScreen());
                         },
                       ),
                     ],
                   ),
-                ),
-                Height(h: 1),
-                SmoothPageIndicator(
-                  effect: WormEffect(
-                    dotColor: Color.fromARGB(255, 214, 212, 212),
-                    dotHeight: 8,
-                    dotWidth: 8,
-                    spacing: 4,
-                    radius: 100,
-                    activeDotColor: kColors.primaryColor,
-                    type: WormType.normal,
+                  Height(h: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      kTxt(
+                        text: '  Incoming Orders',
+                        size: 13,
+                        weight: FontWeight.w500,
+                      ),
+                      orderProvider.incomingOrders.isEmpty
+                          ? SizedBox.shrink()
+                          : GestureDetector(
+                              onTap: () {
+                                goTo(context, SeeAllescrowsScreen());
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  kTxt(
+                                    text: 'View all',
+                                    size: 13,
+                                    weight: FontWeight.w500,
+                                    color: kColors.textGrey,
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: kColors.textGrey,
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
                   ),
-                  count: 2,
-                  controller: pageviewController,
-                ),
-                Height(h: 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GenBtn(
-                        size: size,
-                        width: 43,
-                        height: 5,
-                        btnColor: kColors.blackColor,
-                        txtColor: kColors.whiteColor,
-                        btnText: 'Fund Wallet',
-                        textSize: 13,
-                        tap: () {
-                          goTo(context, TopUpScreen());
-                        }),
-                    Width(w: 3),
-                    GenBtn(
-                      size: size,
-                      width: 43,
-                      height: 5,
-                      btnColor: kColors.primaryColor,
-                      txtColor: kColors.whiteColor,
-                      btnText: 'Create Escrow',
-                      textSize: 13,
-                      tap: () {
-                        goTo(context, SelectTypeScreen());
-                      },
-                    ),
-                  ],
-                ),
-                Height(h: 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    kTxt(
-                      text: '  Incoming Orders',
-                      size: 13,
-                      weight: FontWeight.w500,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        goTo(context, SeeAllescrowsScreen());
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          kTxt(
-                            text: 'View all',
-                            size: 13,
-                            weight: FontWeight.w500,
-                            color: kColors.textGrey,
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: kColors.textGrey,
-                            size: 14,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Height(h: 1),
-                orderProvider.incomingOrders.isEmpty
-                    ? kTxt(text: 'You have no incoming order')
-                    : SizedBox(
-                        height: 24 * size.height / 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: orderProvider.incomingOrders.length,
-                          itemBuilder: (context, index) {
-                            var order = orderProvider.incomingOrders[index];
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                right: 1.5 * size.width / 100,
-                                bottom: 1 * size.height / 100,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  goTo(context, FullEscrowDetailScreen());
-                                },
-                                child: IncomingOrdersBox(
-                                  acceptIsLoading: acceptOrderIsLoading,
-                                  rejectIsLoading: rejectOrderIsLoading,
-                                  width:
-                                      orderProvider.incomingOrders.length == 1
-                                          ? 93
-                                          : null,
-                                  orderID: order['reference_code'].toString(),
-                                  amount: formatNumberWithCommas(
-                                      order['amount'].toString()),
-                                  fee: formatNumberWithCommas(
-                                      order['fee'].toString()),
-                                  date: formatDateTime(order['created_at']),
-                                  sender: order['created_by'].toString(),
-                                  type: order['role'],
-                                  viewTap: () {
-                                    goTo(
-                                        context,
-                                        FullIncomingOrderScreen(
-                                          orderid: order['id'].toString(),
-                                          amount: formatNumberWithCommas(
-                                              order['amount'].toString()),
-                                          fee: formatNumberWithCommas(
-                                              order['fee'].toString()),
-                                          date: formatDateTime(
-                                              order['created_at']),
-                                          name: order['role'] == 'Selling'
-                                              ? order['seller']['firstname']
-                                              : order['buyer']['firstname'],
-                                          phone: order['role'] == 'Selling'
-                                              ? order['seller']['firstname']
-                                              : order['buyer']['phone']
-                                                  .toString(),
-                                          total: formatNumberWithCommas(
-                                              order['total_amount'].toString()),
-                                          feepayer: order['escrow_fee_payer'],
-                                          type: order['role'],
-                                          description: order['description'],
-                                        ));
+                  Height(h: 1),
+                  orderProvider.incomingOrders.isEmpty
+                      ? kTxt(text: 'You have no incoming order')
+                      : SizedBox(
+                          height: 24 * size.height / 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: orderProvider.incomingOrders.length,
+                            itemBuilder: (context, index) {
+                              var order = orderProvider.incomingOrders[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  right: 1.5 * size.width / 100,
+                                  bottom: 1 * size.height / 100,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    goTo(context, FullEscrowDetailScreen());
                                   },
-                                  acceptTap: () {},
-                                  rejectTap: () {},
+                                  child: IncomingOrdersBox(
+                                    acceptIsLoading: acceptOrderIsLoading,
+                                    rejectIsLoading: rejectOrderIsLoading,
+                                    width:
+                                        orderProvider.incomingOrders.length == 1
+                                            ? 93
+                                            : null,
+                                    orderID: order['reference_code'].toString(),
+                                    amount: formatNumberWithCommas(
+                                        order['amount'].toString()),
+                                    fee: formatNumberWithCommas(
+                                        order['fee'].toString()),
+                                    date: formatDateTime(order['created_at']),
+                                    sender: order['created_by'].toString(),
+                                    type: order['role'],
+                                    viewTap: () {
+                                      goTo(
+                                          context,
+                                          FullIncomingOrderScreen(
+                                            orderid: order['id'].toString(),
+                                            amount: formatNumberWithCommas(
+                                                order['amount'].toString()),
+                                            fee: formatNumberWithCommas(
+                                                order['fee'].toString()),
+                                            date: formatDateTime(
+                                                order['created_at']),
+                                            name: order['role'] == 'Selling'
+                                                ? order['seller']['firstname']
+                                                : order['buyer']['firstname'],
+                                            phone: order['role'] == 'Selling'
+                                                ? order['seller']['firstname']
+                                                : order['buyer']['phone']
+                                                    .toString(),
+                                            total: formatNumberWithCommas(
+                                                order['total_amount']
+                                                    .toString()),
+                                            feepayer: order['escrow_fee_payer'],
+                                            type: order['role'],
+                                            description: order['description'],
+                                          ));
+                                    },
+                                    acceptTap: () {},
+                                    rejectTap: () {},
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                Height(h: 0.3),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    kTxt(
-                      text: '  Show Running Escrows',
-                      size: 12,
-                      weight: FontWeight.w500,
-                    ),
-                    Switch(
-                      activeColor: kColors.primaryColor,
-                      value: showRunning,
-                      onChanged: (value) {
-                        setState(() {
-                          showRunning = !showRunning;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                showRunning ? Height(h: 1) : SizedBox.shrink(),
-                showRunning
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          kTxt(
-                            text: '  Running Escrows',
-                            size: 13,
-                            weight: FontWeight.w500,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              goTo(context, SeeAllescrowsScreen());
+                              );
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                kTxt(
-                                  text: 'View all',
-                                  size: 13,
-                                  weight: FontWeight.w500,
-                                  color: kColors.textGrey,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: kColors.textGrey,
-                                  size: 14,
-                                ),
-                              ],
+                          ),
+                        ),
+                  Height(h: 0.3),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      kTxt(
+                        text: '  Show Running Escrows',
+                        size: 12,
+                        weight: FontWeight.w500,
+                      ),
+                      Switch(
+                        activeColor: kColors.primaryColor,
+                        value: showRunning,
+                        onChanged: (value) {
+                          setState(() {
+                            showRunning = !showRunning;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                  showRunning ? Height(h: 1) : SizedBox.shrink(),
+                  showRunning
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            kTxt(
+                              text: '  Running Escrows',
+                              size: 13,
+                              weight: FontWeight.w500,
+                            ),
+                            orderProvider.runningOrders.isEmpty
+                                ? SizedBox.shrink()
+                                : GestureDetector(
+                                    onTap: () {
+                                      goTo(context, SeeAllescrowsScreen());
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        kTxt(
+                                          text: 'View all',
+                                          size: 13,
+                                          weight: FontWeight.w500,
+                                          color: kColors.textGrey,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: kColors.textGrey,
+                                          size: 14,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                          ],
+                        )
+                      : SizedBox.shrink(),
+                  Height(h: 1),
+                  showRunning
+                      ? orderProvider.runningOrders.isEmpty
+                          ? kTxt(text: 'You have no running order')
+                          : SizedBox(
+                              height: 10 * size.height / 100,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: orderProvider.runningOrders.length,
+                                itemBuilder: (context, index) {
+                                  var order =
+                                      orderProvider.runningOrders[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: 1.5 * size.width / 100,
+                                      bottom: 1 * size.height / 100,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        goTo(
+                                            context,
+                                            FullRunningOrderScreen(
+                                              orderid: order['id'].toString(),
+                                              amount: formatNumberWithCommas(
+                                                  order['amount'].toString()),
+                                              fee: formatNumberWithCommas(
+                                                  order['fee'].toString()),
+                                              date: formatDateTime(
+                                                  order['created_at']),
+                                              name: order['role'] == 'Selling'
+                                                  ? order['seller']['firstname']
+                                                  : order['buyer']['firstname'],
+                                              phone: order['role'] == 'Selling'
+                                                  ? order['seller']['firstname']
+                                                  : order['buyer']['phone']
+                                                      .toString(),
+                                              total: formatNumberWithCommas(
+                                                  order['total_amount']
+                                                      .toString()),
+                                              feepayer:
+                                                  order['escrow_fee_payer'],
+                                              type: order['role'],
+                                              description: order['description'],
+                                            ));
+                                      },
+                                      child: PendingEscrowsBox(
+                                        product:
+                                            order['description'].toString(),
+                                        amount: formatNumberWithCommas(
+                                          order['amount'].toString(),
+                                        ),
+                                        img: img[index],
+                                        type: order['role'].toString(),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                      : SizedBox.shrink(),
+                  Height(h: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      kTxt(
+                        text: '  Recent Orders',
+                        size: 13,
+                        weight: FontWeight.w500,
+                      ),
+                      orderProvider.trns.isEmpty
+                          ? SizedBox.shrink()
+                          : GestureDetector(
+                              onTap: () {
+                                goTo(context, SeeAllTrxnScreen());
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  kTxt(
+                                    text: 'View all',
+                                    size: 13,
+                                    weight: FontWeight.w500,
+                                    color: kColors.textGrey,
+                                  ),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: kColors.textGrey,
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
+                            ),
+                    ],
+                  ),
+                  Height(h: 1),
+                  SizedBox(
+                    height: 24 * size.height / 100,
+                    child: ListView.builder(
+                      itemCount: orderProvider.trns.length,
+                      itemBuilder: (context, index) {
+                        var order = orderProvider.trns[index];
+                        return Padding(
+                          padding:
+                              EdgeInsets.only(bottom: 0.8 * size.height / 100),
+                          child: GestureDetector(
+                            onTap: () {
+                              goTo(context, TrxnFullDetailScreen());
+                            },
+                            child: RecentTransactionTile(
+                              status: order['status'].toString(),
+                              type: order['role'],
+                              amount: order['amount'].toString(),
+                              datetime: order['created_at'].toString(),
+                              title: order['description'],
                             ),
                           ),
-                        ],
-                      )
-                    : SizedBox.shrink(),
-                Height(h: 1),
-                showRunning
-                    ? SizedBox(
-                        height: 10 * size.height / 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: orderProvider.runningOrders.length,
-                          itemBuilder: (context, index) {
-                            var order = orderProvider.runningOrders[index];
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                right: 1.5 * size.width / 100,
-                                bottom: 1 * size.height / 100,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  goTo(context, FullEscrowDetailScreen());
-                                },
-                                child: PendingEscrowsBox(
-                                  product: order['description'].toString(),
-                                  amount: formatNumberWithCommas(
-                                    order['amount'].toString(),
-                                  ),
-                                  img: img[index],
-                                  type: order['role'].toString(),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                Height(h: 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    kTxt(
-                      text: '  Recent Orders',
-                      size: 13,
-                      weight: FontWeight.w500,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        goTo(context, SeeAllTrxnScreen());
+                        );
                       },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          kTxt(
-                            text: 'View all',
-                            size: 13,
-                            weight: FontWeight.w500,
-                            color: kColors.textGrey,
-                          ),
-                          Icon(
-                            Icons.arrow_forward,
-                            color: kColors.textGrey,
-                            size: 14,
-                          ),
-                        ],
-                      ),
                     ),
-                  ],
-                ),
-                Height(h: 1),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: status.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding:
-                            EdgeInsets.only(bottom: 0.8 * size.height / 100),
-                        child: GestureDetector(
-                          onTap: () {
-                            goTo(context, TrxnFullDetailScreen());
-                          },
-                          child: RecentTransactionTile(
-                            status: status[index],
-                            type: typeT[index],
-                            amount: amount[index],
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

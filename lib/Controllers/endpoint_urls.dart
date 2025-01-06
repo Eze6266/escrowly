@@ -23,7 +23,7 @@ class kUrl {
 
   static String resetPwd = '$_baseUrl/auth/reset-password';
   static String acceptOrder = '$_baseUrl/orders/cancel';
-  static String fetchTrxns = '$_baseUrl/orders/fetch-recent';
+  static String fetchTrxns = '$_baseUrl/orders/fetch-all';
 
   static String rejectOrder = '$_baseUrl/orders/accept';
 }

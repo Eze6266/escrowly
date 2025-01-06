@@ -104,6 +104,8 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                           goTo(context, TrxnFullDetailScreen());
                         },
                         child: RecentTransactionTile(
+                          datetime: '',
+                          title: '',
                           status: status[index],
                           type: typeT[index],
                           amount: amount[index],

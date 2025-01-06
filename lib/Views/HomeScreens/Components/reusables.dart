@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
+import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
@@ -134,8 +135,10 @@ class RecentTransactionTile extends StatelessWidget {
     required this.amount,
     required this.type,
     required this.status,
+    required this.datetime,
+    required this.title,
   });
-  String type, amount, status;
+  String type, amount, status, datetime, title;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -166,7 +169,7 @@ class RecentTransactionTile extends StatelessWidget {
               ),
               Height(h: 0.3),
               kTxt(
-                text: '25 Oct 2024, 01:53PM',
+                text: '${formatDateTime(datetime)}',
                 size: 11,
                 weight: FontWeight.w400,
                 color: kColors.textGrey,
@@ -198,7 +201,7 @@ class RecentTransactionTile extends StatelessWidget {
                 text: 'N${formatNumberWithCommas(amount)}',
                 size: 12,
                 weight: FontWeight.w600,
-                color: kColors.red,
+                color: kColors.blackColor,
               ),
             ],
           ),
@@ -209,24 +212,28 @@ class RecentTransactionTile extends StatelessWidget {
 }
 
 Color getStatusTxtColor(String status) {
-  if (status == '1') {
-    return kColors.greenColor;
-  } else if (status == '2') {
+  if (status == '0') {
     return kColors.orange;
+  } else if (status == '1') {
+    return kColors.primaryColor;
+  } else if (status == '2') {
+    return kColors.purple;
   } else if (status == '3') {
-    return kColors.red;
+    return kColors.greenColor;
   } else {
     return kColors.red;
   }
 }
 
 String getStatusTxt(String status) {
-  if (status == '1') {
-    return 'Completed';
-  } else if (status == '2') {
+  if (status == '0') {
     return 'Pending';
+  } else if (status == '1') {
+    return 'Accepted';
+  } else if (status == '2') {
+    return 'In Progress';
   } else if (status == '3') {
-    return 'Failed';
+    return 'Completed';
   } else {
     return 'Cancelled';
   }

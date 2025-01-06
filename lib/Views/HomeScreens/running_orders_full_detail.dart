@@ -9,8 +9,8 @@ import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 
-class FullIncomingOrderScreen extends StatefulWidget {
-  FullIncomingOrderScreen({
+class FullRunningOrderScreen extends StatefulWidget {
+  FullRunningOrderScreen({
     super.key,
     required this.amount,
     required this.date,
@@ -34,20 +34,17 @@ class FullIncomingOrderScreen extends StatefulWidget {
       orderid,
       description;
   @override
-  State<FullIncomingOrderScreen> createState() =>
-      _FullIncomingOrderScreenState();
+  State<FullRunningOrderScreen> createState() => _FullRunningOrderScreenState();
 }
 
-class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
-  bool acceptIsLoading = false;
-  bool rejectIsLoading = false;
+class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var orderProvider = Provider.of<OrderProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
-    acceptIsLoading = Provider.of<OrderProvider>(context).acceptOrderIsLoading;
-    rejectIsLoading = Provider.of<OrderProvider>(context).rejectOrderIsLoading;
+    // acceptIsLoading = Provider.of<OrderProvider>(context).acceptOrderIsLoading;
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,
@@ -63,9 +60,7 @@ class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
               Height(h: 2),
               Row(
                 children: [
-                  (acceptIsLoading || rejectIsLoading)
-                      ? SizedBox.shrink()
-                      : BckBtn(),
+                  isLoading ? SizedBox.shrink() : BckBtn(),
                   Width(w: 20),
                   kTxt(
                     text: 'Order Details',
@@ -118,57 +113,30 @@ class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
               GenBtn(
                 size: size,
                 width: 90,
-                isLoading: acceptIsLoading,
+                isLoading: isLoading,
                 height: 6,
-                btnColor:
-                    rejectIsLoading ? kColors.textGrey : kColors.primaryColor,
-                btnText: 'Accept Order',
+                btnColor: isLoading ? kColors.textGrey : kColors.red,
+                btnText: 'Raise Dispute',
                 txtColor: kColors.whiteColor,
-                tap: (rejectIsLoading || acceptIsLoading)
+                tap: isLoading
                     ? () {}
                     : () {
-                        orderProvider
-                            .acceptOrder(
-                                orderid: widget.orderid, context: context)
-                            .then((value) {
-                          if (value == 'success') {
-                            goBack(context);
-                            orderProvider.fetchIncomingOrder(context: context);
-                            authProvider.getUser(context: context);
-                          } else {
-                            showCustomErrorToast(
-                                context, orderProvider.acceptOrderMessage);
-                          }
-                        });
+                        // orderProvider
+                        //     .acceptOrder(
+                        //         orderid: widget.orderid, context: context)
+                        //     .then((value) {
+                        //   if (value == 'success') {
+                        //     goBack(context);
+                        //     orderProvider.fetchIncomingOrder(context: context);
+                        //     authProvider.getUser(context: context);
+                        //   } else {
+                        //     showCustomErrorToast(
+                        //         context, orderProvider.acceptOrderMessage);
+                        //   }
+                        // });
                       },
               ),
               Height(h: 1),
-              GenBtn(
-                size: size,
-                width: 90,
-                isLoading: rejectIsLoading,
-                height: 6,
-                btnColor: acceptIsLoading ? kColors.textGrey : kColors.red,
-                btnText: 'Reject Order',
-                txtColor: kColors.whiteColor,
-                tap: (acceptIsLoading || rejectIsLoading)
-                    ? () {}
-                    : () {
-                        orderProvider
-                            .rejectOrder(
-                                orderid: widget.orderid, context: context)
-                            .then((value) {
-                          if (value == 'success') {
-                            goBack(context);
-                            orderProvider.fetchIncomingOrder(context: context);
-                            authProvider.getUser(context: context);
-                          } else {
-                            showCustomErrorToast(
-                                context, orderProvider.acceptOrderMessage);
-                          }
-                        });
-                      },
-              ),
             ],
           ),
         ),
