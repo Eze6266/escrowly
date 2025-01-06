@@ -2,6 +2,8 @@
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/check_email_function.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
@@ -24,6 +26,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
+    isLoading = Provider.of<AuthProvider>(context).sendPwdOtpIsLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,11 +111,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 if (emailError == true || emailCtrler.text.isEmpty) {
                   showCustomErrorToast(context, 'Enter a valid email');
                 } else {
-                  goTo(
-                      context,
-                      ForgotPasswordOtpScren(
-                        email: emailCtrler.text,
-                      ));
+                  authProvider
+                      .sendPwdOtp(email: emailCtrler.text, context: context)
+                      .then((value) {
+                    if (value == 'success') {
+                      goTo(context,
+                          ForgotPasswordOtpScren(email: emailCtrler.text));
+                    } else {
+                      showCustomErrorToast(
+                          context, authProvider.sendPwdOtpMessage);
+                    }
+                  });
                 }
               },
             ),

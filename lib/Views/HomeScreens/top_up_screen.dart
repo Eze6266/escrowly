@@ -1,7 +1,9 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:trustbridge/Controllers/Providers/TransactionProviders/transaction_provider.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/top_up_card_widget.dart';
@@ -29,6 +31,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var trxnProvider = Provider.of<TransactionProvider>(context);
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,
@@ -63,16 +66,27 @@ class _TopUpScreenState extends State<TopUpScreen> {
               textalign: TextAlign.center,
             ),
             Height(h: 2),
-            AccountNumberCard(
-              size: size,
-              accNumber: '7067581951',
-              accName: 'Emmanuel Ezejiobi',
-              bankName: 'Opay',
-              gradColor: kColors.primaryColor,
-              gradColor2: kColors.primaryColor,
-              onTap: () {
-                copyToClipboard(context, '7067581951');
-              },
+            Expanded(
+              child: ListView.builder(
+                itemCount: trxnProvider.accNumbers.length,
+                itemBuilder: (context, index) {
+                  var account = trxnProvider.accNumbers[index];
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 2 * size.height / 100),
+                    child: AccountNumberCard(
+                      size: size,
+                      accNumber: '${account['accountNumber']}',
+                      accName: '${account['accountName']}',
+                      bankName: '${account['bankName']}',
+                      gradColor: kColors.primaryColor,
+                      gradColor2: kColors.primaryColor,
+                      onTap: () {
+                        copyToClipboard(context, '${account['accountNumber']}');
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),

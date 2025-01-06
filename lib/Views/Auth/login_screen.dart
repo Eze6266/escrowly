@@ -3,6 +3,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Controllers/biometric_service.dart';
 import 'package:trustbridge/Utilities/Functions/check_email_function.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
@@ -33,6 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var biometricApi = Provider.of<BiometricService>(context);
+    var authProvider = Provider.of<AuthProvider>(context);
+    isLoading = Provider.of<AuthProvider>(context).loginUserIsLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -166,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             pwdCtrler.text.isEmpty ||
                             pwdError == true
                         ? kColors.textGrey.withOpacity(0.5)
-                        : kColors.primaryAccent,
+                        : kColors.primaryColor,
                     btnText: 'Login',
                     txtColor: kColors.whiteColor,
                     textSize: 16,
@@ -181,7 +184,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         showCustomErrorToast(
                             context, 'Make sure all fields are filled');
                       } else {
-                        goTo(context, BottomNav(chosenmyIndex: 0));
+                        authProvider
+                            .loginUser(
+                                email: emailCtrler.text,
+                                password: pwdCtrler.text,
+                                context: context)
+                            .then((value) {
+                          if (value == 'success') {
+                            authProvider.getUser(context: context);
+                            goTo(context, BottomNav(chosenmyIndex: 0));
+                          } else {
+                            showCustomErrorToast(
+                                context, authProvider.loginUserMessage);
+                          }
+                        });
                       }
                     },
                   ),

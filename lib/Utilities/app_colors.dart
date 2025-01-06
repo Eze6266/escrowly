@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class kColors {
   static Color whiteColor = const Color(0xffffffff);
   static Color blackColor = const Color(0xff000000);
-  static Color primaryColor = Color(0xFF0000FF);
+  static Color primaryColor = Color(0xff4034E8);
   static Color darkPrimaryColor = Color.fromARGB(255, 5, 3, 129);
 
   static Color primaryAccent = Color(0xFF3366FF);

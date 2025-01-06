@@ -5,21 +5,36 @@ import 'dart:async';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
+import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
+import 'package:trustbridge/Views/Auth/Components/otp_boxes.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   VerifyOtpScreen({
     super.key,
     required this.email,
+    required this.number,
+    required this.nin,
+    required this.password,
+    required this.firstName,
+    required this.lastName,
   });
-  String email;
+  String email, number, nin, password, firstName, lastName;
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
 }
 
 class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
+  TextEditingController pin1 = TextEditingController();
+  TextEditingController pin2 = TextEditingController();
+  TextEditingController pin3 = TextEditingController();
+  TextEditingController pin4 = TextEditingController();
+  TextEditingController pin5 = TextEditingController();
+
   bool sendcodeagain = false;
   late Timer timer;
   int start = 60;
@@ -58,11 +73,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   }
 
   bool isLoading = false;
-  bool otpIsLoading = false;
   bool sendCodeIsLoading = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
+    isLoading = (Provider.of<AuthProvider>(context).registerUserIsLoading ||
+        Provider.of<AuthProvider>(context).verifyOtpIsLoading);
+    sendCodeIsLoading = Provider.of<AuthProvider>(context).senOtpIsLoading;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +92,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
         child: Column(
           children: [
             Height(h: 2),
-            isLoading || otpIsLoading
+            isLoading
                 ? SizedBox.shrink()
                 : Align(
                     alignment: Alignment.centerLeft,
@@ -106,66 +124,74 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
               ),
             ),
             Height(h: 3),
-            OtpPinField(
-              autoFocus: true,
-              autoFillEnable: true,
-              textInputAction: TextInputAction.done,
-              onSubmit: (text) {
-                setState(() {
-                  print('Entered pin is $text');
-                });
-              },
-              onChange: (text) {},
-              otpPinFieldStyle: OtpPinFieldStyle(
-                filledFieldBorderColor: kColors.primaryColor,
-                fieldBorderWidth: 1.5,
-                activeFieldBorderColor: kColors.textGrey,
-              ),
-              maxLength: 4,
-              showCursor: true,
-              cursorColor: kColors.primaryColor,
-              cursorWidth: 1,
-              otpPinFieldDecoration:
-                  OtpPinFieldDecoration.defaultPinBoxDecoration,
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            // Row(
+            // OtpPinField(
+            //   autoFocus: true,
+            //   autoFillEnable: true,
+            //   textInputAction: TextInputAction.done,
+            //   onSubmit: (text) {
+            //     setState(() {
+            //       print('Entered pin is $text');
+            //     });
+            //   },
+            //   onChange: (text) {},
+            //   otpPinFieldStyle: OtpPinFieldStyle(
+            //     filledFieldBorderColor: kColors.primaryColor,
+            //     fieldBorderWidth: 1.5,
+            //     activeFieldBorderColor: kColors.textGrey,
+            //   ),
+            //   maxLength: 4,
+            //   showCursor: true,
+            //   cursorColor: kColors.primaryColor,
+            //   cursorWidth: 1,
+            //   otpPinFieldDecoration:
+            //       OtpPinFieldDecoration.defaultPinBoxDecoration,
             //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     OTPBoxes(
-            //       size: size,
-            //       pinController: pin1,
-            //       otpclick: () {
-            //         setState(() {});
-            //       },
-            //     ),
-            //     SizedBox(width: 3 * size.width / 100),
-            //     OTPBoxes(
-            //       size: size,
-            //       pinController: pin2,
-            //       otpclick: () {
-            //         setState(() {});
-            //       },
-            //     ),
-            //     SizedBox(width: 3 * size.width / 100),
-            //     OTPBoxes(
-            //       size: size,
-            //       pinController: pin3,
-            //       otpclick: () {
-            //         setState(() {});
-            //       },
-            //     ),
-            //     SizedBox(width: 3 * size.width / 100),
-            //     OTPBoxes(
-            //       size: size,
-            //       pinController: pin4,
-            //       otpclick: () {
-            //         setState(() {});
-            //       },
-            //     ),
-            //   ],
             // ),
 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                OTPBoxes(
+                  size: size,
+                  pinController: pin1,
+                  otpclick: () {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(width: 2 * size.width / 100),
+                OTPBoxes(
+                  size: size,
+                  pinController: pin2,
+                  otpclick: () {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(width: 2 * size.width / 100),
+                OTPBoxes(
+                  size: size,
+                  pinController: pin3,
+                  otpclick: () {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(width: 2 * size.width / 100),
+                OTPBoxes(
+                  size: size,
+                  pinController: pin4,
+                  otpclick: () {
+                    setState(() {});
+                  },
+                ),
+                SizedBox(width: 2 * size.width / 100),
+                OTPBoxes(
+                  size: size,
+                  pinController: pin5,
+                  otpclick: () {
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
             Height(h: 3),
             RichText(
               text: TextSpan(
@@ -207,26 +233,77 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                     txtWeight: FontWeight.w600,
                     borderRadius: 10,
                     tap: () {
-                      setState(() {
-                        start = 60;
-                        startTimer();
+                      authProvider
+                          .senOtp(
+                              email: widget.email,
+                              password: widget.password,
+                              context: context)
+                          .then((value) {
+                        if (value == 'success') {
+                          sendcodeagain = true;
+                          showCustomSuccessToast(
+                              context, 'Otp sent successfully');
+                          setState(() {
+                            start = 60;
+                            startTimer();
+                          });
+                        } else {
+                          showCustomErrorToast(
+                              context, authProvider.senOtpMessage);
+                        }
                       });
                     },
                   ),
             Height(h: 15),
             GenBtn(
               size: size,
-              width: 90,
+              width: 86,
               height: 6,
-              isLoading: (isLoading || otpIsLoading) == true ? true : false,
+              isLoading: isLoading == true ? true : false,
               btnColor: kColors.primaryAccent,
-              btnText: 'Become a Vendor',
+              btnText: 'Proceed',
               txtColor: kColors.whiteColor,
               textSize: 16,
               txtWeight: FontWeight.w500,
               borderRadius: 30,
               tap: () {
-                goTo(context, LoginScreen());
+                var pin =
+                    pin1.text + pin2.text + pin3.text + pin4.text + pin5.text;
+                if (pin1.text.isEmpty ||
+                    pin2.text.isEmpty ||
+                    pin3.text.isEmpty ||
+                    pin4.text.isEmpty ||
+                    pin5.text.isEmpty) {
+                  showCustomErrorToast(context, 'Enter complete pin');
+                } else {
+                  authProvider
+                      .verifyOtp(
+                          email: widget.email, otp: pin, context: context)
+                      .then((value) {
+                    if (value == 'success') {
+                      authProvider
+                          .registerUser(
+                              email: widget.email,
+                              otp: pin,
+                              phone: widget.number,
+                              firstName: widget.firstName,
+                              nin: widget.nin,
+                              lastName: widget.lastName,
+                              context: context)
+                          .then((value) {
+                        if (value == 'success') {
+                          goTo(context, LoginScreen());
+                        } else {
+                          showCustomErrorToast(
+                              context, authProvider.registerUserMessage);
+                        }
+                      });
+                    } else {
+                      showCustomErrorToast(
+                          context, authProvider.verifyOtpMessage);
+                    }
+                  });
+                }
               },
             ),
             Height(h: 3),
