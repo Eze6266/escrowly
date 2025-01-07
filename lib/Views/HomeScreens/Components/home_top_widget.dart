@@ -10,12 +10,13 @@ class HomeTopWidget extends StatelessWidget {
   HomeTopWidget({
     super.key,
     required this.bellTap,
+    required this.supportTap,
     required this.img,
     required this.name,
   });
 
   String img, name;
-  Function() bellTap;
+  Function() bellTap, supportTap;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -63,21 +64,33 @@ class HomeTopWidget extends StatelessWidget {
             )
           ],
         ),
-        Stack(
+        Row(
           children: [
             GestureDetector(
-              onTap: bellTap,
-              child: SvgPicture.asset(
-                kImages.notifbell,
-                color: kColors.blackColor,
+              onTap: supportTap,
+              child: Icon(
+                Icons.support_agent,
+                size: 24,
               ),
             ),
-            Positioned(
-              left: 3.2 * size.width / 100,
-              child: CircleAvatar(
-                radius: 2.5,
-                backgroundColor: kColors.red,
-              ),
+            Width(w: 2),
+            Stack(
+              children: [
+                GestureDetector(
+                  onTap: bellTap,
+                  child: SvgPicture.asset(
+                    kImages.notifbell,
+                    color: kColors.blackColor,
+                  ),
+                ),
+                Positioned(
+                  left: 3.2 * size.width / 100,
+                  child: CircleAvatar(
+                    radius: 2.5,
+                    backgroundColor: kColors.red,
+                  ),
+                ),
+              ],
             ),
           ],
         ),

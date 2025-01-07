@@ -25,6 +25,7 @@ import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_s
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/select_type_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/full_incoming_trxn.dart';
 import 'package:trustbridge/Views/HomeScreens/notification_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/recent_order_full_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/running_orders_full_detail.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
@@ -134,6 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     bellTap: () {
                       goTo(context, NotificationScreen());
                     },
+                    supportTap: () {},
                   ),
                   Height(h: 1.2),
                   SizedBox(
@@ -458,28 +460,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   Height(h: 1),
                   SizedBox(
                     height: 24 * size.height / 100,
-                    child: ListView.builder(
-                      itemCount: orderProvider.trns.length,
-                      itemBuilder: (context, index) {
-                        var order = orderProvider.trns[index];
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(bottom: 0.8 * size.height / 100),
-                          child: GestureDetector(
-                            onTap: () {
-                              goTo(context, TrxnFullDetailScreen());
+                    child: orderProvider.trns.isEmpty
+                        ? Center(
+                            child: kTxt(text: 'No transactions yet'),
+                          )
+                        : ListView.builder(
+                            itemCount: orderProvider.trns.length,
+                            itemBuilder: (context, index) {
+                              var order = orderProvider.trns[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: 0.8 * size.height / 100),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    goTo(
+                                        context,
+                                        FullRecentOrderScreen(
+                                          status: order['status'].toString(),
+                                          orderid: order['id'].toString(),
+                                          amount: formatNumberWithCommas(
+                                              order['amount'].toString()),
+                                          fee: formatNumberWithCommas(
+                                              order['fee'].toString()),
+                                          date: formatDateTime(
+                                              order['created_at']),
+                                          name: order['role'] == 'Selling'
+                                              ? order['seller']['firstname']
+                                              : order['buyer']['firstname'],
+                                          phone: order['role'] == 'Selling'
+                                              ? order['seller']['firstname']
+                                              : order['buyer']['phone']
+                                                  .toString(),
+                                          total: formatNumberWithCommas(
+                                              order['total_amount'].toString()),
+                                          feepayer: order['escrow_fee_payer'],
+                                          type: order['role'],
+                                          description: order['description'],
+                                        ));
+                                  },
+                                  child: RecentTransactionTile(
+                                    status: order['status'].toString(),
+                                    type: order['role'],
+                                    amount: order['amount'].toString(),
+                                    datetime: order['created_at'].toString(),
+                                    title: order['description'],
+                                  ),
+                                ),
+                              );
                             },
-                            child: RecentTransactionTile(
-                              status: order['status'].toString(),
-                              type: order['role'],
-                              amount: order['amount'].toString(),
-                              datetime: order['created_at'].toString(),
-                              title: order['description'],
-                            ),
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ],
               ),
