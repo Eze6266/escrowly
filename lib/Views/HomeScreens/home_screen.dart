@@ -84,6 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       authProvider.getUser(context: context);
       trxnProvider.fetchAccNumbers(context: context);
+      trxnProvider.fetchWalletTrxns(context: context);
+
       trxnProvider.fetchBalances(context: context);
       trxnProvider.fetchBankList(context: context);
       orderProvider.fetchIncomingOrder(context: context);
@@ -110,6 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
         authProvider.getUser(context: context);
         trxnProvider.fetchAccNumbers(context: context);
         trxnProvider.fetchBalances(context: context);
+        trxnProvider.fetchWalletTrxns(context: context);
+
         trxnProvider.fetchBankList(context: context);
         orderProvider.fetchIncomingOrder(context: context);
         orderProvider.fetchTrxns(context: context);
