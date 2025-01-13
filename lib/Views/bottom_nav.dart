@@ -14,6 +14,7 @@ import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Views/HomeScreens/home_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/settings_screen.dart';
 import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
+import 'package:trustbridge/Views/WalletScreens/wallet_screen.dart';
 
 class BottomNav extends StatefulWidget {
   BottomNav({super.key, required this.chosenmyIndex});
@@ -29,8 +30,8 @@ class _BottomNavState extends State<BottomNav> {
   DateTime currentTime = DateTime.now();
   List<Widget> widgetList = [
     HomeScreen(),
+    WalletScreen(),
     SettingsScreen(),
-    SupportScreen(),
   ];
 
   @override

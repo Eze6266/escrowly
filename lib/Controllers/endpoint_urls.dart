@@ -11,6 +11,8 @@ class kUrl {
   static String registerUser = '$_baseUrl/auth/register';
   static String fetchBalances = '$_baseUrl/user/user-info';
   static String fetchBankList = '$_baseUrl/general/banks';
+  static String fetchWalletTrxns = '$_baseUrl/transactions/wallet-transaction';
+
   static String validateAccName = '$_baseUrl/withdrawal/check-bank/details';
 
   static String verifyOtp = '$_baseUrl/auth/check-otp';

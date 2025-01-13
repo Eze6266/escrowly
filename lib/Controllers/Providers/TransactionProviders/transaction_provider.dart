@@ -245,6 +245,65 @@ class TransactionProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************VALIDATE ACCOUNT NAME************//////////////////
+
+/////////////////////**********************FETCH WALLET TRANSACTIONS************//////////////////
+
+  bool fetchWalletTrxnsIsLoading = false;
+  var fetchWalletTrxnsStatus, fetchWalletTrxnsMessage;
+  List wallettrxns = [];
+
+  Future<String?> fetchWalletTrxns({
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    fetchWalletTrxnsIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+    print('$token');
+    try {
+      var response = await http.get(
+        Uri.parse('${kUrl.fetchWalletTrxns}'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is get wallet trxns status code ${response.statusCode}');
+
+      fetchWalletTrxnsIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        fetchWalletTrxnsStatus =
+            jsonDecode(responseString)['status'].toString();
+        fetchWalletTrxnsMessage = jsonDecode(responseString)['message'];
+        accNumbers = jsonDecode(responseString)['data'];
+
+        notifyListeners();
+
+        return fetchWalletTrxnsStatus;
+      } else {
+        String responseString = response.body;
+        fetchWalletTrxnsStatus =
+            jsonDecode(responseString)['status'].toString();
+        fetchWalletTrxnsMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return fetchWalletTrxnsStatus;
+      }
+    } catch (error) {
+      fetchWalletTrxnsIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return fetchWalletTrxnsStatus;
+  }
+
+/////////////////////**********************FETCH WALLET TRANSACTIONS************//////////////////
   void trxnNotifier() {
     notifyListeners();
   }
