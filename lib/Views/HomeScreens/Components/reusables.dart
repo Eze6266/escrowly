@@ -211,6 +211,88 @@ class RecentTransactionTile extends StatelessWidget {
   }
 }
 
+class WalletTransactionTile extends StatelessWidget {
+  WalletTransactionTile({
+    super.key,
+    required this.amount,
+    required this.type,
+    required this.status,
+    required this.datetime,
+    required this.title,
+  });
+  String type, amount, status, datetime, title;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 2 * size.width / 100,
+        vertical: 1 * size.height / 100,
+      ),
+      height: 7 * size.height / 100,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: kColors.whiteColor,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              kTxt(
+                text: getTitleTxt(type),
+                size: 13,
+                weight: FontWeight.w500,
+              ),
+              Height(h: 0.3),
+              kTxt(
+                text: '${formatDateTime(datetime)}',
+                size: 11,
+                weight: FontWeight.w400,
+                color: kColors.textGrey,
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2 * size.width / 100,
+                  vertical: 0.1 * size.height / 100,
+                ),
+                decoration: BoxDecoration(
+                  color: getStatusTxtColor(status).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: kTxt(
+                    text: getStatusTxt(status),
+                    size: 10,
+                    color: getStatusTxtColor(status),
+                    weight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Height(h: 1),
+              kTxt(
+                text: 'N${formatNumberWithCommas(amount)}',
+                size: 12,
+                weight: FontWeight.w600,
+                color: kColors.blackColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 Color getStatusTxtColor(String status) {
   if (status == '0') {
     return kColors.orange;

@@ -101,13 +101,13 @@ class _BottomNavState extends State<BottomNav> {
             ),
             BottomNavigationBarItem(
               activeIcon: Image.asset(
-                kImages.settings,
+                kImages.wallet,
                 height: 2.5 * size.height / 100,
                 color: kColors.primaryColor,
               ),
-              label: 'Settings',
+              label: 'Wallet',
               icon: Image.asset(
-                kImages.settings2,
+                kImages.wallet,
                 height: 2.5 * size.height / 100,
                 color: kColors.textGrey,
               ),
@@ -118,7 +118,7 @@ class _BottomNavState extends State<BottomNav> {
                 height: 2.5 * size.height / 100,
                 color: kColors.primaryColor,
               ),
-              label: 'Support',
+              label: 'Settings',
               icon: Image.asset(
                 kImages.support2,
                 height: 2.5 * size.height / 100,
