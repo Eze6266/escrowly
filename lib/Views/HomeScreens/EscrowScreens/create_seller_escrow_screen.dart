@@ -21,6 +21,8 @@ class CreateSellerEscrowScreen extends StatefulWidget {
 
 class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
   TextEditingController amountCtrler = TextEditingController();
+  TextEditingController descCtrler = TextEditingController();
+
   bool naMe = false;
   @override
   void initState() {
@@ -77,24 +79,28 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
                 ),
                 Height(h: 1),
                 TitleTField(
+                  important: true,
                   radius: 10,
                   hint: 'Enter customer name',
                   title: 'Customer Name',
                 ),
                 Height(h: 3),
                 TitleTField(
+                  important: true,
                   radius: 10,
                   hint: 'Enter customer numer',
                   title: 'Customer Phone',
                 ),
                 Height(h: 3),
                 TitleTField(
+                  important: true,
                   radius: 10,
                   hint: 'Enter customer email',
                   title: 'Customer Email',
                 ),
                 Height(h: 3),
                 TitleTField(
+                  important: true,
                   radius: 10,
                   hint: 'Enter amount for product/escrow',
                   title: 'Amount',
@@ -103,6 +109,18 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
                   onChanged: (value) {
                     setState(() {});
                   },
+                ),
+                Height(h: 3),
+                TitleTField(
+                  radius: 10,
+                  hint: 'Enter description for order',
+                  title: 'Description',
+                  controller: descCtrler,
+                  keyType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                  maxLine: 5,
                 ),
                 Height(h: 3),
                 Row(
@@ -142,7 +160,7 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
                         ),
                       )
                     : SizedBox.shrink(),
-                Height(h: 10),
+                Height(h: 8),
                 GenBtn(
                   size: size,
                   width: 90,
