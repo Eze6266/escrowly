@@ -11,6 +11,8 @@ class kUrl {
   static String registerUser = '$_baseUrl/auth/register';
   static String fetchBalances = '$_baseUrl/user/user-info';
   static String fetchBankList = '$_baseUrl/general/banks';
+  static String fetchWithdrawals = '$_baseUrl/withdrawal/withdrawal-history';
+
   static String validateAccName = '$_baseUrl/withdrawal/check-bank/details';
 
   static String verifyOtp = '$_baseUrl/auth/check-otp';
@@ -18,10 +20,14 @@ class kUrl {
 
   static String loginUser = '$_baseUrl/auth/login';
   static String getUser = '$_baseUrl/user';
+  static String getNotifcations = '$_baseUrl/user/notification';
+
   static String verifyNin = 'https://api.monnify.com/api/v1/vas/nin-details';
   static String monnifyBase = 'https://api.monnify.com';
 
   static String resetPwd = '$_baseUrl/auth/reset-password';
+  static String readNotification = '$_baseUrl/user/notifications';
+
   static String acceptOrder = '$_baseUrl/orders/cancel';
   static String fetchTrxns = '$_baseUrl/orders/fetch-all';
 

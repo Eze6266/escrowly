@@ -245,6 +245,65 @@ class TransactionProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************VALIDATE ACCOUNT NAME************//////////////////
+
+/////////////////////**********************FETCH WITHDRAWALS************//////////////////
+
+  bool fetchWithdrawalsIsLoading = false;
+  var fetchWithdrawalsStatus, fetchWithdrawalsMessage;
+  List withdrawlist = [];
+
+  Future<String?> fetchWithdrawals({
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    fetchWithdrawalsIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+    print('$token');
+    try {
+      var response = await http.get(
+        Uri.parse('${kUrl.fetchWithdrawals}'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print(
+          'this is get fetch withdrawals list status code ${response.statusCode}');
+
+      fetchWithdrawalsIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        fetchWithdrawalsStatus =
+            jsonDecode(responseString)['status'].toString();
+        fetchWithdrawalsMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return fetchWithdrawalsStatus;
+      } else {
+        String responseString = response.body;
+        fetchWithdrawalsStatus =
+            jsonDecode(responseString)['status'].toString();
+        fetchWithdrawalsMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return fetchWithdrawalsStatus;
+      }
+    } catch (error) {
+      fetchWithdrawalsIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return fetchWithdrawalsStatus;
+  }
+
+/////////////////////**********************FETCH WITHDRAWALS************//////////////////
   void trxnNotifier() {
     notifyListeners();
   }

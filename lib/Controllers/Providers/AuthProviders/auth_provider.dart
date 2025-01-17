@@ -304,7 +304,7 @@ class AuthProvider extends ChangeNotifier {
 
 /////////////////////**********************SEND PASSWORD OTP************//////////////////
 
-  /////////////////////**********************LOGIN USER************//////////////////
+  /////////////////////**********************RESET PASSWORD************//////////////////
 
   bool resetPwdIsLoading = false;
   var resetPwdStatus, resetPwdMessage;
@@ -534,6 +534,116 @@ class AuthProvider extends ChangeNotifier {
     return null;
   }
   //***************************** GET TOKEN ****************************//
+
+  //**********************GET NOTIFICATIONS*****************//
+  bool getNotifcationsisLoading = false;
+  var getNotifcationsStatus;
+  var getNotifcationsMessage;
+
+  List notifcations = [];
+
+  Future<String?> getNotifcations({
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    getNotifcationsisLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+    print('$token');
+    try {
+      var response = await http.get(
+        Uri.parse('${kUrl.getNotifcations}'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is get notifcations ${response.statusCode}');
+
+      getNotifcationsisLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        getNotifcationsStatus = jsonDecode(responseString)['status'].toString();
+
+        notifyListeners();
+
+        return getNotifcationsStatus;
+      } else {
+        String responseString = response.body;
+        getNotifcationsStatus = jsonDecode(responseString)['status'].toString();
+        getNotifcationsMessage = jsonDecode(responseString)['statusMessage'];
+        notifyListeners();
+        return getNotifcationsStatus;
+      }
+    } catch (error) {
+      getNotifcationsisLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return getNotifcationsStatus;
+  }
+
+///////////////////**********************GET NOTIFICATIONS*****************////////////////////
+
+  /////////////////////**********************READ NOTIFICATION************//////////////////
+
+  bool readNotificationIsLoading = false;
+  var readNotificationStatus, readNotificationMessage;
+
+  Future<String?> readNotification({
+    required String id,
+    required BuildContext context,
+  }) async {
+    readNotificationIsLoading = true;
+    notifyListeners();
+
+    try {
+      var response = await http.patch(
+        Uri.parse('${kUrl.readNotification}/$id/read'),
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      print('this is read notification status code ${response.statusCode}');
+
+      readNotificationIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        readNotificationStatus =
+            jsonDecode(responseString)['status'].toString();
+        readNotificationMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return readNotificationStatus;
+      } else {
+        String responseString = response.body;
+        readNotificationStatus =
+            jsonDecode(responseString)['status'].toString();
+        readNotificationMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return readNotificationStatus;
+      }
+    } catch (error) {
+      readNotificationIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return readNotificationStatus;
+  }
+
+/////////////////////**********************READ NOTIFICATION************//////////////////
 }
 
 class ErrorHandler {
