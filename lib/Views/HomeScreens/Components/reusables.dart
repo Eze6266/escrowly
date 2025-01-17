@@ -163,7 +163,8 @@ class RecentTransactionTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               kTxt(
-                text: getTitleTxt(type),
+                // text: getTitleTxt(status),
+                text: title,
                 size: 13,
                 weight: FontWeight.w500,
               ),
@@ -251,7 +252,7 @@ class WalletTransactionTile extends StatelessWidget {
               ),
               Height(h: 0.3),
               kTxt(
-                text: '${formatDateTime(datetime)}',
+                text: '${datetime}',
                 size: 11,
                 weight: FontWeight.w400,
                 color: kColors.textGrey,
@@ -271,7 +272,7 @@ class WalletTransactionTile extends StatelessWidget {
                 ),
                 child: Center(
                   child: kTxt(
-                    text: getStatusTxt(status),
+                    text: getWithdrawStatusTxt(status),
                     size: 10,
                     color: getStatusTxtColor(status),
                     weight: FontWeight.w600,
@@ -316,6 +317,20 @@ String getStatusTxt(String status) {
     return 'In Progress';
   } else if (status == '3') {
     return 'Completed';
+  } else {
+    return 'Cancelled';
+  }
+}
+
+String getWithdrawStatusTxt(String status) {
+  if (status == '0') {
+    return 'Pending';
+  } else if (status == '1') {
+    return 'Success';
+  } else if (status == '2') {
+    return 'Failed';
+  } else if (status == '3') {
+    return 'Rejected';
   } else {
     return 'Cancelled';
   }

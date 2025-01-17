@@ -11,12 +11,9 @@ import 'package:trustbridge/Utilities/reusables.dart';
 void showNotificationDetailDialog({
   required BuildContext context,
   required String title,
-  required String amount,
-  required String network,
-  required String phone,
   required String type,
   required String dateTime,
-  required String status,
+  required String description,
 }) {
   showDialog(
     barrierDismissible: false,
@@ -26,11 +23,8 @@ void showNotificationDetailDialog({
         insetPadding: EdgeInsets.all(10),
         child: NotificationDetailDialog(
           title: title,
-          amount: amount,
-          phone: phone,
-          network: network,
           type: type,
-          status: status,
+          description: description,
           dateTime: dateTime,
         ),
       );
@@ -41,16 +35,13 @@ void showNotificationDetailDialog({
 class NotificationDetailDialog extends StatefulWidget {
   NotificationDetailDialog({
     super.key,
-    required this.network,
     required this.title,
-    required this.phone,
-    required this.amount,
     required this.dateTime,
     required this.type,
-    required this.status,
+    required this.description,
   });
 
-  String title, amount, phone, network, dateTime, type, status;
+  String title, dateTime, type, description;
 
   @override
   State<NotificationDetailDialog> createState() =>
@@ -64,7 +55,7 @@ class _NotificationDetailDialogState extends State<NotificationDetailDialog> {
 
     return Container(
       width: 95 * size.width / 100,
-      height: 26 * size.height / 100,
+      height: 20 * size.height / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: kColors.whiteColor,
@@ -88,7 +79,8 @@ class _NotificationDetailDialogState extends State<NotificationDetailDialog> {
                     ),
                     child: Center(
                       child: kTxt(
-                        text: '${widget.type}',
+                        text:
+                            '${widget.type == '0' ? 'Deposit' : widget.type == '1' ? 'Withdrawal' : widget.type == '2' ? 'Order' : 'Profile'}',
                         size: 12,
                         weight: FontWeight.w600,
                       ),
@@ -147,44 +139,67 @@ class _NotificationDetailDialogState extends State<NotificationDetailDialog> {
                   ),
                 ],
               ),
-              Height(h: 2),
-              Row(
-                children: [
-                  kTxt(
-                    text: 'Amount: ',
-                    color: kColors.textGrey,
-                    size: 12,
-                    weight: FontWeight.w500,
-                  ),
-                  kTxt(
-                    text: 'N${formatNumberWithCommas(widget.amount)}',
-                    color: kColors.red,
-                    weight: FontWeight.w700,
-                    size: 16,
-                  ),
-                ],
-              ),
+              // Height(h: 2),
+              // Row(
+              //   children: [
+              //     kTxt(
+              //       text: 'Amount: ',
+              //       color: kColors.textGrey,
+              //       size: 12,
+              //       weight: FontWeight.w500,
+              //     ),
+              //     kTxt(
+              //       text: 'N${formatNumberWithCommas(widget.amount)}',
+              //       color: kColors.red,
+              //       weight: FontWeight.w700,
+              //       size: 16,
+              //     ),
+              //   ],
+              // ),
+              // Height(h: 0.8),
+              // Row(
+              //   children: [
+              //     kTxt(
+              //       text: 'Order ID: ',
+              //       color: kColors.textGrey,
+              //       size: 12,
+              //       weight: FontWeight.w500,
+              //     ),
+              //     kTxt(
+              //       text: '${widget.network}',
+              //       color: kColors.blackColor,
+              //       size: 13,
+              //       weight: FontWeight.w600,
+              //     ),
+              //   ],
+              // ),
+
+              // Row(
+              //   children: [
+              //     kTxt(
+              //       text: 'Phone number: ',
+              //       color: kColors.textGrey,
+              //       weight: FontWeight.w500,
+              //       size: 12,
+              //     ),
+              //     SizedBox(
+              //       width: 60 * size.width / 100,
+              //       child: kTxt(
+              //         text: '${widget.phone}',
+              //         color: kColors.blackColor,
+              //         weight: FontWeight.w600,
+              //         size: 12,
+              //         maxLine: 2,
+              //       ),
+              //     ),
+              //   ],
+              // ),
               Height(h: 0.8),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   kTxt(
-                    text: 'Order ID: ',
-                    color: kColors.textGrey,
-                    size: 12,
-                    weight: FontWeight.w500,
-                  ),
-                  kTxt(
-                    text: '${widget.network}',
-                    color: kColors.blackColor,
-                    size: 13,
-                    weight: FontWeight.w600,
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  kTxt(
-                    text: 'Phone number: ',
+                    text: 'Description: ',
                     color: kColors.textGrey,
                     weight: FontWeight.w500,
                     size: 12,
@@ -192,31 +207,12 @@ class _NotificationDetailDialogState extends State<NotificationDetailDialog> {
                   SizedBox(
                     width: 60 * size.width / 100,
                     child: kTxt(
-                      text: '${widget.phone}',
+                      text: widget.description,
+                      size: 12,
                       color: kColors.blackColor,
                       weight: FontWeight.w600,
-                      size: 12,
-                      maxLine: 2,
+                      maxLine: 20,
                     ),
-                  ),
-                ],
-              ),
-              Height(h: 0.8),
-              Row(
-                children: [
-                  kTxt(
-                    text: 'Status: ',
-                    color: kColors.textGrey,
-                    weight: FontWeight.w500,
-                    size: 12,
-                  ),
-                  kTxt(
-                    text: '${widget.status == '1' ? 'Success' : 'Pending'}',
-                    size: 12,
-                    color: widget.status.toLowerCase() == '1'
-                        ? kColors.greenColor
-                        : kColors.orange,
-                    weight: FontWeight.w600,
                   ),
                 ],
               ),

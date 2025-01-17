@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
+import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
+import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
@@ -58,6 +62,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var notifProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -101,32 +106,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   Icons.search,
                 ),
               ),
-              Height(h: 3),
+              Height(h: 1),
               Expanded(
                 child: ListView.builder(
-                  itemCount: title.length,
+                  itemCount: notifProvider.notifcations.length,
                   itemBuilder: (context, index) {
+                    var notif = notifProvider.notifcations[index];
                     return Padding(
                       padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
                       child: GestureDetector(
                         onTap: () {
+                          notifProvider.readNotification(
+                              id: notif['id'], context: context);
                           showNotificationDetailDialog(
-                            dateTime: '${date[index]} ${times[index]}',
-                            status: status[index],
+                            dateTime:
+                                '${formatDateTime(notif['created_at'])} ${formatTime(notif['created_at'])}',
+                            description: notif['description'],
                             context: context,
-                            title: title[index],
-                            amount: '50000',
-                            network: 'TRXn4ku27374848438',
-                            phone: '07067581951',
-                            type: type[index],
+                            title: notif['title'],
+                            type: notif['type'],
                           );
+                          notifProvider.getNotifcations(context: context);
+                          notifProvider.authNotifier();
                         },
                         child: NotificationTile(
-                          status: status[index],
-                          time: times[index],
-                          description: description[index],
-                          date: date[index],
-                          title: title[index],
+                          status: notif['status'],
+                          time: formatTime(notif['created_at']),
+                          description: notif['description'],
+                          date: formatDateTime(notif['created_at']),
+                          title: notif['title'],
                         ),
                       ),
                     );

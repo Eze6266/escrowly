@@ -10,3 +10,13 @@ String formatDateTime(String dateTimeString) {
 
   return '$formattedDate, $formattedTime';
 }
+
+String formatTime(String time) {
+  try {
+    DateTime parsedTime = DateTime.parse(time);
+    // Format time to 12-hour format with am/pm
+    return DateFormat('hh:mma').format(parsedTime).toLowerCase();
+  } catch (e) {
+    return "Invalid time format";
+  }
+}

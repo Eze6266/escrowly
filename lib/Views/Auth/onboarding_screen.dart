@@ -60,88 +60,90 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 3 * size.width / 100,
-              vertical: 4 * size.height / 100,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SmoothPageIndicator(
-                  effect: WormEffect(
-                    dotColor: kColors.whitishGrey,
-                    dotHeight: 1 * size.height / 100,
-                    dotWidth: 9 * size.width / 100,
-                    spacing: 13,
-                    radius: 100,
-                    activeDotColor: kColors.primaryColor,
-                    type: WormType.normal,
-                  ),
-                  count: 2,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0.001,
+        backgroundColor: kColors.primaryColor,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 3 * size.width / 100,
+            vertical: 4 * size.height / 100,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SmoothPageIndicator(
+                effect: WormEffect(
+                  dotColor: kColors.whitishGrey,
+                  dotHeight: 1 * size.height / 100,
+                  dotWidth: 9 * size.width / 100,
+                  spacing: 13,
+                  radius: 100,
+                  activeDotColor: kColors.primaryColor,
+                  type: WormType.normal,
+                ),
+                count: 2,
+                controller: pageviewController,
+              ),
+              Height(h: 2),
+              Container(
+                height: 65 * size.height / 100,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: PageView(
                   controller: pageviewController,
+                  children: [
+                    OnboardingContent(
+                      size: size,
+                      subText:
+                          'From Start to Finish, We Protect Your Payments and Ensure Peace of Mind on Every Deal!.',
+                      imgUrl: kImages.onboard4,
+                    ),
+                    OnboardingContent(
+                      align: TextAlign.center,
+                      size: size,
+                      subText:
+                          'An Escrow Experience Designed for Safety—Protecting Your Transactions Every Step of the Way!.',
+                      imgUrl: kImages.onboard5,
+                    ),
+                  ],
                 ),
-                Height(h: 2),
-                Container(
-                  height: 65 * size.height / 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: PageView(
-                    controller: pageviewController,
-                    children: [
-                      OnboardingContent(
-                        size: size,
-                        subText:
-                            'From Start to Finish, We Protect Your Payments and Ensure Peace of Mind on Every Deal!.',
-                        imgUrl: kImages.onboard4,
-                      ),
-                      OnboardingContent(
-                        align: TextAlign.center,
-                        size: size,
-                        subText:
-                            'An Escrow Experience Designed for Safety—Protecting Your Transactions Every Step of the Way!.',
-                        imgUrl: kImages.onboard5,
-                      ),
-                    ],
-                  ),
+              ),
+              Height(h: 3),
+              GenBtn(
+                size: size,
+                width: 90,
+                height: 6,
+                btnColor: kColors.primaryAccent,
+                btnText: 'Create an account',
+                txtColor: kColors.whiteColor,
+                textSize: 16,
+                txtWeight: FontWeight.w500,
+                borderRadius: 30,
+                tap: () async {
+                  await _markOnboardingAsViewed();
+                  goTo(context, SignupScreen());
+                },
+              ),
+              Height(h: 3),
+              GestureDetector(
+                onTap: () async {
+                  await _markOnboardingAsViewed();
+                  goTo(context, LoginScreen());
+                },
+                child: kTxt(
+                  text: 'Login as Existing User',
+                  color: kColors.primaryColor,
+                  size: 16,
+                  weight: FontWeight.w600,
                 ),
-                Height(h: 3),
-                GenBtn(
-                  size: size,
-                  width: 90,
-                  height: 6,
-                  btnColor: kColors.primaryAccent,
-                  btnText: 'Create an account',
-                  txtColor: kColors.whiteColor,
-                  textSize: 16,
-                  txtWeight: FontWeight.w500,
-                  borderRadius: 30,
-                  tap: () async {
-                    await _markOnboardingAsViewed();
-                    goTo(context, SignupScreen());
-                  },
-                ),
-                Height(h: 3),
-                GestureDetector(
-                  onTap: () async {
-                    await _markOnboardingAsViewed();
-                    goTo(context, LoginScreen());
-                  },
-                  child: kTxt(
-                    text: 'Login as Existing User',
-                    color: kColors.primaryColor,
-                    size: 16,
-                    weight: FontWeight.w600,
-                  ),
-                ),
-                Height(h: 2),
-              ],
-            ),
+              ),
+              Height(h: 2),
+            ],
           ),
         ),
       ),

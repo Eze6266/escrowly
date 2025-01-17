@@ -568,6 +568,7 @@ class AuthProvider extends ChangeNotifier {
       if (response.statusCode == 200 || response.statusCode == 201) {
         String responseString = response.body;
         getNotifcationsStatus = jsonDecode(responseString)['status'].toString();
+        notifcations = jsonDecode(responseString)['data'];
 
         notifyListeners();
 
@@ -644,6 +645,9 @@ class AuthProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************READ NOTIFICATION************//////////////////
+  void authNotifier() {
+    notifyListeners();
+  }
 }
 
 class ErrorHandler {

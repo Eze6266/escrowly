@@ -83,8 +83,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       authProvider.getUser(context: context);
+      authProvider.getNotifcations(context: context);
+
       trxnProvider.fetchAccNumbers(context: context);
+      trxnProvider.fetchWalletTrxns(context: context);
+
       trxnProvider.fetchBalances(context: context);
+      trxnProvider.fetchWithdrawals(context: context);
+
       trxnProvider.fetchBankList(context: context);
       orderProvider.fetchIncomingOrder(context: context);
       orderProvider.fetchTrxns(context: context);
@@ -110,6 +116,8 @@ class _HomeScreenState extends State<HomeScreen> {
         authProvider.getUser(context: context);
         trxnProvider.fetchAccNumbers(context: context);
         trxnProvider.fetchBalances(context: context);
+        trxnProvider.fetchWalletTrxns(context: context);
+
         trxnProvider.fetchBankList(context: context);
         orderProvider.fetchIncomingOrder(context: context);
         orderProvider.fetchTrxns(context: context);
@@ -465,7 +473,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: kTxt(text: 'No transactions yet'),
                           )
                         : ListView.builder(
-                            itemCount: orderProvider.trns.length,
+                            itemCount: orderProvider.trns.length > 10
+                                ? 10
+                                : orderProvider.trns.length,
                             itemBuilder: (context, index) {
                               var order = orderProvider.trns[index];
                               return Padding(
@@ -503,7 +513,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     type: order['role'],
                                     amount: order['amount'].toString(),
                                     datetime: order['created_at'].toString(),
-                                    title: order['description'],
+                                    title: order['reference_code'],
                                   ),
                                 ),
                               );

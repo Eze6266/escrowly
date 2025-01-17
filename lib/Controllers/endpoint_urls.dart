@@ -12,6 +12,7 @@ class kUrl {
   static String fetchBalances = '$_baseUrl/user/user-info';
   static String fetchBankList = '$_baseUrl/general/banks';
   static String fetchWithdrawals = '$_baseUrl/withdrawal/withdrawal-history';
+  static String fetchWalletTrxns = '$_baseUrl/transactions/wallet-transaction';
 
   static String validateAccName = '$_baseUrl/withdrawal/check-bank/details';
 
