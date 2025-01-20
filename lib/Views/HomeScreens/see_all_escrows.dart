@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
+import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
@@ -14,29 +17,23 @@ class SeeAllescrowsScreen extends StatefulWidget {
 }
 
 class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
-  List img = [
-    kImages.onboard,
-    kImages.onboard2,
-    kImages.onboard1,
-    kImages.onboard
-  ];
-  List type = [
-    '1',
-    '2',
-    '1',
-    '2',
-  ];
-  List amount = ['30000', '13000', '100000', '5000'];
-  List product = [
-    'Tecno spark 4 phone 254g Ram',
-    'Cinderella glass shoes',
-    'Royce Black watch diamond',
-    'Figo belt',
-  ];
+  String _searchQuery = ''; // Store the search query
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var orderProvider = Provider.of<OrderProvider>(context);
+
+    // Filter transactions based on the search query
+    List filteredTransactions = orderProvider.runningOrders
+        .where((order) =>
+            order['description'].toString().toLowerCase().contains(
+                _searchQuery.toLowerCase()) || // Search by description
+            order['amount']
+                .toString()
+                .toLowerCase()
+                .contains(_searchQuery.toLowerCase())) // Search by status
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -63,10 +60,15 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
               Height(h: 2),
               TitleTField(
                 hasTitle: false,
-                hint: 'Search escrows',
+                hint: 'Search escrows by description or amount',
                 suffixIcon: Icon(
                   Icons.search,
                 ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value; // Update the search query
+                  });
+                },
               ),
               Height(h: 3),
               GridView.builder(
@@ -75,19 +77,22 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
                   crossAxisCount: 2,
                   crossAxisSpacing: 2 * size.width / 100,
                   mainAxisSpacing: 1.2 * size.height / 100,
-                  childAspectRatio: 2 / 2,
+                  childAspectRatio: 2 / 1,
                 ),
-                itemCount: product.length,
+                itemCount: filteredTransactions.length,
                 itemBuilder: (context, index) {
+                  var order = filteredTransactions[index];
+
                   return GestureDetector(
                     onTap: () {
                       goTo(context, FullEscrowDetailScreen());
                     },
                     child: PendingEscrowsBox(
-                      product: product[index],
-                      amount: amount[index],
-                      img: img[index],
-                      type: type[index],
+                      product: order['description'].toString(),
+                      amount: formatNumberWithCommas(
+                        order['amount'].toString(),
+                      ),
+                      type: order['role'].toString(),
                     ),
                   );
                 },

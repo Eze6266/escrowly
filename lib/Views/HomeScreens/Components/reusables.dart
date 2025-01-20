@@ -13,11 +13,10 @@ class PendingEscrowsBox extends StatelessWidget {
   PendingEscrowsBox({
     super.key,
     required this.amount,
-    required this.img,
     required this.product,
     required this.type,
   });
-  String product, amount, img, type;
+  String product, amount, type;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

@@ -8,6 +8,7 @@ import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/home_balance_widget.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/notification_detail_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/show_withdraw_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
@@ -132,14 +133,26 @@ class _WalletScreenState extends State<WalletScreen> {
                   return Padding(
                     padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        showWithdrawDetailDialog(
+                          dateTime: '${formatDateTime(wallet['created_at'])}',
+                          description: wallet['narration'].toString(),
+                          accName: wallet['accountname'].toString(),
+                          accNumber: wallet['accountnumber'].toString(),
+                          bankName: wallet['bankname'].toString(),
+                          context: context,
+                          title: wallet['withdrawalid'].toString(),
+                          status: wallet['status'].toString(),
+                          amount: formatNumberWithCommas(
+                              wallet['amount'].toString()),
+                        );
+                      },
                       child: WalletTransactionTile(
                         status: wallet['status'].toString(),
                         type: '2',
                         amount:
                             formatNumberWithCommas(wallet['amount'].toString()),
-                        datetime:
-                            '${formatDateTime(wallet['created_at'])} ${formatTime(wallet['created_at'])}',
+                        datetime: '${formatDateTime(wallet['created_at'])}',
                         title: '',
                       ),
                     ),

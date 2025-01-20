@@ -81,7 +81,9 @@ class _FeeDescriptionDialogState extends State<FeeDescriptionDialog> {
               child: kTxt(
                 text: widget.which == '1'
                     ? 'Escrowly applies a minimal transaction fee of 2.5%, with a maximum limit of NGN5,000. By selecting the checkbox, the fee will be included in your entered amount.'
-                    : 'Escrowly applies a minimal transaction fee of 2.5%, with a maximum limit of NGN5,000. By selecting the checkbox, the fee will be included to the total amount paid by the customer',
+                    : widget.which == '2'
+                        ? 'Escrowly applies a minimal transaction fee of 2.5%, with a maximum limit of NGN5,000. By selecting the checkbox, the fee will be split for both buyer and seller'
+                        : 'Escrowly applies a minimal transaction fee of 2.5%, with a maximum limit of NGN5,000. By selecting the checkbox, the fee will be included to the total amount paid by the customer',
                 size: 12,
                 weight: FontWeight.w500,
                 color: kColors.textGrey,

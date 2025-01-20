@@ -28,9 +28,11 @@ import 'package:trustbridge/Views/HomeScreens/notification_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/recent_order_full_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/running_orders_full_detail.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
+import 'package:trustbridge/Views/HomeScreens/see_all_incoming.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/top_up_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
+import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,36 +44,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final pageviewController = PageController();
 
-  List img = [
-    kImages.onboard,
-    kImages.onboard2,
-    kImages.onboard1,
-    kImages.onboard
-  ];
-  List type = [
-    '1',
-    '2',
-    '1',
-    '2',
-  ];
-  List amount = ['30000', '13000', '100000', '5000'];
-  List fee = ['20', '90', '200', '10'];
-  List date = [
-    'December 23, 2024',
-    'January 12, 2025',
-    'October 04, 2023',
-    'December 23, 2024',
-  ];
-
-  List product = [
-    'Tecno spark 4 phone 254g Ram',
-    'Cinderella glass shoes',
-    'Royce Black watch diamond',
-    'Figo belt',
-  ];
-
-  List typeT = ['1', '2', '3', '4'];
-  List status = ['1', '2', '3', '4'];
   bool showRunning = false;
   @override
   void initState() {
@@ -114,9 +86,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return RefreshIndicator(
       onRefresh: () {
         authProvider.getUser(context: context);
+        authProvider.getNotifcations(context: context);
+
         trxnProvider.fetchAccNumbers(context: context);
-        trxnProvider.fetchBalances(context: context);
         trxnProvider.fetchWalletTrxns(context: context);
+
+        trxnProvider.fetchBalances(context: context);
+        trxnProvider.fetchWithdrawals(context: context);
 
         trxnProvider.fetchBankList(context: context);
         orderProvider.fetchIncomingOrder(context: context);
@@ -143,7 +119,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     bellTap: () {
                       goTo(context, NotificationScreen());
                     },
-                    supportTap: () {},
+                    supportTap: () {
+                      goTo(context, SupportScreen());
+                    },
                   ),
                   Height(h: 1.2),
                   SizedBox(
@@ -226,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? SizedBox.shrink()
                           : GestureDetector(
                               onTap: () {
-                                goTo(context, SeeAllescrowsScreen());
+                                goTo(context, SeeAllIncomingOrdersScreen());
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -248,73 +226,87 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   Height(h: 1),
-                  orderProvider.incomingOrders.isEmpty
-                      ? kTxt(text: 'You have no incoming order')
-                      : SizedBox(
-                          height: 24 * size.height / 100,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: orderProvider.incomingOrders.length,
-                            itemBuilder: (context, index) {
-                              var order = orderProvider.incomingOrders[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: 1.5 * size.width / 100,
-                                  bottom: 1 * size.height / 100,
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    goTo(context, FullEscrowDetailScreen());
-                                  },
-                                  child: IncomingOrdersBox(
-                                    acceptIsLoading: acceptOrderIsLoading,
-                                    rejectIsLoading: rejectOrderIsLoading,
-                                    width:
-                                        orderProvider.incomingOrders.length == 1
+                  orderProvider.fetchIncomingOrderisLoading
+                      ? Center(
+                          child: kTxt(text: 'Fetching orders...'),
+                        )
+                      : orderProvider.incomingOrders.isEmpty
+                          ? kTxt(text: 'You have no incoming order')
+                          : SizedBox(
+                              height: 24 * size.height / 100,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: orderProvider.incomingOrders.length,
+                                itemBuilder: (context, index) {
+                                  var order =
+                                      orderProvider.incomingOrders[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: 1.5 * size.width / 100,
+                                      bottom: 1 * size.height / 100,
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        goTo(context, FullEscrowDetailScreen());
+                                      },
+                                      child: IncomingOrdersBox(
+                                        acceptIsLoading: acceptOrderIsLoading,
+                                        rejectIsLoading: rejectOrderIsLoading,
+                                        width: orderProvider
+                                                    .incomingOrders.length ==
+                                                1
                                             ? 93
                                             : null,
-                                    orderID: order['reference_code'].toString(),
-                                    amount: formatNumberWithCommas(
-                                        order['amount'].toString()),
-                                    fee: formatNumberWithCommas(
-                                        order['fee'].toString()),
-                                    date: formatDateTime(order['created_at']),
-                                    sender: order['created_by'].toString(),
-                                    type: order['role'],
-                                    viewTap: () {
-                                      goTo(
-                                          context,
-                                          FullIncomingOrderScreen(
-                                            orderid: order['id'].toString(),
-                                            amount: formatNumberWithCommas(
-                                                order['amount'].toString()),
-                                            fee: formatNumberWithCommas(
-                                                order['fee'].toString()),
-                                            date: formatDateTime(
-                                                order['created_at']),
-                                            name: order['role'] == 'Selling'
-                                                ? order['seller']['firstname']
-                                                : order['buyer']['firstname'],
-                                            phone: order['role'] == 'Selling'
-                                                ? order['seller']['firstname']
-                                                : order['buyer']['phone']
-                                                    .toString(),
-                                            total: formatNumberWithCommas(
-                                                order['total_amount']
-                                                    .toString()),
-                                            feepayer: order['escrow_fee_payer'],
-                                            type: order['role'],
-                                            description: order['description'],
-                                          ));
-                                    },
-                                    acceptTap: () {},
-                                    rejectTap: () {},
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
+                                        orderID:
+                                            order['reference_code'].toString(),
+                                        amount: formatNumberWithCommas(
+                                            order['amount'].toString()),
+                                        fee: formatNumberWithCommas(
+                                            order['fee'].toString()),
+                                        date:
+                                            formatDateTime(order['created_at']),
+                                        sender: order['created_by'].toString(),
+                                        type: order['role'],
+                                        viewTap: () {
+                                          goTo(
+                                              context,
+                                              FullIncomingOrderScreen(
+                                                orderid: order['id'].toString(),
+                                                amount: formatNumberWithCommas(
+                                                    order['amount'].toString()),
+                                                fee: formatNumberWithCommas(
+                                                    order['fee'].toString()),
+                                                date: formatDateTime(
+                                                    order['created_at']),
+                                                name: order['role'] == 'Selling'
+                                                    ? order['seller']
+                                                        ['firstname']
+                                                    : order['buyer']
+                                                        ['firstname'],
+                                                phone: order['role'] ==
+                                                        'Selling'
+                                                    ? order['seller']
+                                                        ['firstname']
+                                                    : order['buyer']['phone']
+                                                        .toString(),
+                                                total: formatNumberWithCommas(
+                                                    order['total_amount']
+                                                        .toString()),
+                                                feepayer:
+                                                    order['escrow_fee_payer'],
+                                                type: order['role'],
+                                                description:
+                                                    order['description'],
+                                              ));
+                                        },
+                                        acceptTap: () {},
+                                        rejectTap: () {},
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                   Height(h: 0.3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -373,63 +365,76 @@ class _HomeScreenState extends State<HomeScreen> {
                       : SizedBox.shrink(),
                   Height(h: 1),
                   showRunning
-                      ? orderProvider.runningOrders.isEmpty
-                          ? kTxt(text: 'You have no running order')
-                          : SizedBox(
-                              height: 10 * size.height / 100,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: orderProvider.runningOrders.length,
-                                itemBuilder: (context, index) {
-                                  var order =
-                                      orderProvider.runningOrders[index];
-                                  return Padding(
-                                    padding: EdgeInsets.only(
-                                      right: 1.5 * size.width / 100,
-                                      bottom: 1 * size.height / 100,
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        goTo(
-                                            context,
-                                            FullRunningOrderScreen(
-                                              orderid: order['id'].toString(),
-                                              amount: formatNumberWithCommas(
-                                                  order['amount'].toString()),
-                                              fee: formatNumberWithCommas(
-                                                  order['fee'].toString()),
-                                              date: formatDateTime(
-                                                  order['created_at']),
-                                              name: order['role'] == 'Selling'
-                                                  ? order['seller']['firstname']
-                                                  : order['buyer']['firstname'],
-                                              phone: order['role'] == 'Selling'
-                                                  ? order['seller']['firstname']
-                                                  : order['buyer']['phone']
-                                                      .toString(),
-                                              total: formatNumberWithCommas(
-                                                  order['total_amount']
-                                                      .toString()),
-                                              feepayer:
-                                                  order['escrow_fee_payer'],
-                                              type: order['role'],
-                                              description: order['description'],
-                                            ));
-                                      },
-                                      child: PendingEscrowsBox(
-                                        product:
-                                            order['description'].toString(),
-                                        amount: formatNumberWithCommas(
-                                          order['amount'].toString(),
-                                        ),
-                                        img: img[index],
-                                        type: order['role'].toString(),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                      ? orderProvider.fetchTrxnsisLoading
+                          ? Center(
+                              child: kTxt(text: 'Fetching transactions...'),
                             )
+                          : orderProvider.runningOrders.isEmpty
+                              ? kTxt(text: 'You have no running order')
+                              : SizedBox(
+                                  height: 10 * size.height / 100,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        orderProvider.runningOrders.length,
+                                    itemBuilder: (context, index) {
+                                      var order =
+                                          orderProvider.runningOrders[index];
+                                      return Padding(
+                                        padding: EdgeInsets.only(
+                                          right: 1.5 * size.width / 100,
+                                          bottom: 1 * size.height / 100,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            goTo(
+                                                context,
+                                                FullRunningOrderScreen(
+                                                  orderid:
+                                                      order['id'].toString(),
+                                                  amount:
+                                                      formatNumberWithCommas(
+                                                          order['amount']
+                                                              .toString()),
+                                                  fee: formatNumberWithCommas(
+                                                      order['fee'].toString()),
+                                                  date: formatDateTime(
+                                                      order['created_at']),
+                                                  name:
+                                                      order['role'] == 'Selling'
+                                                          ? order['seller']
+                                                              ['firstname']
+                                                          : order['buyer']
+                                                              ['firstname'],
+                                                  phone: order['role'] ==
+                                                          'Selling'
+                                                      ? order['seller']
+                                                          ['firstname']
+                                                      : order['buyer']['phone']
+                                                          .toString(),
+                                                  total: formatNumberWithCommas(
+                                                      order['total_amount']
+                                                          .toString()),
+                                                  feepayer:
+                                                      order['escrow_fee_payer'],
+                                                  type: order['role'],
+                                                  description:
+                                                      order['description'],
+                                                ));
+                                          },
+                                          child: PendingEscrowsBox(
+                                            product:
+                                                order['description'].toString(),
+                                            amount: formatNumberWithCommas(
+                                              order['amount'].toString(),
+                                            ),
+                                            type: order['role'].toString(),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
                       : SizedBox.shrink(),
                   Height(h: 2),
                   Row(
@@ -468,57 +473,65 @@ class _HomeScreenState extends State<HomeScreen> {
                   Height(h: 1),
                   SizedBox(
                     height: 24 * size.height / 100,
-                    child: orderProvider.trns.isEmpty
+                    child: orderProvider.fetchTrxnsisLoading
                         ? Center(
-                            child: kTxt(text: 'No transactions yet'),
+                            child: kTxt(text: 'Loading...'),
                           )
-                        : ListView.builder(
-                            itemCount: orderProvider.trns.length > 10
-                                ? 10
-                                : orderProvider.trns.length,
-                            itemBuilder: (context, index) {
-                              var order = orderProvider.trns[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                    bottom: 0.8 * size.height / 100),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    goTo(
-                                        context,
-                                        FullRecentOrderScreen(
-                                          status: order['status'].toString(),
-                                          orderid: order['id'].toString(),
-                                          amount: formatNumberWithCommas(
-                                              order['amount'].toString()),
-                                          fee: formatNumberWithCommas(
-                                              order['fee'].toString()),
-                                          date: formatDateTime(
-                                              order['created_at']),
-                                          name: order['role'] == 'Selling'
-                                              ? order['seller']['firstname']
-                                              : order['buyer']['firstname'],
-                                          phone: order['role'] == 'Selling'
-                                              ? order['seller']['firstname']
-                                              : order['buyer']['phone']
-                                                  .toString(),
-                                          total: formatNumberWithCommas(
-                                              order['total_amount'].toString()),
-                                          feepayer: order['escrow_fee_payer'],
-                                          type: order['role'],
-                                          description: order['description'],
-                                        ));
-                                  },
-                                  child: RecentTransactionTile(
-                                    status: order['status'].toString(),
-                                    type: order['role'],
-                                    amount: order['amount'].toString(),
-                                    datetime: order['created_at'].toString(),
-                                    title: order['reference_code'],
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
+                        : orderProvider.trns.isEmpty
+                            ? Center(
+                                child: kTxt(text: 'No transactions yet'),
+                              )
+                            : ListView.builder(
+                                itemCount: orderProvider.trns.length > 10
+                                    ? 10
+                                    : orderProvider.trns.length,
+                                itemBuilder: (context, index) {
+                                  var order = orderProvider.trns[index];
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: 0.8 * size.height / 100),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        goTo(
+                                            context,
+                                            FullRecentOrderScreen(
+                                              status:
+                                                  order['status'].toString(),
+                                              orderid: order['id'].toString(),
+                                              amount: formatNumberWithCommas(
+                                                  order['amount'].toString()),
+                                              fee: formatNumberWithCommas(
+                                                  order['fee'].toString()),
+                                              date: formatDateTime(
+                                                  order['created_at']),
+                                              name: order['role'] == 'Selling'
+                                                  ? order['seller']['firstname']
+                                                  : order['buyer']['firstname'],
+                                              phone: order['role'] == 'Selling'
+                                                  ? order['seller']['firstname']
+                                                  : order['buyer']['phone']
+                                                      .toString(),
+                                              total: formatNumberWithCommas(
+                                                  order['total_amount']
+                                                      .toString()),
+                                              feepayer:
+                                                  order['escrow_fee_payer'],
+                                              type: order['role'],
+                                              description: order['description'],
+                                            ));
+                                      },
+                                      child: RecentTransactionTile(
+                                        status: order['status'].toString(),
+                                        type: order['role'],
+                                        amount: order['amount'].toString(),
+                                        datetime:
+                                            order['created_at'].toString(),
+                                        title: order['reference_code'],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
                   ),
                 ],
               ),

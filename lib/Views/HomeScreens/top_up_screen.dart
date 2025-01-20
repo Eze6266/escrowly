@@ -7,6 +7,7 @@ import 'package:trustbridge/Controllers/Providers/TransactionProviders/transacti
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/top_up_card_widget.dart';
+import 'package:trustbridge/Views/bottom_nav.dart';
 
 class TopUpScreen extends StatefulWidget {
   const TopUpScreen({super.key});
@@ -88,6 +89,18 @@ class _TopUpScreenState extends State<TopUpScreen> {
                 },
               ),
             ),
+            GenBtn(
+              size: size,
+              width: 90,
+              height: 6,
+              btnColor: kColors.primaryColor,
+              btnText: 'I have done the transfer',
+              txtColor: kColors.whiteColor,
+              tap: () {
+                goTo(context, BottomNav(chosenmyIndex: 0));
+              },
+            ),
+            Height(h: 3),
           ],
         ),
       ),

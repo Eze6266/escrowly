@@ -116,8 +116,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
                       child: GestureDetector(
                         onTap: () {
-                          notifProvider.readNotification(
-                              id: notif['id'], context: context);
+                          notifProvider
+                              .readNotification(
+                                  id: notif['id'], context: context)
+                              .then((value) {
+                            if (value == 'true') {
+                            } else {}
+                          });
                           showNotificationDetailDialog(
                             dateTime:
                                 '${formatDateTime(notif['created_at'])} ${formatTime(notif['created_at'])}',

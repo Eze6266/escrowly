@@ -15,6 +15,9 @@ class kImages {
   static const String board1 = '$_baseImageAsset/board1.jpg';
   static const String board1png = '$_baseImageAsset/board1.png';
   static const String board2png = '$_baseImageAsset/board1.png';
+  static const String escrowsupport = '$_baseImageAsset/escrowsupport.png';
+  static const String escrowchat = '$_baseImageAsset/escrowchat.png';
+  static const String typing = '$_baseImageAsset/typing.gif';
 
   static const String board2 = '$_baseImageAsset/onboard2.jpg';
 
@@ -52,6 +55,8 @@ class kImages {
   static const String infoicon = '$_baseIconAsset/infoicon.svg';
   static const String securityicon = '$_baseIconAsset/securityicon.svg';
   static const String shopicon = '$_baseIconAsset/shop.svg';
+  static const String checksvg = '$_baseIconAsset/checksvg.svg';
+
   static const String copyIcon = '$_baseIconAsset/copy.svg';
   static const String addicon = '$_baseIconAsset/addicon.svg';
   static const String moniepointsvg = '$_baseIconAsset/moniepointsvg.svg';

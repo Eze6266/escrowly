@@ -59,9 +59,11 @@ class WhoGoPayFee extends StatelessWidget {
     super.key,
     required this.naMe,
     required this.onTap,
+    required this.txt,
   });
   bool naMe;
   Function() onTap;
+  String txt;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -69,7 +71,7 @@ class WhoGoPayFee extends StatelessWidget {
     return Row(
       children: [
         kTxt(
-          text: 'i am paying the transaction fee',
+          text: '$txt',
           size: 10,
           weight: FontWeight.w400,
           color: kColors.primaryColor,

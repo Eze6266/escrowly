@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: kTxt(
-                          text: 'Password cannot be less than 3',
+                          text: 'Password cannot be less than 6',
                           color: kColors.red,
                           size: 12,
                           weight: FontWeight.w600,

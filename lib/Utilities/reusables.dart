@@ -80,22 +80,24 @@ class Width extends StatelessWidget {
 }
 
 class kTxt extends StatelessWidget {
-  kTxt({
-    super.key,
-    this.color,
-    this.size,
-    required this.text,
-    this.weight,
-    this.textalign,
-    this.letterSpace,
-    this.maxLine,
-  });
+  kTxt(
+      {super.key,
+      this.color,
+      this.size,
+      required this.text,
+      this.weight,
+      this.textalign,
+      this.letterSpace,
+      this.maxLine,
+      this.softRap,
+      s});
   String text;
   Color? color;
   double? size, letterSpace;
   TextAlign? textalign;
   FontWeight? weight;
   int? maxLine;
+  bool? softRap;
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +112,7 @@ class kTxt extends StatelessWidget {
         letterSpacing: letterSpace ?? 0,
       ),
       textAlign: textalign ?? TextAlign.left,
+      softWrap: softRap ?? false,
       maxLines: maxLine ?? null,
       overflow: TextOverflow.ellipsis,
     );

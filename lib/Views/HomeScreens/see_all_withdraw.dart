@@ -8,6 +8,7 @@ import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/notification_detail_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
 
@@ -88,7 +89,25 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                                   padding: EdgeInsets.only(
                                       bottom: 0.8 * size.height / 100),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      showWithdrawDetailDialog(
+                                        dateTime:
+                                            '${formatDateTime(wallet['created_at'])}',
+                                        description:
+                                            wallet['narration'].toString(),
+                                        accName:
+                                            wallet['accountname'].toString(),
+                                        accNumber:
+                                            wallet['accountnumber'].toString(),
+                                        bankName: wallet['bankname'].toString(),
+                                        context: context,
+                                        title:
+                                            wallet['withdrawalid'].toString(),
+                                        status: wallet['status'].toString(),
+                                        amount: formatNumberWithCommas(
+                                            wallet['amount'].toString()),
+                                      );
+                                    },
                                     child: WalletTransactionTile(
                                       status: wallet['status'].toString(),
                                       type: '2',

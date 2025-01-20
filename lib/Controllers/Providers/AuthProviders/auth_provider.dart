@@ -645,6 +645,63 @@ class AuthProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************READ NOTIFICATION************//////////////////
+
+  /////////////////////**********************CHANGE PASSWORD************//////////////////
+
+  bool changePwdIsLoading = false;
+  var changePwdStatus, changePwdMessage;
+
+  Future<String?> changePwd({
+    required String oldPwd,
+    required String newPwd,
+    required BuildContext context,
+  }) async {
+    changePwdIsLoading = true;
+    notifyListeners();
+
+    try {
+      var response = await http.post(
+        Uri.parse('${kUrl.changePwd}'),
+        body: {
+          "oldpassword": oldPwd,
+          "password": newPwd,
+        },
+        headers: {
+          'Accept': 'application/json',
+        },
+      );
+      print('this is change password status code ${response.statusCode}');
+
+      changePwdIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        changePwdStatus = jsonDecode(responseString)['status'].toString();
+        changePwdMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return changePwdStatus;
+      } else {
+        String responseString = response.body;
+        changePwdStatus = jsonDecode(responseString)['status'].toString();
+        changePwdMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return changePwdStatus;
+      }
+    } catch (error) {
+      changePwdIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return changePwdStatus;
+  }
+
+/////////////////////**********************CHANGE PASSWORD************//////////////////
   void authNotifier() {
     notifyListeners();
   }

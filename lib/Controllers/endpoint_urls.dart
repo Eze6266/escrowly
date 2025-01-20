@@ -27,9 +27,13 @@ class kUrl {
   static String monnifyBase = 'https://api.monnify.com';
 
   static String resetPwd = '$_baseUrl/auth/reset-password';
+  static String changePwd = '$_baseUrl/user/update-password';
+
   static String readNotification = '$_baseUrl/user/notifications';
 
   static String acceptOrder = '$_baseUrl/orders/cancel';
+  static String createOrder = '$_baseUrl/orders/create';
+
   static String fetchTrxns = '$_baseUrl/orders/fetch-all';
 
   static String rejectOrder = '$_baseUrl/orders/accept';

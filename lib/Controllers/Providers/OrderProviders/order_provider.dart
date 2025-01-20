@@ -235,4 +235,156 @@ class OrderProvider extends ChangeNotifier {
   }
 
 ///////////////////**********************FETCH TRANSACTIONS*****************////////////////////
+
+  /////////////////////**********************CREATE BUYER ORDER************//////////////////
+
+  bool createBuyerOrderIsLoading = false;
+  var createBuyerOrderStatus, createBuyerOrderMessage;
+
+  Future<String?> createBuyerOrder({
+    required String email,
+    required String phone,
+    required String description,
+    required String amount,
+    required String payer,
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    createBuyerOrderIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+
+    var payload = {
+      "buyerEmail": '',
+      "sellerEmail": email,
+      "buyerPhone": '',
+      "sellerPhone": phone,
+      "delivery_date": DateTime.now().toString(),
+      "description": description,
+      "total_amount": amount,
+      "delivery_address": "Non",
+      "role": "Buying",
+      "escrow_fee_payer": payer,
+    };
+    print(payload);
+    try {
+      var response = await http.post(
+        Uri.parse('${kUrl.createOrder}'),
+        body: payload,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is create buyer order status code ${response.statusCode}');
+
+      createBuyerOrderIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        createBuyerOrderStatus =
+            jsonDecode(responseString)['status'].toString();
+        createBuyerOrderMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return createBuyerOrderStatus;
+      } else {
+        String responseString = response.body;
+        createBuyerOrderStatus =
+            jsonDecode(responseString)['status'].toString();
+        createBuyerOrderMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return createBuyerOrderStatus;
+      }
+    } catch (error) {
+      createBuyerOrderIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return createBuyerOrderStatus;
+  }
+
+/////////////////////**********************CREATE BUYER ORDER************//////////////////
+
+  /////////////////////**********************CREATE SELLER ORDER************//////////////////
+
+  bool createSellerOrderIsLoading = false;
+  var createSellerOrderStatus, createSellerOrderMessage;
+
+  Future<String?> createSellerOrder({
+    required String email,
+    required String phone,
+    required String description,
+    required String amount,
+    required String payer,
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    createSellerOrderIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+
+    var payload = {
+      "buyerEmail": email,
+      "sellerEmail": '',
+      "buyerPhone": phone,
+      "sellerPhone": '',
+      "delivery_date": DateTime.now().toString(),
+      "description": description,
+      "total_amount": amount,
+      "delivery_address": "Non",
+      "role": "Selling",
+      "escrow_fee_payer": payer,
+    };
+    print(payload);
+    try {
+      var response = await http.post(
+        Uri.parse('${kUrl.createOrder}'),
+        body: payload,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is create seller order status code ${response.statusCode}');
+
+      createSellerOrderIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        createSellerOrderStatus =
+            jsonDecode(responseString)['status'].toString();
+        createSellerOrderMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return createSellerOrderStatus;
+      } else {
+        String responseString = response.body;
+        createSellerOrderStatus =
+            jsonDecode(responseString)['status'].toString();
+        createSellerOrderMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return createSellerOrderStatus;
+      }
+    } catch (error) {
+      createSellerOrderIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return createSellerOrderStatus;
+  }
+
+/////////////////////**********************CREATE SELLER ORDER************//////////////////
 }
