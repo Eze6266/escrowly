@@ -76,16 +76,21 @@ class OrderProvider extends ChangeNotifier {
     required BuildContext context,
   }) async {
     acceptOrderIsLoading = true;
-    notifyListeners();
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString('token');
 
+    notifyListeners();
+    print('ajeeeeee $orderid');
     try {
       var response = await http.post(
         Uri.parse('${kUrl.acceptOrder}'),
         body: {
           "ID": orderid,
+          "pin": '1234',
         },
         headers: {
           'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
         },
       );
       print('this is accept order status code ${response.statusCode}');

@@ -12,6 +12,7 @@ import 'package:trustbridge/Controllers/Providers/TransactionProviders/transacti
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/Functions/greetings_function.dart';
+import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
@@ -299,8 +300,66 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     order['description'],
                                               ));
                                         },
-                                        acceptTap: () {},
-                                        rejectTap: () {},
+                                        acceptTap: () {
+                                          orderProvider
+                                              .acceptOrder(
+                                                  orderid:
+                                                      order['id'].toString(),
+                                                  context: context)
+                                              .then((value) {
+                                            if (value == 'success') {
+                                              trxnProvider.fetchWalletTrxns(
+                                                  context: context);
+
+                                              trxnProvider.fetchBalances(
+                                                  context: context);
+                                              trxnProvider.fetchWithdrawals(
+                                                  context: context);
+
+                                              trxnProvider.fetchBankList(
+                                                  context: context);
+                                              orderProvider.fetchIncomingOrder(
+                                                  context: context);
+                                              orderProvider.fetchTrxns(
+                                                  context: context);
+                                            } else {
+                                              showCustomErrorToast(
+                                                  context,
+                                                  orderProvider
+                                                      .acceptOrderMessage);
+                                            }
+                                          });
+                                        },
+                                        rejectTap: () {
+                                          orderProvider
+                                              .rejectOrder(
+                                                  orderid:
+                                                      order['id'].toString(),
+                                                  context: context)
+                                              .then((value) {
+                                            if (value == 'success') {
+                                              trxnProvider.fetchWalletTrxns(
+                                                  context: context);
+
+                                              trxnProvider.fetchBalances(
+                                                  context: context);
+                                              trxnProvider.fetchWithdrawals(
+                                                  context: context);
+
+                                              trxnProvider.fetchBankList(
+                                                  context: context);
+                                              orderProvider.fetchIncomingOrder(
+                                                  context: context);
+                                              orderProvider.fetchTrxns(
+                                                  context: context);
+                                            } else {
+                                              showCustomErrorToast(
+                                                  context,
+                                                  orderProvider
+                                                      .acceptOrderMessage);
+                                            }
+                                          });
+                                        },
                                       ),
                                     ),
                                   );

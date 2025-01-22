@@ -31,10 +31,10 @@ class kUrl {
 
   static String readNotification = '$_baseUrl/user/notifications';
 
-  static String acceptOrder = '$_baseUrl/orders/cancel';
+  static String acceptOrder = '$_baseUrl/orders/accept';
   static String createOrder = '$_baseUrl/orders/create';
 
   static String fetchTrxns = '$_baseUrl/orders/fetch-all';
 
-  static String rejectOrder = '$_baseUrl/orders/accept';
+  static String rejectOrder = '$_baseUrl/orders/reject';
 }

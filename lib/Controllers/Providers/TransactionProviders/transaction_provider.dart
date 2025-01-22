@@ -221,7 +221,7 @@ class TransactionProvider extends ChangeNotifier {
         validateAccNameStatus = jsonDecode(responseString)['status'].toString();
         validateAccNameMessage =
             jsonDecode(responseString)['message'].toString();
-        accName = jsonDecode(responseString)['data']['bank']['name'].toString();
+        accName = jsonDecode(responseString)['data']['accountName'].toString();
 
         notifyListeners();
 

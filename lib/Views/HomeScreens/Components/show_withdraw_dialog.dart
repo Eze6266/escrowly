@@ -164,36 +164,35 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
               controller: accNumCtrler,
               keyType: TextInputType.number,
               onChanged: (value) {
-                // if (accNumCtrler.text.length == 10) {
-                //   setState(() {
-                //     accNumberError = false;
-                //   });
-                //   if (trxnProvider.selectedBankName == '') {
-                //   } else {
-                //     setState(() {
-                //       trxnProvider
-                //           .validateAccName(
-                //         token: authProvider.token,
-                //         accNumber: accNumCtrler.text,
-                //         bankCode: trxnProvider.selectedBankCode,
-                //         context: context,
-                //       )
-                //           .then((value) {
-                //         if (value == 'true') {
-                //           setState(() {});
-                //         } else {
-                //           showCustomErrorToast(
-                //               context, trxnProvider.validateAccNameMessage);
-                //         }
-                //       });
-                //     });
-                //   }
-                // } else {
-                //   setState(() {
-                //     accNumberError = true;
-                //     trxnProvider.accName = '';
-                //   });
-                // }
+                if (accNumCtrler.text.length == 10) {
+                  setState(() {
+                    accNumberError = false;
+                  });
+                  if (trxnProvider.selectedBank == '') {
+                  } else {
+                    setState(() {
+                      trxnProvider
+                          .validateAccName(
+                        accNumber: accNumCtrler.text,
+                        bankCode: trxnProvider.selectedCode,
+                        context: context,
+                      )
+                          .then((value) {
+                        if (value == 'success') {
+                          setState(() {});
+                        } else {
+                          showCustomErrorToast(
+                              context, trxnProvider.validateAccNameMessage);
+                        }
+                      });
+                    });
+                  }
+                } else {
+                  setState(() {
+                    accNumberError = true;
+                    trxnProvider.accName = '';
+                  });
+                }
               },
             ),
             accNumberError
@@ -310,8 +309,12 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
               txtColor: kColors.whiteColor,
               txtWeight: FontWeight.w500,
               tap: () {
-                goBack(context);
-                showWithdrawProcessingDialog(context, confetticontroller);
+                if (trxnProvider.accName == '') {
+                  showCustomErrorToast(context, 'Unverified account');
+                } else {
+                  goBack(context);
+                  showWithdrawProcessingDialog(context, confetticontroller);
+                }
               },
             ),
           ],
