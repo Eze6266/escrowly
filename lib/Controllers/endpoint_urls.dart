@@ -18,6 +18,7 @@ class kUrl {
 
   static String verifyOtp = '$_baseUrl/auth/check-otp';
   static String fetchIncomingOrder = '$_baseUrl/orders/incoming-orders';
+  static String fetchRecenttrxn = '$_baseUrl/transactions/wallet-transaction';
 
   static String loginUser = '$_baseUrl/auth/login';
   static String getUser = '$_baseUrl/user';

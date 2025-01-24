@@ -11,14 +11,14 @@ import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/recent_order_full_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
 
-class SeeAllTrxnScreen extends StatefulWidget {
-  const SeeAllTrxnScreen({super.key});
+class SeeAllRecentTrxnScreen extends StatefulWidget {
+  const SeeAllRecentTrxnScreen({super.key});
 
   @override
-  State<SeeAllTrxnScreen> createState() => _SeeAllTrxnScreenState();
+  State<SeeAllRecentTrxnScreen> createState() => _SeeAllRecentTrxnScreenState();
 }
 
-class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
+class _SeeAllRecentTrxnScreenState extends State<SeeAllRecentTrxnScreen> {
   String _searchQuery = ''; // Store the search query
 
   @override
@@ -27,9 +27,9 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
     var orderProvider = Provider.of<OrderProvider>(context);
 
     // Filter transactions based on the search query
-    List filteredTransactions = orderProvider.trns
+    List filteredTransactions = orderProvider.recenttrxns
         .where((order) =>
-            order['reference_code'].toString().toLowerCase().contains(
+            order['amount'].toString().toLowerCase().contains(
                 _searchQuery.toLowerCase()) || // Search by description
             order['status']
                 .toString()
@@ -54,7 +54,7 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                   BckBtn(),
                   Width(w: 26),
                   kTxt(
-                    text: 'Orders',
+                    text: 'Transactions',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
@@ -63,7 +63,7 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
               Height(h: 2),
               TitleTField(
                 hasTitle: false,
-                hint: 'Search transactions',
+                hint: 'Search transactions by amount or status',
                 suffixIcon: Icon(Icons.search),
                 onChanged: (value) {
                   setState(() {
@@ -77,7 +77,7 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                   : Expanded(
                       child: orderProvider.trns.isEmpty
                           ? Center(
-                              child: kTxt(text: 'No orders yet'),
+                              child: kTxt(text: 'No transactions yet'),
                             )
                           : ListView.builder(
                               itemCount: filteredTransactions.length,
@@ -89,38 +89,37 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                                       bottom: 0.8 * size.height / 100),
                                   child: GestureDetector(
                                     onTap: () {
-                                      goTo(
-                                          context,
-                                          FullRecentOrderScreen(
-                                            status: order['status'].toString(),
-                                            orderid: order['id'].toString(),
-                                            amount: formatNumberWithCommas(
-                                                order['amount'].toString()),
-                                            fee: formatNumberWithCommas(
-                                                order['fee'].toString()),
-                                            date: formatDateTime(
-                                                order['created_at']),
-                                            name: order['role'] == 'Selling'
-                                                ? order['seller']['firstname']
-                                                : order['buyer']['firstname'],
-                                            phone: order['role'] == 'Selling'
-                                                ? order['seller']['firstname']
-                                                : order['buyer']['phone']
-                                                    .toString(),
-                                            total: formatNumberWithCommas(
-                                                order['total_amount']
-                                                    .toString()),
-                                            feepayer: order['escrow_fee_payer'],
-                                            type: order['role'],
-                                            description: order['description'],
-                                          ));
+                                      // goTo(
+                                      //     context,
+                                      //     FullRecentOrderScreen(
+                                      //       status: order['status'].toString(),
+                                      //       orderid: order['id'].toString(),
+                                      //       amount: formatNumberWithCommas(
+                                      //           order['amount'].toString()),
+                                      //       fee: formatNumberWithCommas(
+                                      //           order['fee'].toString()),
+                                      //       date: formatDateTime(
+                                      //           order['created_at']),
+                                      //       name: order['role'] == 'Selling'
+                                      //           ? order['seller']['firstname']
+                                      //           : order['buyer']['firstname'],
+                                      //       phone: order['role'] == 'Selling'
+                                      //           ? order['seller']['firstname']
+                                      //           : order['buyer']['phone']
+                                      //               .toString(),
+                                      //       total: formatNumberWithCommas(
+                                      //           order['total_amount']
+                                      //               .toString()),
+                                      //       feepayer: order['escrow_fee_payer'],
+                                      //       type: order['role'],
+                                      //       description: order['description'],
+                                      //     ));
                                     },
-                                    child: RecentTransactionTile(
+                                    child: HomeRecentTransactionTile(
                                       status: order['status'].toString(),
-                                      type: order['role'],
+                                      type: order['type'],
                                       amount: order['amount'].toString(),
                                       datetime: order['created_at'].toString(),
-                                      title: order['reference_code'],
                                     ),
                                   ),
                                 );

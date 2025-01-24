@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Views/HomeScreens/home_screen.dart';
+import 'package:trustbridge/Views/Orders/orders_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/settings_screen.dart';
 import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 import 'package:trustbridge/Views/WalletScreens/wallet_screen.dart';
@@ -31,6 +32,7 @@ class _BottomNavState extends State<BottomNav> {
   List<Widget> widgetList = [
     HomeScreen(),
     WalletScreen(),
+    OrdersScreen(),
     SettingsScreen(),
   ];
 
@@ -108,6 +110,19 @@ class _BottomNavState extends State<BottomNav> {
               label: 'Wallet',
               icon: Image.asset(
                 kImages.wallet,
+                height: 2.5 * size.height / 100,
+                color: kColors.textGrey,
+              ),
+            ),
+            BottomNavigationBarItem(
+              activeIcon: Image.asset(
+                kImages.orders,
+                height: 2.5 * size.height / 100,
+                color: kColors.primaryColor,
+              ),
+              label: 'Orders',
+              icon: Image.asset(
+                kImages.orders,
                 height: 2.5 * size.height / 100,
                 color: kColors.textGrey,
               ),

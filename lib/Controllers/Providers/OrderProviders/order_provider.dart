@@ -66,21 +66,23 @@ class OrderProvider extends ChangeNotifier {
 
 ///////////////////**********************FETCH INCOMING ORDER*****************////////////////////
 
-  /////////////////////**********************ACCEPT ORDER************//////////////////
+  // Maps to track loading states for each order
+  Map<String, bool> acceptOrderLoading = {};
+  Map<String, bool> rejectOrderLoading = {};
 
-  bool acceptOrderIsLoading = false;
   var acceptOrderStatus, acceptOrderMessage;
+  var rejectOrderStatus, rejectOrderMessage;
 
   Future<String?> acceptOrder({
     required String orderid,
     required BuildContext context,
   }) async {
-    acceptOrderIsLoading = true;
+    acceptOrderLoading[orderid] = true; // Set loading for this specific order
+    notifyListeners();
+
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString('token');
 
-    notifyListeners();
-    print('ajeeeeee $orderid');
     try {
       var response = await http.post(
         Uri.parse('${kUrl.acceptOrder}'),
@@ -95,47 +97,34 @@ class OrderProvider extends ChangeNotifier {
       );
       print('this is accept order status code ${response.statusCode}');
 
-      acceptOrderIsLoading = false;
-      notifyListeners();
       var data = response.body;
       print(data);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         String responseString = response.body;
         acceptOrderStatus = jsonDecode(responseString)['status'].toString();
         acceptOrderMessage = jsonDecode(responseString)['message'];
-
-        notifyListeners();
-
-        return acceptOrderStatus;
       } else {
         String responseString = response.body;
         acceptOrderStatus = jsonDecode(responseString)['status'].toString();
         acceptOrderMessage = jsonDecode(responseString)['message'];
-        notifyListeners();
-        return acceptOrderStatus;
       }
     } catch (error) {
-      acceptOrderIsLoading = false;
-      notifyListeners();
       ErrorHandler.handleError(error, context);
       print(error);
+    } finally {
+      acceptOrderLoading[orderid] =
+          false; // Reset loading for this specific order
+      notifyListeners();
     }
-    notifyListeners();
     return acceptOrderStatus;
   }
-
-/////////////////////**********************ACCEPT ORDER************//////////////////
-
-  /////////////////////**********************REJECT ORDER************//////////////////
-
-  bool rejectOrderIsLoading = false;
-  var rejectOrderStatus, rejectOrderMessage;
 
   Future<String?> rejectOrder({
     required String orderid,
     required BuildContext context,
   }) async {
-    rejectOrderIsLoading = true;
+    rejectOrderLoading[orderid] = true; // Set loading for this specific order
     notifyListeners();
 
     try {
@@ -150,34 +139,141 @@ class OrderProvider extends ChangeNotifier {
       );
       print('this is reject order status code ${response.statusCode}');
 
-      rejectOrderIsLoading = false;
-      notifyListeners();
       var data = response.body;
       print(data);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         String responseString = response.body;
         rejectOrderStatus = jsonDecode(responseString)['status'].toString();
         rejectOrderMessage = jsonDecode(responseString)['message'];
-
-        notifyListeners();
-
-        return rejectOrderStatus;
       } else {
         String responseString = response.body;
         rejectOrderStatus = jsonDecode(responseString)['status'].toString();
         rejectOrderMessage = jsonDecode(responseString)['message'];
-        notifyListeners();
-        return rejectOrderStatus;
       }
     } catch (error) {
-      rejectOrderIsLoading = false;
-      notifyListeners();
       ErrorHandler.handleError(error, context);
       print(error);
+    } finally {
+      rejectOrderLoading[orderid] =
+          false; // Reset loading for this specific order
+      notifyListeners();
     }
-    notifyListeners();
     return rejectOrderStatus;
   }
+
+  ///////////////////**********************ACCEPT ORDER************//////////////////
+
+//   bool acceptOrderIsLoading = false;
+//   var acceptOrderStatus, acceptOrderMessage;
+
+//   Future<String?> acceptOrder({
+//     required String orderid,
+//     required BuildContext context,
+//   }) async {
+//     acceptOrderIsLoading = true;
+//     SharedPreferences pref = await SharedPreferences.getInstance();
+//     var token = pref.getString('token');
+
+//     notifyListeners();
+//     print('ajeeeeee $orderid');
+//     try {
+//       var response = await http.post(
+//         Uri.parse('${kUrl.acceptOrder}'),
+//         body: {
+//           "ID": orderid,
+//           "pin": '1234',
+//         },
+//         headers: {
+//           'Accept': 'application/json',
+//           'Authorization': 'Bearer $token',
+//         },
+//       );
+//       print('this is accept order status code ${response.statusCode}');
+
+//       acceptOrderIsLoading = false;
+//       notifyListeners();
+//       var data = response.body;
+//       print(data);
+//       if (response.statusCode == 200 || response.statusCode == 201) {
+//         String responseString = response.body;
+//         acceptOrderStatus = jsonDecode(responseString)['status'].toString();
+//         acceptOrderMessage = jsonDecode(responseString)['message'];
+
+//         notifyListeners();
+
+//         return acceptOrderStatus;
+//       } else {
+//         String responseString = response.body;
+//         acceptOrderStatus = jsonDecode(responseString)['status'].toString();
+//         acceptOrderMessage = jsonDecode(responseString)['message'];
+//         notifyListeners();
+//         return acceptOrderStatus;
+//       }
+//     } catch (error) {
+//       acceptOrderIsLoading = false;
+//       notifyListeners();
+//       ErrorHandler.handleError(error, context);
+//       print(error);
+//     }
+//     notifyListeners();
+//     return acceptOrderStatus;
+//   }
+
+// /////////////////////**********************ACCEPT ORDER************//////////////////
+
+//   /////////////////////**********************REJECT ORDER************//////////////////
+
+//   bool rejectOrderIsLoading = false;
+//   var rejectOrderStatus, rejectOrderMessage;
+
+//   Future<String?> rejectOrder({
+//     required String orderid,
+//     required BuildContext context,
+//   }) async {
+//     rejectOrderIsLoading = true;
+//     notifyListeners();
+
+//     try {
+//       var response = await http.post(
+//         Uri.parse('${kUrl.rejectOrder}'),
+//         body: {
+//           "ID": orderid,
+//         },
+//         headers: {
+//           'Accept': 'application/json',
+//         },
+//       );
+//       print('this is reject order status code ${response.statusCode}');
+
+//       rejectOrderIsLoading = false;
+//       notifyListeners();
+//       var data = response.body;
+//       print(data);
+//       if (response.statusCode == 200 || response.statusCode == 201) {
+//         String responseString = response.body;
+//         rejectOrderStatus = jsonDecode(responseString)['status'].toString();
+//         rejectOrderMessage = jsonDecode(responseString)['message'];
+
+//         notifyListeners();
+
+//         return rejectOrderStatus;
+//       } else {
+//         String responseString = response.body;
+//         rejectOrderStatus = jsonDecode(responseString)['status'].toString();
+//         rejectOrderMessage = jsonDecode(responseString)['message'];
+//         notifyListeners();
+//         return rejectOrderStatus;
+//       }
+//     } catch (error) {
+//       rejectOrderIsLoading = false;
+//       notifyListeners();
+//       ErrorHandler.handleError(error, context);
+//       print(error);
+//     }
+//     notifyListeners();
+//     return rejectOrderStatus;
+//   }
 
 /////////////////////**********************REJECT ORDER************//////////////////
 
@@ -392,4 +488,61 @@ class OrderProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************CREATE SELLER ORDER************//////////////////
+
+  //**********************FETCH RECENT TRXNS*****************//
+  bool fetchRecenttrxnisLoading = false;
+  var fetchRecenttrxnStatus;
+  var fetchRecenttrxnMessage;
+
+  List recenttrxns = [];
+
+  Future<String?> fetchRecenttrxn({
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    fetchRecenttrxnisLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+    print('$token');
+    try {
+      var response = await http.get(
+        Uri.parse('${kUrl.fetchRecenttrxn}'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is fetch recent trxns ${response.statusCode}');
+
+      fetchRecenttrxnisLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        fetchRecenttrxnStatus = jsonDecode(responseString)['status'].toString();
+        recenttrxns = jsonDecode(responseString)['data'];
+
+        notifyListeners();
+
+        return fetchRecenttrxnStatus;
+      } else {
+        String responseString = response.body;
+        fetchRecenttrxnStatus = jsonDecode(responseString)['status'].toString();
+        fetchRecenttrxnMessage = jsonDecode(responseString)['statusMessage'];
+        notifyListeners();
+        return fetchRecenttrxnStatus;
+      }
+    } catch (error) {
+      fetchRecenttrxnisLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return fetchRecenttrxnStatus;
+  }
+
+///////////////////**********************FETCH RECENT TRXNS*****************////////////////////
 }

@@ -403,7 +403,7 @@ class AuthProvider extends ChangeNotifier {
         email = jsonDecode(responseString)['data']['email'].toString();
 
         firstName = jsonDecode(responseString)['data']['first_name'].toString();
-        userID = jsonDecode(responseString)['data']['_id'].toString();
+        userID = jsonDecode(responseString)['data']['id'].toString();
         lastName = jsonDecode(responseString)['data']['last_name'].toString();
         userName = jsonDecode(responseString)['data']['username'].toString();
         phone = jsonDecode(responseString)['data']['phone'].toString();

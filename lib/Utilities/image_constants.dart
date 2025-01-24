@@ -31,6 +31,7 @@ class kImages {
   static const String settings = '$_baseImageAsset/settings.png';
   static const String settings2 = '$_baseImageAsset/settings2.png';
   static const String wallet = '$_baseImageAsset/wallet.png';
+  static const String orders = '$_baseImageAsset/orders.png';
 
   static const String emmy = '$_baseImageAsset/emmy.jpg';
   static const String supportimg = '$_baseImageAsset/supportimg.jpg';

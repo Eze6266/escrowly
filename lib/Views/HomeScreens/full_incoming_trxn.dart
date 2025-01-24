@@ -46,8 +46,13 @@ class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
     Size size = MediaQuery.of(context).size;
     var orderProvider = Provider.of<OrderProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
-    acceptIsLoading = Provider.of<OrderProvider>(context).acceptOrderIsLoading;
-    rejectIsLoading = Provider.of<OrderProvider>(context).rejectOrderIsLoading;
+    acceptIsLoading =
+        orderProvider.acceptOrderLoading[widget.orderid.toString()] ?? false;
+    rejectIsLoading =
+        orderProvider.rejectOrderLoading[widget.orderid.toString()] ?? false;
+
+    // acceptIsLoading = Provider.of<OrderProvider>(context).acceptOrderIsLoading;
+    // rejectIsLoading = Provider.of<OrderProvider>(context).rejectOrderIsLoading;
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,

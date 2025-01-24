@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:text_scroll/text_scroll.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
@@ -211,6 +213,88 @@ class RecentTransactionTile extends StatelessWidget {
   }
 }
 
+class HomeRecentTransactionTile extends StatelessWidget {
+  HomeRecentTransactionTile({
+    super.key,
+    required this.amount,
+    required this.type,
+    required this.status,
+    required this.datetime,
+  });
+  String type, amount, status, datetime;
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 2 * size.width / 100,
+        vertical: 1 * size.height / 100,
+      ),
+      height: 7 * size.height / 100,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: kColors.whiteColor,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              kTxt(
+                text: getHomeTitleTxt(type),
+                size: 13,
+                weight: FontWeight.w500,
+              ),
+              Height(h: 0.3),
+              kTxt(
+                text: '${formatDateTime(datetime)}',
+                size: 11,
+                weight: FontWeight.w400,
+                color: kColors.textGrey,
+              ),
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 0.8 * size.width / 100,
+                  vertical: 0.1 * size.height / 100,
+                ),
+                decoration: BoxDecoration(
+                  color: getHomeStatusTxtColor(status).withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: kTxt(
+                    text: getHomeStatusTxt(status),
+                    size: 10,
+                    color: getHomeStatusTxtColor(status),
+                    weight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Height(h: 1),
+              kTxt(
+                text: 'N${formatNumberWithCommas(amount)}',
+                size: 12,
+                weight: FontWeight.w600,
+                color: kColors.blackColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class WalletTransactionTile extends StatelessWidget {
   WalletTransactionTile({
     super.key,
@@ -307,6 +391,20 @@ Color getStatusTxtColor(String status) {
   }
 }
 
+Color getHomeStatusTxtColor(String status) {
+  if (status == '0') {
+    return kColors.orange;
+  } else if (status == '1') {
+    return kColors.greenColor;
+  } else if (status == '2') {
+    return kColors.red;
+  } else if (status == '3') {
+    return kColors.purple;
+  } else {
+    return kColors.red;
+  }
+}
+
 String getStatusTxt(String status) {
   if (status == '0') {
     return 'Pending';
@@ -318,6 +416,20 @@ String getStatusTxt(String status) {
     return 'Completed';
   } else {
     return 'Cancelled';
+  }
+}
+
+String getHomeStatusTxt(String status) {
+  if (status == '0') {
+    return 'Pending';
+  } else if (status == '1') {
+    return 'Successful';
+  } else if (status == '2') {
+    return 'Failed';
+  } else if (status == '3') {
+    return 'Reversed';
+  } else {
+    return 'Unknown';
   }
 }
 
@@ -344,6 +456,18 @@ String getTitleTxt(String type) {
     return 'Account Topup';
   } else {
     return 'Cancelled Escrow';
+  }
+}
+
+String getHomeTitleTxt(String type) {
+  if (type == '0') {
+    return 'Deposit';
+  } else if (type == '1') {
+    return 'Withdrawal';
+  } else if (type == '2') {
+    return 'Order Payment';
+  } else {
+    return 'Unknown';
   }
 }
 
@@ -460,14 +584,17 @@ class IncomingOrdersBox extends StatelessWidget {
     required this.sender,
     required this.type,
     required this.orderID,
-    required this.acceptIsLoading,
-    required this.rejectIsLoading,
+    required this.userid,
+    required this.isAcceptLoading,
+    required this.isRejectLoading,
     this.width,
   });
-  bool acceptIsLoading, rejectIsLoading;
-  String date, amount, fee, sender, type, orderID;
-  Function() acceptTap, rejectTap, viewTap;
-  double? width;
+
+  final bool isAcceptLoading, isRejectLoading;
+  final String date, amount, fee, sender, type, orderID, userid;
+  final Function() acceptTap, rejectTap, viewTap;
+  final double? width;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -480,14 +607,11 @@ class IncomingOrdersBox extends StatelessWidget {
           horizontal: 2 * size.width / 100,
           vertical: 0.7 * size.height / 100,
         ),
-        // height: 18 * size.height / 100,
         width: (width ?? 84) * size.width / 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: kColors.whiteColor,
-          border: Border.all(
-            color: kColors.whitishGrey,
-          ),
+          border: Border.all(color: kColors.whitishGrey),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -496,16 +620,12 @@ class IncomingOrdersBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     CircleAvatar(
                       radius: 18,
                       backgroundColor: kColors.primaryColor.withOpacity(0.2),
-                      child: Icon(
-                        Icons.shopping_cart,
-                        color: kColors.primaryColor,
-                        size: 18,
-                      ),
+                      child: Icon(Icons.shopping_cart,
+                          color: kColors.primaryColor, size: 18),
                     ),
                     Width(w: 3),
                     kTxt(
@@ -531,7 +651,9 @@ class IncomingOrdersBox extends StatelessWidget {
             ),
             Height(h: 1),
             kTxt(
-              text: 'You have an order invitation to join, From $sender',
+              text: (userid == Provider.of<AuthProvider>(context).userID)
+                  ? 'You sent an order invitation for $sender'
+                  : 'You have an order invitation to join, From $sender',
               maxLine: 2,
               color: kColors.blackColor,
               size: 14,
@@ -575,68 +697,46 @@ class IncomingOrdersBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                acceptIsLoading
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 2 * size.width / 100),
-                        child: Center(
-                          child: SizedBox(
-                            height: 1.8 * size.height / 100,
-                            width: 4.2 * size.width / 100,
-                            child: CircularProgressIndicator(
-                              color: kColors.primaryColor,
-                            ),
+                isAcceptLoading
+                    ? Center(
+                        child: SizedBox(
+                          height: 1.8 * size.height / 100,
+                          width: 4.2 * size.width / 100,
+                          child: CircularProgressIndicator(
+                            color: kColors.primaryColor,
                           ),
                         ),
                       )
-                    : rejectIsLoading
-                        ? kTxt(
-                            text: '  Accept',
-                            size: 15,
-                            color: kColors.textGrey,
-                            weight: FontWeight.w500,
-                            maxLine: 1,
-                          )
-                        : GestureDetector(
-                            onTap: acceptTap,
-                            child: kTxt(
-                              text: '  Accept',
-                              size: 15,
-                              color: kColors.primaryColor,
-                              weight: FontWeight.w500,
-                              maxLine: 1,
-                            ),
-                          ),
-                rejectIsLoading
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 2 * size.width / 100),
-                        child: Center(
-                          child: SizedBox(
-                            height: 1.8 * size.height / 100,
-                            width: 4.2 * size.width / 100,
-                            child: CircularProgressIndicator(
-                              color: kColors.red,
-                            ),
+                    : GestureDetector(
+                        onTap: acceptTap,
+                        child: kTxt(
+                          text: '  Accept',
+                          size: 15,
+                          color: kColors.primaryColor,
+                          weight: FontWeight.w500,
+                          maxLine: 1,
+                        ),
+                      ),
+                isRejectLoading
+                    ? Center(
+                        child: SizedBox(
+                          height: 1.8 * size.height / 100,
+                          width: 4.2 * size.width / 100,
+                          child: CircularProgressIndicator(
+                            color: kColors.red,
                           ),
                         ),
                       )
-                    : acceptIsLoading
-                        ? kTxt(
-                            text: 'Reject  ',
-                            size: 15,
-                            color: kColors.textGrey,
-                            weight: FontWeight.w500,
-                            maxLine: 1,
-                          )
-                        : GestureDetector(
-                            onTap: rejectTap,
-                            child: kTxt(
-                              text: 'Reject  ',
-                              size: 15,
-                              color: kColors.red,
-                              weight: FontWeight.w500,
-                              maxLine: 1,
-                            ),
-                          ),
+                    : GestureDetector(
+                        onTap: rejectTap,
+                        child: kTxt(
+                          text: 'Reject  ',
+                          size: 15,
+                          color: kColors.red,
+                          weight: FontWeight.w500,
+                          maxLine: 1,
+                        ),
+                      ),
               ],
             ),
           ],
