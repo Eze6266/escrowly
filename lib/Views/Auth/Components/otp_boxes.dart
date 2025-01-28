@@ -38,17 +38,15 @@ class OTPBoxes extends StatelessWidget {
         decoration: InputDecoration(
           hintText: '',
           hintStyle: TextStyle(fontSize: 13),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+          focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: kColors.whitishGrey,
+              color: kColors.blackColor,
               width: 2.0,
             ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+          enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
-              color: Color(0xffd2d2d2),
+              color: kColors.blackColor,
               width: 2.0,
             ),
           ),

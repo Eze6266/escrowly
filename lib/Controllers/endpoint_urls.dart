@@ -6,6 +6,8 @@ class kUrl {
   static String secret = dotenv.env['SECRET'] ?? 'FALL_BACK_TEXT';
 
   static String sendOtp = '$_baseUrl/auth/get-started';
+  static String sendForgotpwdotp = '$_baseUrl/auth/forgot-password-with-email';
+
   static String fetchAccNumbers = '$_baseUrl/user/get-account-details';
 
   static String registerUser = '$_baseUrl/auth/register';

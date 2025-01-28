@@ -21,22 +21,22 @@ class OnboardingContent extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Image.asset(
-          imgUrl,
-          height: 30 * size.height / 100,
-          width: 80 * size.width / 100,
-        ),
-        Height(h: 10),
         SizedBox(
           width: 80 * size.width / 100,
           child: kTxt(
             text: '$subText',
-            weight: FontWeight.w600,
-            color: kColors.textGrey,
-            size: 14,
+            weight: FontWeight.w700,
+            color: kColors.blackColor,
+            size: 18,
             textalign: TextAlign.center,
             maxLine: 10,
           ),
+        ),
+        Height(h: 24),
+        Image.asset(
+          imgUrl,
+          height: 30 * size.height / 100,
+          width: 80 * size.width / 100,
         ),
       ],
     );

@@ -78,14 +78,15 @@ class _SplashScreenState extends State<SplashScreen> {
               Height(h: 0.5),
               Image.asset(
                 kImages.appicon,
-                height: 15 * size.height / 100,
+                height: 10 * size.height / 100,
               ),
+              Height(h: 1),
               Text(
                 'Escrowly',
-                style: GoogleFonts.acme(
-                  fontSize: 30,
-                  color: kColors.primaryColor,
-                  fontWeight: FontWeight.w700,
+                style: GoogleFonts.poppins(
+                  fontSize: 25,
+                  color: kColors.blackColor,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],

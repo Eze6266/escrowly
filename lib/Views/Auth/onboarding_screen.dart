@@ -78,11 +78,11 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               SmoothPageIndicator(
                 effect: WormEffect(
                   dotColor: kColors.whitishGrey,
-                  dotHeight: 1 * size.height / 100,
-                  dotWidth: 9 * size.width / 100,
+                  dotHeight: 0.3 * size.height / 100,
+                  dotWidth: 12 * size.width / 100,
                   spacing: 13,
                   radius: 100,
-                  activeDotColor: kColors.primaryColor,
+                  activeDotColor: kColors.blackColor,
                   type: WormType.normal,
                 ),
                 count: 2,
@@ -100,14 +100,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                     OnboardingContent(
                       size: size,
                       subText:
-                          'From Start to Finish, We Protect Your Payments and Ensure Peace of Mind on Every Deal!.',
+                          'Shop with confidence,\nevery transaction is secure.',
                       imgUrl: kImages.onboard4,
                     ),
                     OnboardingContent(
                       align: TextAlign.center,
                       size: size,
-                      subText:
-                          'An Escrow Experience Designed for Safety—Protecting Your Transactions Every Step of the Way!.',
+                      subText: 'Sell smarter,\nget paid securely and on time.',
                       imgUrl: kImages.onboard5,
                     ),
                   ],
@@ -115,32 +114,31 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               Height(h: 3),
               GenBtn(
-                size: size,
-                width: 90,
-                height: 6,
-                btnColor: kColors.primaryAccent,
-                btnText: 'Create an account',
+                borderRadius: 14,
                 txtColor: kColors.whiteColor,
-                textSize: 16,
-                txtWeight: FontWeight.w500,
-                borderRadius: 30,
+                size: size,
+                width: 80,
+                height: 6,
+                btnColor: kColors.primaryColor,
+                btnText: 'Create account',
                 tap: () async {
                   await _markOnboardingAsViewed();
                   goTo(context, SignupScreen());
                 },
               ),
-              Height(h: 3),
-              GestureDetector(
-                onTap: () async {
+              Height(h: 1.5),
+              GenBtn(
+                borderRadius: 14,
+                borderColor: kColors.textGrey,
+                size: size,
+                width: 80,
+                height: 6,
+                btnColor: kColors.whiteColor,
+                btnText: 'Login to existing account',
+                tap: () async {
                   await _markOnboardingAsViewed();
                   goTo(context, LoginScreen());
                 },
-                child: kTxt(
-                  text: 'Login as Existing User',
-                  color: kColors.primaryColor,
-                  size: 16,
-                  weight: FontWeight.w600,
-                ),
               ),
               Height(h: 2),
             ],

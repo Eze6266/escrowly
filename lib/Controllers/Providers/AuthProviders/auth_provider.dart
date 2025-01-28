@@ -263,7 +263,7 @@ class AuthProvider extends ChangeNotifier {
 
     try {
       var response = await http.post(
-        Uri.parse('${kUrl.sendOtp}'),
+        Uri.parse('${kUrl.sendForgotpwdotp}'),
         body: {
           "email": email,
         },

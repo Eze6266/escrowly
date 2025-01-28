@@ -270,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               : null,
                                       orderID:
                                           order['reference_code'].toString(),
-                                      userid: order['id'].toString(),
+                                      userid: order['userid'].toString(),
                                       amount: formatNumberWithCommas(
                                           order['amount'].toString()),
                                       fee: formatNumberWithCommas(

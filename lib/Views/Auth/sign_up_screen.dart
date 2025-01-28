@@ -11,6 +11,7 @@ import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
+import 'package:trustbridge/Views/Auth/nin_screen.dart';
 import 'package:trustbridge/Views/Auth/verify_otp_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -51,6 +52,7 @@ class _SignupScreenState extends State<SignupScreen> {
         Provider.of<AuthProvider>(context).getTokenisLoading);
 
     return Scaffold(
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         toolbarHeight: 0.001,
         backgroundColor: kColors.primaryColor,
@@ -60,19 +62,21 @@ class _SignupScreenState extends State<SignupScreen> {
           padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
-              Image.asset(
-                kImages.appwordwhite,
-                height: 8 * size.height / 100,
-              ),
+              // Image.asset(
+              //   kImages.appwordwhite,
+              //   height: 8 * size.height / 100,
+              // ),
+              Height(h: 2),
               kTxt(
-                text: 'Get Started',
+                text: 'Create an account',
                 size: 19,
                 weight: FontWeight.w700,
               ),
               Height(h: 3),
               TitleTField(
+                radius: 10,
                 width: 93 * size.width / 100,
-                elevated: true,
+                elevated: false,
                 title: 'First Name',
                 hint: 'Enter first name',
                 isLoading: isLoading,
@@ -106,7 +110,8 @@ class _SignupScreenState extends State<SignupScreen> {
               Height(h: 3),
               TitleTField(
                 width: 93 * size.width / 100,
-                elevated: true,
+                elevated: false,
+                radius: 10,
                 title: 'Last Name',
                 hint: 'Enter last name',
                 isLoading: isLoading,
@@ -139,8 +144,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   : SizedBox.shrink(),
               Height(h: 2),
               TitleTField(
+                radius: 10,
                 width: 93 * size.width / 100,
-                elevated: true,
+                elevated: false,
                 title: 'Email',
                 hint: 'Enter your email',
                 controller: emailCtrler,
@@ -171,42 +177,44 @@ class _SignupScreenState extends State<SignupScreen> {
                     )
                   : SizedBox.shrink(),
               Height(h: 2),
+              // TitleTField(
+              //   radius: 10,
+              //   width: 93 * size.width / 100,
+              //   elevated: false,
+              //   title: 'NIN',
+              //   hint: 'Enter your nin',
+              //   controller: ninCtrler,
+              //   isLoading: isLoading,
+              //   keyType: TextInputType.number,
+              //   onChanged: (value) {
+              //     setState(() {
+              //       if (ninCtrler.text.length < 10) {
+              //         ninError = true;
+              //       } else {
+              //         ninError = false;
+              //       }
+              //     });
+              //   },
+              // ),
+              // ninError
+              //     ? Padding(
+              //         padding: EdgeInsets.only(left: 2 * size.width / 100),
+              //         child: Align(
+              //           alignment: Alignment.centerLeft,
+              //           child: kTxt(
+              //             text: 'Enter a valid nin',
+              //             color: kColors.red,
+              //             size: 12,
+              //             weight: FontWeight.w600,
+              //           ),
+              //         ),
+              //       )
+              //     : SizedBox.shrink(),
+              // Height(h: 2),
               TitleTField(
+                radius: 10,
                 width: 93 * size.width / 100,
-                elevated: true,
-                title: 'NIN',
-                hint: 'Enter your nin',
-                controller: ninCtrler,
-                isLoading: isLoading,
-                keyType: TextInputType.number,
-                onChanged: (value) {
-                  setState(() {
-                    if (ninCtrler.text.length < 10) {
-                      ninError = true;
-                    } else {
-                      ninError = false;
-                    }
-                  });
-                },
-              ),
-              ninError
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 2 * size.width / 100),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: kTxt(
-                          text: 'Enter a valid nin',
-                          color: kColors.red,
-                          size: 12,
-                          weight: FontWeight.w600,
-                        ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-              Height(h: 2),
-              TitleTField(
-                width: 93 * size.width / 100,
-                elevated: true,
+                elevated: false,
                 title: 'Phone Number',
                 hint: 'Enter phone',
                 controller: phoneCtrler,
@@ -252,7 +260,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 width: 93 * size.width / 100,
                 obscure: pwd ? true : false,
-                elevated: true,
+                elevated: false,
+                radius: 10,
                 title: 'Create Password',
                 hint: 'Enter a password',
                 controller: pwdCtrler,
@@ -300,7 +309,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 width: 93 * size.width / 100,
                 obscure: confirmPwd ? true : false,
-                elevated: true,
+                elevated: false,
+                radius: 10,
                 title: 'Confirm Password',
                 hint: 'Re-Enter a password',
                 controller: confPwdCtrler,
@@ -350,8 +360,8 @@ class _SignupScreenState extends State<SignupScreen> {
                     // phoneCtrler.text.isEmpty ||
                     // phoneError == true
                     ? kColors.textGrey.withOpacity(0.5)
-                    : kColors.primaryAccent,
-                btnText: 'Next',
+                    : kColors.primaryColor,
+                btnText: 'Create account',
                 txtColor: kColors.whiteColor,
                 textSize: 16,
                 txtWeight: FontWeight.w500,
@@ -360,8 +370,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   if (firstNameCtrler.text.isEmpty ||
                       emailCtrler.text.isEmpty ||
                       pwdCtrler.text.isEmpty ||
-                      ninCtrler.text.isEmpty ||
-                      ninError == true ||
+                      // ninCtrler.text.isEmpty ||
+                      // ninError == true ||
                       firstNameError == true ||
                       lastNameCtrler.text.isEmpty ||
                       lastNameError == true ||
@@ -374,49 +384,63 @@ class _SignupScreenState extends State<SignupScreen> {
                         context, 'Make sure all fields are filled');
                   } else {
                     if (pwdCtrler.text == confPwdCtrler.text) {
-                      authProvider.generateToken().then((value) {
-                        if (value == 'true') {
-                          authProvider
-                              .verifyNIN(ninCtrler.text, authProvider.getToken)
-                              .then(
-                            (value) {
-                              if (value == 'success') {
-                                authProvider
-                                    .senOtp(
-                                        email: emailCtrler.text,
-                                        password: pwdCtrler.text,
-                                        context: context)
-                                    .then((value) {
-                                  if (value == 'success') {
-                                    goTo(
-                                        context,
-                                        VerifyOtpScreen(
-                                          email: emailCtrler.text,
-                                          firstName: firstNameCtrler.text,
-                                          lastName: lastNameCtrler.text,
-                                          nin: ninCtrler.text,
-                                          number: phoneCtrler.text,
-                                          password: pwdCtrler.text,
-                                        ));
-                                  } else {
-                                    showCustomErrorToast(
-                                        context, authProvider.senOtpMessage);
-                                  }
-                                });
-                              } else {
-                                showCustomErrorToast(
-                                    context, authProvider.verifyNinMessage);
-                              }
-                            },
-                          );
-                        } else {
-                          showCustomErrorToast(
-                              context, authProvider.getTokenMessage);
-                        }
-                      });
                     } else {
                       showCustomErrorToast(context, 'Passwords don\'t match');
                     }
+                    goTo(
+                        context,
+                        NinScreen(
+                          email: emailCtrler.text,
+                          firstName: firstNameCtrler.text,
+                          lastName: lastNameCtrler.text,
+                          number: ninCtrler.text,
+                          password: pwdCtrler.text,
+                        ));
+
+                    // if (pwdCtrler.text == confPwdCtrler.text) {
+                    //   authProvider.generateToken().then((value) {
+                    //     if (value == 'true') {
+                    //       authProvider
+                    //           .verifyNIN(ninCtrler.text, authProvider.getToken)
+                    //           .then(
+                    //         (value) {
+                    //           if (value == 'success') {
+                    //             authProvider
+                    //                 .senOtp(
+                    //                     email: emailCtrler.text,
+                    //                     password: pwdCtrler.text,
+                    //                     context: context)
+                    //                 .then((value) {
+                    //               if (value == 'success') {
+                    //                 goTo(
+                    //                     context,
+                    //                     VerifyOtpScreen(
+                    //                       email: emailCtrler.text,
+                    //                       firstName: firstNameCtrler.text,
+                    //                       lastName: lastNameCtrler.text,
+                    //                       nin: ninCtrler.text,
+                    //                       number: phoneCtrler.text,
+                    //                       password: pwdCtrler.text,
+                    //                     ));
+                    //               } else {
+                    //                 showCustomErrorToast(
+                    //                     context, authProvider.senOtpMessage);
+                    //               }
+                    //             });
+                    //           } else {
+                    //             showCustomErrorToast(
+                    //                 context, authProvider.verifyNinMessage);
+                    //           }
+                    //         },
+                    //       );
+                    //     } else {
+                    //       showCustomErrorToast(
+                    //           context, authProvider.getTokenMessage);
+                    //     }
+                    //   });
+                    // } else {
+                    //   showCustomErrorToast(context, 'Passwords don\'t match');
+                    // }
                   }
                 },
               ),
@@ -436,7 +460,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextSpan(
                       text: 'Login',
                       style: TextStyle(
-                        color: kColors.primaryAccent,
+                        color: kColors.primaryColor,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
@@ -446,7 +470,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ),
-              Height(h: 2),
               Height(h: 4),
             ],
           ),

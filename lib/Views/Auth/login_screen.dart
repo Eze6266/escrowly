@@ -38,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     isLoading = Provider.of<AuthProvider>(context).loginUserIsLoading;
 
     return Scaffold(
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         toolbarHeight: 0.001,
         backgroundColor: kColors.primaryColor,
@@ -47,12 +48,14 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
-              Image.asset(
-                kImages.appwordwhite,
-                height: 8 * size.height / 100,
-              ),
+              Height(h: 3),
+              // Image.asset(
+              //   kImages.appwordwhite,
+              //   height: 8 * size.height / 100,
+              // ),
+
               kTxt(
-                text: 'Login To Your Account',
+                text: 'Get right back in!',
                 size: 19,
                 weight: FontWeight.w700,
               ),
@@ -60,9 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
               TitleTField(
                 height: 6.5 * size.height / 100,
                 width: 93 * size.width / 100,
-                elevated: true,
-                title: 'Username/Email',
-                hint: 'Type in your username or email',
+                elevated: false,
+                radius: 10,
+                title: 'Your email address',
+                hint: 'Enter your email address',
                 controller: emailCtrler,
                 isLoading: isLoading,
                 keyType: TextInputType.emailAddress,
@@ -106,8 +110,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 width: 93 * size.width / 100,
                 obscure: pwd ? true : false,
-                elevated: true,
-                title: 'Password',
+                elevated: false,
+                radius: 10,
+                title: 'Your password',
                 hint: 'Type in your password',
                 controller: pwdCtrler,
                 isLoading: isLoading,
@@ -140,9 +145,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   : SizedBox.shrink(),
               Height(h: 2),
               Padding(
-                padding: EdgeInsets.only(left: 2 * size.width / 100),
+                padding: EdgeInsets.only(right: 2 * size.width / 100),
                 child: Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: Alignment.centerRight,
                   child: GestureDetector(
                     onTap: () {
                       goTo(context, ForgotPasswordScreen());
@@ -156,65 +161,50 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              Height(h: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  GenBtn(
-                    size: size,
-                    width: biometricApi.isBiometricSupported ? 78 : 90,
-                    height: 6,
-                    btnColor: emailCtrler.text.isEmpty ||
-                            emailError == true ||
-                            pwdCtrler.text.isEmpty ||
-                            pwdError == true
-                        ? kColors.textGrey.withOpacity(0.5)
-                        : kColors.primaryColor,
-                    btnText: 'Login',
-                    txtColor: kColors.whiteColor,
-                    textSize: 16,
-                    isLoading: isLoading,
-                    txtWeight: FontWeight.w500,
-                    borderRadius: 8,
-                    tap: () {
-                      if (emailCtrler.text.isEmpty ||
-                          emailError == true ||
-                          pwdCtrler.text.isEmpty ||
-                          pwdError == true) {
-                        showCustomErrorToast(
-                            context, 'Make sure all fields are filled');
+              Height(h: 10),
+              GenBtn(
+                size: size,
+                width: 80,
+                height: 6,
+                btnColor: emailCtrler.text.isEmpty ||
+                        emailError == true ||
+                        pwdCtrler.text.isEmpty ||
+                        pwdError == true
+                    ? kColors.textGrey.withOpacity(0.5)
+                    : kColors.primaryColor,
+                btnText: 'Login',
+                txtColor: kColors.whiteColor,
+                textSize: 16,
+                isLoading: isLoading,
+                txtWeight: FontWeight.w500,
+                borderRadius: 10,
+                tap: () {
+                  if (emailCtrler.text.isEmpty ||
+                      emailError == true ||
+                      pwdCtrler.text.isEmpty ||
+                      pwdError == true) {
+                    showCustomErrorToast(
+                        context, 'Make sure all fields are filled');
+                  } else {
+                    authProvider
+                        .loginUser(
+                            email: emailCtrler.text,
+                            password: pwdCtrler.text,
+                            context: context)
+                        .then((value) {
+                      if (value == 'success') {
+                        authProvider.getUser(context: context);
+                        goTo(context, BottomNav(chosenmyIndex: 0));
                       } else {
-                        authProvider
-                            .loginUser(
-                                email: emailCtrler.text,
-                                password: pwdCtrler.text,
-                                context: context)
-                            .then((value) {
-                          if (value == 'success') {
-                            authProvider.getUser(context: context);
-                            goTo(context, BottomNav(chosenmyIndex: 0));
-                          } else {
-                            showCustomErrorToast(
-                                context, authProvider.loginUserMessage);
-                          }
-                        });
+                        showCustomErrorToast(
+                            context, authProvider.loginUserMessage);
                       }
-                    },
-                  ),
-                  biometricApi.isBiometricSupported
-                      ? Width(w: 2)
-                      : SizedBox.shrink(),
-                  biometricApi.isBiometricSupported
-                      ? GestureDetector(
-                          onTap: () {
-                            goTo(context, BottomNav(chosenmyIndex: 0));
-                          },
-                          child: BiometricScan(),
-                        )
-                      : SizedBox.shrink(),
-                ],
+                    });
+                  }
+                },
               ),
               Height(h: 2),
+
               RichText(
                 text: TextSpan(
                   style: TextStyle(
@@ -240,6 +230,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
+              Height(h: 6),
+              biometricApi.isBiometricSupported
+                  ? Width(w: 2)
+                  : SizedBox.shrink(),
+              biometricApi.isBiometricSupported
+                  ? GestureDetector(
+                      onTap: () {
+                        goTo(context, BottomNav(chosenmyIndex: 0));
+                      },
+                      child: BiometricScan(),
+                    )
+                  : SizedBox.shrink(),
             ],
           ),
         ),

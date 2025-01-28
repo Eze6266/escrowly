@@ -30,6 +30,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     isLoading = Provider.of<AuthProvider>(context).sendPwdOtpIsLoading;
 
     return Scaffold(
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         toolbarHeight: 0.001,
         backgroundColor: kColors.primaryColor,
@@ -65,9 +66,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Height(h: 3),
             TitleTField(
               width: 93 * size.width / 100,
-              elevated: true,
-              title: 'Business Email',
-              hint: 'Enter business email',
+              elevated: false,
+              radius: 10,
+              title: 'Your email address',
+              hint: 'Enter email address',
               controller: emailCtrler,
               isLoading: isLoading,
               keyType: TextInputType.emailAddress,
@@ -95,18 +97,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                   )
                 : SizedBox.shrink(),
-            Height(h: 4),
+            Height(h: 6),
             GenBtn(
               size: size,
-              width: 90,
+              width: 80,
               isLoading: isLoading,
               height: 6,
-              btnColor: kColors.primaryAccent,
-              btnText: 'Reset Password',
+              btnColor: kColors.primaryColor,
+              btnText: 'Send reset link',
               txtColor: kColors.whiteColor,
               textSize: 16,
               txtWeight: FontWeight.w500,
-              borderRadius: 8,
+              borderRadius: 12,
               tap: () {
                 if (emailError == true || emailCtrler.text.isEmpty) {
                   showCustomErrorToast(context, 'Enter a valid email');
@@ -126,6 +128,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               },
             ),
             Height(h: 2),
+            GestureDetector(
+              onTap: () {
+                goBack(context);
+              },
+              child: kTxt(
+                text: 'Go back to login',
+                color: kColors.primaryColor,
+                size: 13,
+                weight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),

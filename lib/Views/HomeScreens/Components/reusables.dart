@@ -650,15 +650,18 @@ class IncomingOrdersBox extends StatelessWidget {
               ],
             ),
             Height(h: 1),
-            kTxt(
-              text: (userid == Provider.of<AuthProvider>(context).userID)
-                  ? 'You sent an order invitation for $sender'
-                  : 'You have an order invitation to join, From $sender',
-              maxLine: 2,
-              color: kColors.blackColor,
-              size: 14,
-              textalign: TextAlign.left,
-              weight: FontWeight.w500,
+            SizedBox(
+              width: 80 * size.width / 100,
+              child: kTxt(
+                text: (userid == Provider.of<AuthProvider>(context).userID)
+                    ? 'You sent an order invitation for $sender'
+                    : 'You have an order invitation to join, From $sender',
+                maxLine: 2,
+                color: kColors.blackColor,
+                size: 14,
+                textalign: TextAlign.left,
+                weight: FontWeight.w500,
+              ),
             ),
             Align(
               alignment: Alignment.centerLeft,
@@ -707,16 +710,18 @@ class IncomingOrdersBox extends StatelessWidget {
                           ),
                         ),
                       )
-                    : GestureDetector(
-                        onTap: acceptTap,
-                        child: kTxt(
-                          text: '  Accept',
-                          size: 15,
-                          color: kColors.primaryColor,
-                          weight: FontWeight.w500,
-                          maxLine: 1,
-                        ),
-                      ),
+                    : (userid == Provider.of<AuthProvider>(context).userID)
+                        ? SizedBox.shrink()
+                        : GestureDetector(
+                            onTap: acceptTap,
+                            child: kTxt(
+                              text: '  Accept',
+                              size: 15,
+                              color: kColors.primaryColor,
+                              weight: FontWeight.w500,
+                              maxLine: 1,
+                            ),
+                          ),
                 isRejectLoading
                     ? Center(
                         child: SizedBox(
@@ -730,7 +735,10 @@ class IncomingOrdersBox extends StatelessWidget {
                     : GestureDetector(
                         onTap: rejectTap,
                         child: kTxt(
-                          text: 'Reject  ',
+                          text: (userid ==
+                                  Provider.of<AuthProvider>(context).userID)
+                              ? 'Cancel'
+                              : 'Reject  ',
                           size: 15,
                           color: kColors.red,
                           weight: FontWeight.w500,

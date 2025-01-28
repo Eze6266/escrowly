@@ -8,6 +8,7 @@ import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 
 class FullRecentOrderScreen extends StatefulWidget {
   FullRecentOrderScreen({
@@ -127,7 +128,11 @@ class _FullRecentOrderScreenState extends State<FullRecentOrderScreen> {
                       btnColor: isLoading ? kColors.textGrey : kColors.red,
                       btnText: 'Raise Dispute',
                       txtColor: kColors.whiteColor,
-                      tap: isLoading ? () {} : () {},
+                      tap: isLoading
+                          ? () {}
+                          : () {
+                              goTo(context, SupportScreen());
+                            },
                     )
                   : SizedBox.shrink(),
               Height(h: 1),

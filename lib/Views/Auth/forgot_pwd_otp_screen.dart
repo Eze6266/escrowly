@@ -181,15 +181,15 @@ class _ForgotPasswordOtpScrenState extends State<ForgotPasswordOtpScren> {
             Height(h: 3),
             GenBtn(
               size: size,
-              width: 90,
+              width: 80,
               isLoading: isLoading,
               height: 6,
-              btnColor: kColors.primaryAccent,
+              btnColor: kColors.primaryColor,
               btnText: 'Proceed',
               txtColor: kColors.whiteColor,
               textSize: 16,
               txtWeight: FontWeight.w500,
-              borderRadius: 8,
+              borderRadius: 10,
               tap: () {
                 if (otpCtrler.text.isEmpty || otpCtrler.text.length < 4) {
                   showCustomErrorToast(context, 'Enter a valid code');

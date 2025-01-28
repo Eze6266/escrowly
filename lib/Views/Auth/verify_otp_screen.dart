@@ -105,17 +105,17 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                   ),
             Height(h: 2),
             kTxt(
-              text: 'Enter 4-digit Verification code',
+              text: 'Almost there!',
               color: kColors.blackColor,
               weight: FontWeight.w600,
               size: 18,
             ),
             Height(h: 2),
             SizedBox(
-              width: 70 * size.width / 100,
+              width: 80 * size.width / 100,
               child: kTxt(
                 text:
-                    'Code sent to ${widget.email}. This code will expire in 01:30',
+                    'We\'ve emailed a code to ${widget.email}. Enter the code to continue',
                 color: kColors.textGrey,
                 weight: FontWeight.w500,
                 size: 14,
@@ -221,51 +221,100 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
             Height(h: 2),
             sendcodeagain
                 ? SizedBox.shrink()
-                : GenBtn(
-                    size: size,
-                    width: 27,
-                    height: 4,
-                    btnColor: kColors.primaryBg,
-                    isLoading: sendCodeIsLoading,
-                    btnText: 'Resend code',
-                    txtColor: kColors.primaryColor,
-                    textSize: 14,
-                    txtWeight: FontWeight.w600,
-                    borderRadius: 10,
-                    tap: () {
-                      authProvider
-                          .senOtp(
-                              email: widget.email,
-                              password: widget.password,
-                              context: context)
-                          .then((value) {
-                        if (value == 'success') {
-                          sendcodeagain = true;
-                          showCustomSuccessToast(
-                              context, 'Otp sent successfully');
-                          setState(() {
-                            start = 60;
-                            startTimer();
-                          });
-                        } else {
-                          showCustomErrorToast(
-                              context, authProvider.senOtpMessage);
-                        }
-                      });
-                    },
-                  ),
+                : sendCodeIsLoading
+                    ? Center(
+                        child: SizedBox(
+                          height: 2 * size.height / 100,
+                          width: 4 * size.width / 100,
+                          child: CircularProgressIndicator(
+                            color: kColors.primaryColor,
+                          ),
+                        ),
+                      )
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          kTxt(
+                            text: 'Didn\'t receive a code? ',
+                            color: kColors.textGrey,
+                            size: 13,
+                            weight: FontWeight.w400,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              authProvider
+                                  .senOtp(
+                                      email: widget.email,
+                                      password: widget.password,
+                                      context: context)
+                                  .then((value) {
+                                if (value == 'success') {
+                                  sendcodeagain = true;
+                                  showCustomSuccessToast(
+                                      context, 'Otp sent successfully');
+                                  setState(() {
+                                    start = 60;
+                                    startTimer();
+                                  });
+                                } else {
+                                  showCustomErrorToast(
+                                      context, authProvider.senOtpMessage);
+                                }
+                              });
+                            },
+                            child: kTxt(
+                              text: 'Resend',
+                              color: kColors.primaryColor,
+                              size: 13,
+                              weight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+
+            // GenBtn(
+            //   size: size,
+            //   width: 27,
+            //   height: 4,
+            //   btnColor: kColors.primaryBg,
+            //   isLoading: sendCodeIsLoading,
+            //   btnText: 'Resend code',
+            //   txtColor: kColors.primaryColor,
+            //   textSize: 14,
+            //   txtWeight: FontWeight.w600,
+            //   borderRadius: 10,
+            //   tap: () {
+            //     authProvider
+            //         .senOtp(
+            //             email: widget.email,
+            //             password: widget.password,
+            //             context: context)
+            //         .then((value) {
+            //       if (value == 'success') {
+            //         sendcodeagain = true;
+            //         showCustomSuccessToast(context, 'Otp sent successfully');
+            //         setState(() {
+            //           start = 60;
+            //           startTimer();
+            //         });
+            //       } else {
+            //         showCustomErrorToast(context, authProvider.senOtpMessage);
+            //       }
+            //     });
+            //   },
+            // ),
             Height(h: 15),
             GenBtn(
               size: size,
-              width: 86,
+              width: 80,
               height: 6,
               isLoading: isLoading == true ? true : false,
-              btnColor: kColors.primaryAccent,
-              btnText: 'Proceed',
+              btnColor: kColors.primaryColor,
+              btnText: 'Continue',
               txtColor: kColors.whiteColor,
               textSize: 16,
               txtWeight: FontWeight.w500,
-              borderRadius: 30,
+              borderRadius: 13,
               tap: () {
                 var pin =
                     pin1.text + pin2.text + pin3.text + pin4.text + pin5.text;

@@ -103,21 +103,21 @@ class TitleTField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(radius ?? 5),
                     borderSide: BorderSide(
                       color: kColors.textGrey,
-                      width: 0.1,
+                      width: 0.5,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(radius ?? 5),
                     borderSide: BorderSide(
                       color: kColors.textGrey,
-                      width: 0.1,
+                      width: 0.5,
                     ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(radius ?? 5),
                     borderSide: BorderSide(
                       color: kColors.textGrey,
-                      width: 0.1,
+                      width: 0.5,
                     ),
                   ),
                 ),

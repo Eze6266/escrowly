@@ -45,6 +45,7 @@ class kImages {
   static const String onboard5 = '$_baseImageAsset/onboard5.png';
   static const String buyer = '$_baseImageAsset/buyer.png';
   static const String seller = '$_baseImageAsset/seller.png';
+  static const String shield = '$_baseImageAsset/shield.png';
 
   //////////////////////////******** IMAGES*************/////////////////
 
