@@ -42,6 +42,7 @@ class kImages {
 
   static const String onboard2 = '$_baseImageAsset/onboard2.jpg';
   static const String onbod1 = '$_baseImageAsset/onbod1.png';
+  static const String onbod2 = '$_baseImageAsset/onbod2.png';
 
   static const String onboard4 = '$_baseImageAsset/onboard4.png';
   static const String onboard5 = '$_baseImageAsset/onboard5.png';

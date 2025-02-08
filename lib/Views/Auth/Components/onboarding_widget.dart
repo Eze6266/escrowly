@@ -32,10 +32,10 @@ class OnboardingContent extends StatelessWidget {
             maxLine: 10,
           ),
         ),
-        Height(h: 24),
+        Height(h: 7),
         Image.asset(
           imgUrl,
-          height: 30 * size.height / 100,
+          height: 33 * size.height / 100,
           width: 80 * size.width / 100,
         ),
       ],
