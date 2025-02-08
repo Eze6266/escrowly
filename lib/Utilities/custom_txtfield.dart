@@ -71,7 +71,7 @@ class TitleTField extends StatelessWidget {
             elevation: elevated ?? false ? 1 : 0,
             borderRadius: BorderRadius.circular(radius ?? 5),
             child: SizedBox(
-              //  height: height ?? 7 * size.height / 100,
+              height: height ?? 7 * size.height / 100,
               child: TextField(
                 showCursor: true,
                 cursorRadius: Radius.zero,

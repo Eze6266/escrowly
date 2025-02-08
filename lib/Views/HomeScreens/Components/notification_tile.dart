@@ -12,9 +12,11 @@ class NotificationTile extends StatelessWidget {
     required this.time,
     required this.description,
     required this.title,
+    required this.viewTap,
     required this.status,
   });
   String title, description, date, time, status;
+  Function() viewTap;
   @override
   Widget build(BuildContext context) {
     // DateTime dateTime = DateTime.parse(datetime);
@@ -26,86 +28,86 @@ class NotificationTile extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: 1.8 * size.width / 100,
+        horizontal: 2.5 * size.width / 100,
         vertical: 1 * size.height / 100,
       ),
-      width: double.infinity,
+      width: 90 * size.width / 100,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(8),
         color: status == '1'
             ? kColors.whiteColor
-            : kColors.primaryColor.withOpacity(0.1),
+            : kColors.primaryColor.withOpacity(0.05),
         border: Border.all(
             color: status == '1'
                 ? kColors.textGrey.withOpacity(0.2)
                 : Colors.transparent),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: kColors.primaryColor.withOpacity(0.06),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    kImages.appicon,
+              Container(
+                height: 2.45 * size.height / 100,
+                width: 5.45 * size.width / 100,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(kImages.appicon),
+                    fit: BoxFit.cover,
                   ),
+                  borderRadius: BorderRadius.circular(100),
                 ),
               ),
               Width(w: 2),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // kTxt(
-                  //   text: 'Withdraw',
-                  //   color: kColors.greenColor,
-                  //   weight: FontWeight.w600,
-                  //   size: 10,
-                  // ),
-                  SizedBox(
-                    width: 58 * size.width / 100,
-                    child: kTxt(
-                      text: '$title',
-                      color: kColors.blackColor,
-                      weight: FontWeight.w600,
-                      maxLine: 1,
-                      size: 12,
-                    ),
-                  ),
-                  Height(h: 0.5),
-                  SizedBox(
-                    width: 58 * size.width / 100,
-                    child: kTxt(
-                      text: '$description',
-                      color: kColors.textGrey,
-                      weight: FontWeight.w600,
-                      maxLine: 1,
-                      size: 9,
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: 58 * size.width / 100,
+                child: kTxt(
+                  text: '$title',
+                  color: kColors.blackColor,
+                  weight: FontWeight.w600,
+                  maxLine: 1,
+                  textalign: TextAlign.left,
+                  size: 12,
+                ),
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Height(h: 1),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: SizedBox(
+              width: 70 * size.width / 100,
+              child: kTxt(
+                text: '$description',
+                color: kColors.textGrey,
+                weight: FontWeight.w600,
+                maxLine: 2,
+                textalign: TextAlign.left,
+                size: 10,
+              ),
+            ),
+          ),
+          Height(h: 0.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               kTxt(
-                text: '$date',
-                color: kColors.blackColor.withOpacity(0.6),
-                size: 9,
-                weight: FontWeight.w900,
-              ),
-              Height(h: 0.3),
-              kTxt(
-                text: '$time',
-                color: kColors.blackColor.withOpacity(0.6),
+                text: date,
                 size: 10,
-                weight: FontWeight.w900,
+                weight: FontWeight.w500,
+                color: kColors.textGrey.withOpacity(0.8),
+              ),
+              GestureDetector(
+                onTap: viewTap,
+                child: Text(
+                  'View',
+                  style: TextStyle(
+                    color: kColors.primaryColor,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w700,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
             ],
           ),

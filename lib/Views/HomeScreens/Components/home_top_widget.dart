@@ -68,9 +68,9 @@ class HomeTopWidget extends StatelessWidget {
           children: [
             GestureDetector(
               onTap: supportTap,
-              child: Icon(
-                Icons.support_agent,
-                size: 24,
+              child: SvgPicture.asset(
+                kImages.callsvg,
+                height: 2.5 * size.height / 100,
               ),
             ),
             Width(w: 2),

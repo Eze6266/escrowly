@@ -27,47 +27,33 @@ class _HomeBalanceCardState extends State<HomeBalanceCard> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 4 * size.width / 100,
-        vertical: 1 * size.height / 100,
+        vertical: 0.8 * size.height / 100,
       ),
-      height: 16 * size.height / 100,
+      height: 14 * size.height / 100,
       width: 95 * size.width / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         image: DecorationImage(
-          image: AssetImage(kImages.appword),
-          opacity: 0.13,
+          scale: 4.9,
+          image: AssetImage(
+            kImages.cardcross,
+          ),
           alignment: Alignment.topRight,
         ),
-        gradient: LinearGradient(
-          colors: [
-            kColors.primaryColor,
-            kColors.darkPrimaryColor,
-          ],
-        ),
+        color: kColors.primaryColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: kTxt(
-              text: 'Wallet Balance',
-              color: kColors.whiteColor,
-              weight: FontWeight.w400,
-            ),
-          ),
-          Height(h: 1),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               kTxt(
-                text: hideBal
-                    ? '******'
-                    : 'N${formatNumberWithCommas(widget.amount)}',
-                color: kColors.whiteColor,
-                size: 18,
-                weight: FontWeight.w600,
+                text: 'Balance in escrow',
+                color: kColors.whiteColor.withOpacity(0.5),
+                weight: FontWeight.w400,
               ),
+              Width(w: 2),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -78,9 +64,23 @@ class _HomeBalanceCardState extends State<HomeBalanceCard> {
                   hideBal
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: kColors.whiteColor,
-                  size: 20,
+                  color: kColors.whiteColor.withOpacity(0.5),
+                  size: 14,
                 ),
+              ),
+            ],
+          ),
+          Height(h: 0.5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              kTxt(
+                text: hideBal
+                    ? '******'
+                    : 'N${formatNumberWithCommas(widget.amount)}',
+                color: kColors.whiteColor,
+                size: 18,
+                weight: FontWeight.w600,
               ),
             ],
           ),
@@ -98,28 +98,27 @@ class _HomeBalanceCardState extends State<HomeBalanceCard> {
                     style: GoogleFonts.acme(
                       textStyle: TextStyle(
                         color: kColors.whiteColor,
-                        fontSize: 17,
+                        fontSize: 16,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ),
               ),
-              Material(
-                borderRadius: BorderRadius.circular(5),
-                elevation: 2,
-                child: GenBtn(
-                  size: size,
-                  width: 30,
-                  borderRadius: 5,
-                  height: 3.5,
-                  btnColor: kColors.darkGreenColor,
-                  btnText: 'Withdraw',
-                  textSize: 14,
-                  txtWeight: FontWeight.w500,
-                  txtColor: kColors.whiteColor,
-                  tap: widget.withdraw,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  kTxt(
+                    text: 'Transaction history ',
+                    size: 12,
+                    color: kColors.whiteColor,
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: kColors.whiteColor,
+                    size: 10,
+                  ),
+                ],
               ),
             ],
           ),
@@ -150,34 +149,48 @@ class _HomePayoutBalanceCardState extends State<HomePayoutBalanceCard> {
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 4 * size.width / 100,
-        vertical: 1 * size.height / 100,
+        vertical: 0.8 * size.height / 100,
       ),
-      height: 16 * size.height / 100,
+      height: 14 * size.height / 100,
       width: 95 * size.width / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(13),
         image: DecorationImage(
-          image: AssetImage(kImages.appword),
-          opacity: 0.13,
+          scale: 4.9,
+          image: AssetImage(
+            kImages.cardcross,
+          ),
           alignment: Alignment.topRight,
         ),
-        gradient: LinearGradient(
-          colors: [
-            kColors.primaryColor,
-            kColors.darkPrimaryColor,
-          ],
-        ),
+        color: kColors.primaryColor,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: kTxt(
-              text: 'Escrow Balance',
-              color: kColors.whiteColor,
-              weight: FontWeight.w400,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              kTxt(
+                text: 'Payout balance',
+                color: kColors.whiteColor.withOpacity(0.5),
+                weight: FontWeight.w400,
+              ),
+              Width(w: 2),
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    hideBal = !hideBal;
+                  });
+                },
+                child: Icon(
+                  hideBal
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
+                  color: kColors.whiteColor.withOpacity(0.5),
+                  size: 14,
+                ),
+              ),
+            ],
           ),
           Height(h: 1),
           Row(
@@ -190,20 +203,6 @@ class _HomePayoutBalanceCardState extends State<HomePayoutBalanceCard> {
                 color: kColors.whiteColor,
                 size: 18,
                 weight: FontWeight.w600,
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    hideBal = !hideBal;
-                  });
-                },
-                child: Icon(
-                  hideBal
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
-                  color: kColors.whiteColor,
-                  size: 20,
-                ),
               ),
             ],
           ),

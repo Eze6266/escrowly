@@ -41,17 +41,31 @@ class kImages {
   static const String instagram = '$_baseImageAsset/instagram.jpg';
 
   static const String onboard2 = '$_baseImageAsset/onboard2.jpg';
+  static const String onbod1 = '$_baseImageAsset/onbod1.png';
+
   static const String onboard4 = '$_baseImageAsset/onboard4.png';
   static const String onboard5 = '$_baseImageAsset/onboard5.png';
   static const String buyer = '$_baseImageAsset/buyer.png';
   static const String seller = '$_baseImageAsset/seller.png';
   static const String shield = '$_baseImageAsset/shield.png';
+  static const String cardcross = '$_baseImageAsset/cardcross.png';
+  static const String emptysvg = '$_baseImageAsset/emptysvg.png';
 
   //////////////////////////******** IMAGES*************/////////////////
 
   //////////////////////////******** SVGS*************/////////////////
 
   static const String notifbell = '$_baseIconAsset/notifbell.svg';
+  static const String homesvg = '$_baseIconAsset/homesvg.svg';
+  static const String orderssvg = '$_baseIconAsset/orderssvg.svg';
+  static const String walletsvg = '$_baseIconAsset/walletsvg.svg';
+  static const String profilesvg = '$_baseIconAsset/profilesvg.svg';
+  static const String callsvg = '$_baseIconAsset/callsvg.svg';
+  static const String createordersvg = '$_baseIconAsset/createordersvg.svg';
+  static const String fundsvg = '$_baseIconAsset/fundsvg.svg';
+  static const String withdrawsvg = '$_baseIconAsset/withdrawsvg.svg';
+  static const String copysvg = '$_baseIconAsset/copysvg.svg';
+
   static const String accounticon = '$_baseIconAsset/accountusericon.svg';
   static const String callcentericon = '$_baseIconAsset/callcentericon.svg';
   static const String infoicon = '$_baseIconAsset/infoicon.svg';

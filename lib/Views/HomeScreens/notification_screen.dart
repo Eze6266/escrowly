@@ -17,48 +17,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  List title = [
-    'Payout Completed',
-    'Escrow Request Received',
-    'Withdrawal Requested',
-    'Deposit Initiated',
-    'Withdrawal Completed',
-  ];
-  List description = [
-    'You got a payout of N50k',
-    'John Doe created an escrow with you',
-    'You requested a withdrawal of N23,000',
-    'You initiated a deposit',
-    'You requested a withdrawal of N200k',
-  ];
-  List date = [
-    'November 22, 2024',
-    'November 22, 2024',
-    'November 22, 2024',
-    'November 22, 2024',
-    'November 22, 2024',
-  ];
-  List times = [
-    '10:20AM',
-    '10:20AM',
-    '10:20AM',
-    '10:20AM',
-    '10:20AM',
-  ];
-  List status = [
-    '1',
-    '2',
-    '1',
-    '1',
-    '2',
-  ];
-  List type = [
-    'Payout',
-    'Escrow',
-    'Withdrawal',
-    'Deposit',
-    'Withdrawal',
-  ];
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -71,39 +29,52 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),
+          padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
               Height(h: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      BckBtn(),
-                      Width(w: 5),
-                      kTxt(
-                        text: 'Notifications',
-                        weight: FontWeight.w600,
-                        size: 16,
-                      ),
-                    ],
-                  ),
-                  kTxt(
-                    text: 'Mark all as read',
-                    weight: FontWeight.w500,
-                    size: 12,
-                    color: kColors.primaryColor,
-                  ),
-                ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            goBack(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: 16,
+                          ),
+                        ),
+                        Width(w: 1),
+                        kTxt(
+                          text: 'Notifications',
+                          weight: FontWeight.w600,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                    kTxt(
+                      text: 'Mark all as read',
+                      weight: FontWeight.w500,
+                      size: 12,
+                      color: kColors.primaryColor,
+                    ),
+                  ],
+                ),
               ),
               Height(h: 2),
               TitleTField(
+                height: 5 * size.height / 100,
                 hasTitle: false,
                 hint: 'Search notification',
                 suffixIcon: Icon(
                   Icons.search,
+                  size: 18,
                 ),
               ),
               Height(h: 1),
@@ -113,12 +84,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   itemBuilder: (context, index) {
                     var notif = notifProvider.notifcations[index];
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 0.8 * size.height / 100),
-                      child: GestureDetector(
-                        onTap: () {
+                      padding: EdgeInsets.only(
+                        bottom: 0.8 * size.height / 100,
+                        left: 1.5 * size.width / 100,
+                        right: 1.5 * size.width / 100,
+                      ),
+                      child: NotificationTile(
+                        viewTap: () {
                           notifProvider
                               .readNotification(
-                                  id: notif['id'], context: context)
+                                  id: notif['id'].toString(), context: context)
                               .then((value) {
                             if (value == 'true') {
                             } else {}
@@ -134,13 +109,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           notifProvider.getNotifcations(context: context);
                           notifProvider.authNotifier();
                         },
-                        child: NotificationTile(
-                          status: notif['status'],
-                          time: formatTime(notif['created_at']),
-                          description: notif['description'],
-                          date: formatDateTime(notif['created_at']),
-                          title: notif['title'],
-                        ),
+                        status: notif['status'],
+                        time: formatTime(notif['created_at']),
+                        description: notif['description'],
+                        date: formatDateTime(notif['created_at']),
+                        title: notif['title'],
                       ),
                     );
                   },

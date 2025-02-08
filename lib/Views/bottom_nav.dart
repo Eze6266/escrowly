@@ -31,8 +31,8 @@ class _BottomNavState extends State<BottomNav> {
   DateTime currentTime = DateTime.now();
   List<Widget> widgetList = [
     HomeScreen(),
-    WalletScreen(),
     OrdersScreen(),
+    WalletScreen(),
     SettingsScreen(),
   ];
 
@@ -66,7 +66,7 @@ class _BottomNavState extends State<BottomNav> {
             textStyle: TextStyle(
               color: kColors.primaryColor,
               fontSize: 11,
-              fontWeight: FontWeight.w500,
+              fontWeight: FontWeight.w600,
             ),
           ),
           selectedItemColor: kColors.primaryColor,
@@ -89,55 +89,79 @@ class _BottomNavState extends State<BottomNav> {
           currentIndex: myIndex,
           items: [
             BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                kImages.home,
-                height: 2.5 * size.height / 100,
-                color: kColors.primaryColor,
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.homesvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.primaryColor,
+                ),
               ),
               label: 'Home',
-              icon: Image.asset(
-                kImages.home2,
-                height: 2.5 * size.height / 100,
-                color: kColors.textGrey,
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.homesvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.textGrey,
+                ),
               ),
             ),
             BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                kImages.wallet,
-                height: 2.5 * size.height / 100,
-                color: kColors.primaryColor,
-              ),
-              label: 'Wallet',
-              icon: Image.asset(
-                kImages.wallet,
-                height: 2.5 * size.height / 100,
-                color: kColors.textGrey,
-              ),
-            ),
-            BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                kImages.orders,
-                height: 2.5 * size.height / 100,
-                color: kColors.primaryColor,
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.orderssvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.primaryColor,
+                ),
               ),
               label: 'Orders',
-              icon: Image.asset(
-                kImages.orders,
-                height: 2.5 * size.height / 100,
-                color: kColors.textGrey,
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.orderssvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.textGrey,
+                ),
               ),
             ),
             BottomNavigationBarItem(
-              activeIcon: Image.asset(
-                kImages.support,
-                height: 2.5 * size.height / 100,
-                color: kColors.primaryColor,
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.walletsvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.primaryColor,
+                ),
+              ),
+              label: 'Wallet',
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.walletsvg,
+                  height: 1.9 * size.height / 100,
+                  color: kColors.textGrey,
+                ),
+              ),
+            ),
+            BottomNavigationBarItem(
+              activeIcon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.profilesvg,
+                  height: 2 * size.height / 100,
+                  color: kColors.primaryColor,
+                ),
               ),
               label: 'Settings',
-              icon: Image.asset(
-                kImages.support2,
-                height: 2.5 * size.height / 100,
-                color: kColors.textGrey,
+              icon: Padding(
+                padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
+                child: SvgPicture.asset(
+                  kImages.profilesvg,
+                  height: 2 * size.height / 100,
+                  color: kColors.textGrey,
+                ),
               ),
             ),
           ],

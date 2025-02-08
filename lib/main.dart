@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ),
       child: MaterialApp(
-        title: 'TrustBridge',
+        title: 'Escrowly',
         home: SplashScreen(),
       ),
     );

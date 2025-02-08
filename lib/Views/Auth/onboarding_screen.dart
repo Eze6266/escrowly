@@ -101,7 +101,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       size: size,
                       subText:
                           'Shop with confidence,\nevery transaction is secure.',
-                      imgUrl: kImages.onboard4,
+                      imgUrl: kImages.onbod1,
                     ),
                     OnboardingContent(
                       align: TextAlign.center,

@@ -88,6 +88,8 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
                       goTo(context, FullEscrowDetailScreen());
                     },
                     child: PendingEscrowsBox(
+                      date: order['created_at'].toString(),
+                      reference: order['id'],
                       product: order['description'].toString(),
                       amount: formatNumberWithCommas(
                         order['amount'].toString(),

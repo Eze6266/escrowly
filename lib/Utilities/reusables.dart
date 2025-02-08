@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 
@@ -363,6 +364,79 @@ class SelectChip extends StatelessWidget {
             weight: FontWeight.w500,
           ),
         ),
+      ),
+    );
+  }
+}
+
+class GenBtnWSvg extends StatelessWidget {
+  GenBtnWSvg({
+    super.key,
+    required this.size,
+    required this.width,
+    required this.height,
+    required this.btnColor,
+    this.textSize,
+    this.borderColor,
+    this.txtColor,
+    required this.btnText,
+    this.txtWeight,
+    this.tap,
+    this.borderRadius,
+    this.isLoading,
+    required this.imgurl,
+  });
+
+  final Size size;
+  double? textSize, borderRadius;
+  double width;
+  double height;
+  Color? btnColor, txtColor, borderColor;
+  String btnText, imgurl;
+  FontWeight? txtWeight;
+  Function()? tap;
+  bool? isLoading;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: tap ?? () {},
+      child: Container(
+        height: height * size.height / 100,
+        width: width * size.width / 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius ?? 8),
+          color: btnColor ?? kColors.whiteColor,
+          border: Border.all(color: borderColor ?? Colors.transparent),
+        ),
+        child: isLoading ?? false
+            ? Center(
+                child: SizedBox(
+                  height: 2 * size.height / 100,
+                  width: 4 * size.width / 100,
+                  child: CircularProgressIndicator(
+                    color: kColors.whiteColor,
+                  ),
+                ),
+              )
+            : Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      imgurl,
+                      color: kColors.primaryColor,
+                      height: 2 * size.height / 100,
+                    ),
+                    Width(w: 1),
+                    kTxt(
+                      text: btnText,
+                      size: textSize ?? 14,
+                      weight: txtWeight ?? FontWeight.w600,
+                      color: txtColor ?? kColors.blackColor,
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }

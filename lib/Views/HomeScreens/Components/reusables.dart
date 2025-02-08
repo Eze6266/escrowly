@@ -16,115 +16,108 @@ class PendingEscrowsBox extends StatelessWidget {
     super.key,
     required this.amount,
     required this.product,
+    required this.date,
+    required this.reference,
     required this.type,
   });
-  String product, amount, type;
+  String product, amount, type, reference, date;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Material(
-      borderRadius: BorderRadius.circular(8),
-      elevation: 1,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 2 * size.width / 100,
-          vertical: 0.7 * size.height / 100,
-        ),
-        // height: 18 * size.height / 100,
-        width: 42 * size.width / 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: kColors.primaryColor.withOpacity(0.2),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // ClipRRect(
-                //   borderRadius: BorderRadius.circular(100),
-                //   child: Container(
-                //     height: 2.5 * size.height / 100,
-                //     width: 5.5 * size.width / 100,
-                //     decoration: BoxDecoration(
-                //       borderRadius: BorderRadius.circular(100),
-                //       color: kColors.blackColor,
-                //     ),
-                //     child: Center(
-                //       child: kTxt(
-                //         text: getFirstTwoLetters(product),
-                //         size: 8,
-                //         weight: FontWeight.w600,
-                //         color: kColors.whiteColor,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                Shimmer.fromColors(
-                  period: Duration(seconds: 2),
-                  baseColor: type == '1' ? kColors.red : kColors.primaryColor,
-                  highlightColor: kColors.starYellow,
-                  child: kTxt(
-                    text: type == '1' ? 'SELLING' : 'BUYING',
-                    color: kColors.primaryColor,
-                    size: 10,
-                    weight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-            Height(h: 0.5),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: kTxt(
-                text: '$product',
-                size: 12,
-                weight: FontWeight.w500,
-                maxLine: 1,
-                textalign: TextAlign.left,
-              ),
-            ),
-            Height(h: 0.5),
-            Text(
-              'N$amount',
-              style: GoogleFonts.acme(
-                textStyle: TextStyle(
-                  fontSize: 13,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: 3 * size.width / 100,
+        vertical: 1 * size.height / 100,
+      ),
+      // height: 18 * size.height / 100,
+      width: 42 * size.width / 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: kColors.ongoingBg,
+        border: Border.all(color: kColors.dimPrimary),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Shimmer.fromColors(
+                period: Duration(seconds: 2),
+                baseColor: type == '1' ? kColors.red : kColors.primaryColor,
+                highlightColor: kColors.starYellow,
+                child: kTxt(
+                  text: type == '1' ? 'SELLING' : 'BUYING',
                   color: kColors.primaryColor,
-                  fontWeight: FontWeight.w800,
+                  size: 10,
+                  weight: FontWeight.w900,
                 ),
               ),
+            ],
+          ),
+          Height(h: 0.5),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: kTxt(
+              text: '$product',
+              size: 12,
+              weight: FontWeight.w500,
+              maxLine: 1,
+              textalign: TextAlign.left,
             ),
-            // Divider(
-            //   color: kColors.textGrey,
-            //   thickness: 0.5,
-            // ),
-            // Height(h: 2),
-            // type == '1'
-            //     ? GenBtn(
-            //         size: size,
-            //         width: 35,
-            //         borderRadius: 5,
-            //         height: 3.5,
-            //         btnColor: kColors.blackColor,
-            //         btnText: 'Send reminder',
-            //         textSize: 10,
-            //         txtColor: kColors.whiteColor,
-            //       )
-            //     : GenBtn(
-            //         size: size,
-            //         width: 35,
-            //         borderRadius: 5,
-            //         height: 3.5,
-            //         btnColor: kColors.greenColor,
-            //         btnText: 'Pay seller',
-            //         txtColor: kColors.whiteColor,
-            //         textSize: 11,
-            //       ),
-          ],
-        ),
+          ),
+          Height(h: 0.5),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: kTxt(
+              text: '$reference',
+              size: 11,
+              weight: FontWeight.w500,
+              color: kColors.textGrey,
+              maxLine: 1,
+              textalign: TextAlign.left,
+            ),
+          ),
+          Height(h: 0.5),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: kTxt(
+              text: '${formatDateTime(date)}',
+              size: 10,
+              weight: FontWeight.w500,
+              maxLine: 1,
+              color: kColors.textGrey.withOpacity(0.5),
+              textalign: TextAlign.left,
+            ),
+          ),
+          // Divider(
+          //   color: kColors.textGrey,
+          //   thickness: 0.5,
+          // ),
+          // Height(h: 2),
+          // type == '1'
+          //     ? GenBtn(
+          //         size: size,
+          //         width: 35,
+          //         borderRadius: 5,
+          //         height: 3.5,
+          //         btnColor: kColors.blackColor,
+          //         btnText: 'Send reminder',
+          //         textSize: 10,
+          //         txtColor: kColors.whiteColor,
+          //       )
+          //     : GenBtn(
+          //         size: size,
+          //         width: 35,
+          //         borderRadius: 5,
+          //         height: 3.5,
+          //         btnColor: kColors.greenColor,
+          //         btnText: 'Pay seller',
+          //         txtColor: kColors.whiteColor,
+          //         textSize: 11,
+          //       ),
+        ],
       ),
     );
   }
@@ -605,7 +598,7 @@ class IncomingOrdersBox extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 2 * size.width / 100,
-          vertical: 0.7 * size.height / 100,
+          vertical: 0.6 * size.height / 100,
         ),
         width: (width ?? 84) * size.width / 100,
         decoration: BoxDecoration(
@@ -619,23 +612,12 @@ class IncomingOrdersBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 18,
-                      backgroundColor: kColors.primaryColor.withOpacity(0.2),
-                      child: Icon(Icons.shopping_cart,
-                          color: kColors.primaryColor, size: 18),
-                    ),
-                    Width(w: 3),
-                    kTxt(
-                      text: '$orderID',
-                      maxLine: 1,
-                      color: kColors.textGrey,
-                      size: 14,
-                      weight: FontWeight.w500,
-                    ),
-                  ],
+                kTxt(
+                  text: '$orderID',
+                  maxLine: 1,
+                  color: kColors.textGrey,
+                  size: 12,
+                  weight: FontWeight.w500,
                 ),
                 GestureDetector(
                   onTap: viewTap,
@@ -643,19 +625,19 @@ class IncomingOrdersBox extends StatelessWidget {
                     text: 'View',
                     maxLine: 1,
                     color: kColors.textGrey,
-                    size: 14,
+                    size: 12,
                     weight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            Height(h: 1),
+            Height(h: 0.4),
             SizedBox(
               width: 80 * size.width / 100,
               child: kTxt(
                 text: (userid == Provider.of<AuthProvider>(context).userID)
-                    ? 'You sent an order invitation for $sender'
-                    : 'You have an order invitation to join, From $sender',
+                    ? 'Order to $sender'
+                    : 'Order From $sender',
                 maxLine: 2,
                 color: kColors.blackColor,
                 size: 14,
@@ -669,7 +651,7 @@ class IncomingOrdersBox extends StatelessWidget {
                 text: 'Amount: N${formatNumberWithCommas(amount)}',
                 maxLine: 1,
                 color: kColors.textGrey,
-                size: 14,
+                size: 12,
                 textalign: TextAlign.left,
                 weight: FontWeight.w500,
               ),
@@ -680,7 +662,7 @@ class IncomingOrdersBox extends StatelessWidget {
                 text: 'Order Fee: N${formatNumberWithCommas(fee)}',
                 maxLine: 1,
                 color: kColors.textGrey,
-                size: 14,
+                size: 12,
                 textalign: TextAlign.left,
                 weight: FontWeight.w500,
               ),
@@ -691,7 +673,7 @@ class IncomingOrdersBox extends StatelessWidget {
                 text: 'Sent on $date',
                 maxLine: 1,
                 color: kColors.textGrey,
-                size: 14,
+                size: 12,
                 textalign: TextAlign.left,
                 weight: FontWeight.w500,
               ),
@@ -716,7 +698,7 @@ class IncomingOrdersBox extends StatelessWidget {
                             onTap: acceptTap,
                             child: kTxt(
                               text: '  Accept',
-                              size: 15,
+                              size: 13,
                               color: kColors.primaryColor,
                               weight: FontWeight.w500,
                               maxLine: 1,
@@ -739,7 +721,7 @@ class IncomingOrdersBox extends StatelessWidget {
                                   Provider.of<AuthProvider>(context).userID)
                               ? 'Cancel'
                               : 'Reject  ',
-                          size: 15,
+                          size: 13,
                           color: kColors.red,
                           weight: FontWeight.w500,
                           maxLine: 1,
