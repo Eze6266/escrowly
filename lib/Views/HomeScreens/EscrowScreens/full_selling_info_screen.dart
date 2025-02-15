@@ -49,9 +49,9 @@ class _FullSellingDetailScreenState extends State<FullSellingDetailScreen> {
               Row(
                 children: [
                   isLoading ? SizedBox.shrink() : BckBtn(),
-                  Width(w: 20),
+                  Width(w: 26),
                   kTxt(
-                    text: 'Escrow Summary',
+                    text: 'Order Summary',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
@@ -131,7 +131,7 @@ class _FullSellingDetailScreenState extends State<FullSellingDetailScreen> {
                   )
                       .then((value) {
                     if (value == 'success') {
-                      showCashoutSuccessDialog(context);
+                      showCashoutSuccessDialog(context, widget.buyerEmail);
                     } else {
                       showCustomErrorToast(
                           context, orderProvider.createSellerOrderMessage);

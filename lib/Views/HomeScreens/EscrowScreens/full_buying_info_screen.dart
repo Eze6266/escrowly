@@ -6,7 +6,9 @@ import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/enter_buyer_pay_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/order_success_dialog.dart';
+import 'package:trustbridge/Views/HomeScreens/topup_sheet.dart';
 
 class FullBuyingDetailScreen extends StatefulWidget {
   FullBuyingDetailScreen({
@@ -48,9 +50,9 @@ class _FullBuyingDetailScreenState extends State<FullBuyingDetailScreen> {
               Row(
                 children: [
                   isLoading ? SizedBox.shrink() : BckBtn(),
-                  Width(w: 20),
+                  Width(w: 25),
                   kTxt(
-                    text: 'Escrow Summary',
+                    text: 'Order Summary',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
@@ -113,29 +115,48 @@ class _FullBuyingDetailScreenState extends State<FullBuyingDetailScreen> {
                 height: 6,
                 btnColor: kColors.primaryColor,
                 txtColor: kColors.whiteColor,
-                btnText: 'Proceed',
+                btnText: 'Make payment',
                 tap: () {
-                  orderProvider
-                      .createBuyerOrder(
-                    email: widget.sellerEmail,
-                    phone: widget.sellerPhone,
-                    description: widget.description,
-                    amount: widget.amount,
-                    payer: widget.whoPays == 'Seller'
-                        ? 'seller'
-                        : widget.fee == 'Me'
-                            ? 'buyer'
-                            : 'split',
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    isScrollControlled: true,
                     context: context,
-                  )
-                      .then((value) {
-                    if (value == 'success') {
-                      showCashoutSuccessDialog(context);
-                    } else {
-                      showCustomErrorToast(
-                          context, orderProvider.createBuyerOrderMessage);
-                    }
-                  });
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(30),
+                      ),
+                    ),
+                    builder: (context) => BuyerPayPinSheet(
+                      amount: widget.amount,
+                      dateTime: widget.dateTime,
+                      fee: widget.fee,
+                      sellerEmail: widget.sellerEmail,
+                      description: widget.description.toString(),
+                      whoPays: widget.whoPays,
+                      sellerPhone: widget.sellerPhone,
+                    ),
+                  );
+                  // orderProvider
+                  //     .createBuyerOrder(
+                  //   email: widget.sellerEmail,
+                  //   phone: widget.sellerPhone,
+                  //   description: widget.description,
+                  //   amount: widget.amount,
+                  //   payer: widget.whoPays == 'Seller'
+                  //       ? 'seller'
+                  //       : widget.fee == 'Me'
+                  //           ? 'buyer'
+                  //           : 'split',
+                  //   context: context,
+                  // )
+                  //     .then((value) {
+                  //   if (value == 'success') {
+                  //     showCashoutSuccessDialog(context, widget.sellerEmail);
+                  //   } else {
+                  //     showCustomErrorToast(
+                  //         context, orderProvider.createBuyerOrderMessage);
+                  //   }
+                  // });
                 },
               ),
             ],

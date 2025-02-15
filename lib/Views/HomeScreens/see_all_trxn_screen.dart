@@ -19,7 +19,16 @@ class SeeAllTrxnScreen extends StatefulWidget {
 }
 
 class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
+  List selectedList = [];
   String _searchQuery = ''; // Store the search query
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    var orderProvider = Provider.of<OrderProvider>(context, listen: false);
+    selectedList = orderProvider.trns;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +36,7 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
     var orderProvider = Provider.of<OrderProvider>(context);
 
     // Filter transactions based on the search query
-    List filteredTransactions = orderProvider.trns
+    List filteredTransactions = selectedList
         .where((order) =>
             order['reference_code'].toString().toLowerCase().contains(
                 _searchQuery.toLowerCase()) || // Search by description
@@ -54,14 +63,39 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                   BckBtn(),
                   Width(w: 26),
                   kTxt(
-                    text: 'Orders',
+                    text: 'Recent Orders',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
                 ],
               ),
               Height(h: 2),
+              Padding(
+                padding: EdgeInsets.only(right: 2 * size.width / 100),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: HomeCustomDropdown(
+                    initialValue: 'All orders',
+                    onChanged: (value) {
+                      print('Selected value: $value');
+                      value == 'All orders'
+                          ? selectedList = orderProvider.trns
+                          : value == 'Pending'
+                              ? selectedList = orderProvider.pendingOrders
+                              : value == 'In progress'
+                                  ? selectedList = orderProvider.runningOrders
+                                  : value == 'Completed'
+                                      ? selectedList =
+                                          orderProvider.completedOrders
+                                      : selectedList = orderProvider.trns;
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ),
+              Height(h: 2),
               TitleTField(
+                radius: 10,
                 hasTitle: false,
                 hint: 'Search transactions',
                 suffixIcon: Icon(Icons.search),
@@ -75,9 +109,18 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
               orderProvider.fetchTrxnsisLoading
                   ? kTxt(text: 'Loading...')
                   : Expanded(
-                      child: orderProvider.trns.isEmpty
+                      child: filteredTransactions.isEmpty
                           ? Center(
-                              child: kTxt(text: 'No orders yet'),
+                              child: kTxt(
+                                  text: selectedList == orderProvider.trns
+                                      ? 'No orders yet'
+                                      : selectedList ==
+                                              orderProvider.pendingOrders
+                                          ? 'No pending orders'
+                                          : selectedList ==
+                                                  orderProvider.runningOrders
+                                              ? 'No running orders'
+                                              : 'No completed orders'),
                             )
                           : ListView.builder(
                               itemCount: filteredTransactions.length,
@@ -93,6 +136,8 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                                           context,
                                           FullRecentOrderScreen(
                                             status: order['status'].toString(),
+                                            reference: order['reference_code']
+                                                .toString(),
                                             orderid: order['id'].toString(),
                                             amount: formatNumberWithCommas(
                                                 order['amount'].toString()),
@@ -116,6 +161,12 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                                           ));
                                     },
                                     child: RecentTransactionTile(
+                                      sender: order['created_by'].toString(),
+                                      fee: formatNumberWithCommas(
+                                          order['fee'].toString()),
+                                      description:
+                                          order['description'].toString(),
+                                      userid: order['userid'].toString(),
                                       status: order['status'].toString(),
                                       type: order['role'],
                                       amount: order['amount'].toString(),

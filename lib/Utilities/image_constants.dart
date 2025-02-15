@@ -51,6 +51,7 @@ class kImages {
   static const String shield = '$_baseImageAsset/shield.png';
   static const String cardcross = '$_baseImageAsset/cardcross.png';
   static const String emptysvg = '$_baseImageAsset/emptysvg.png';
+  static const String box = '$_baseImageAsset/box.png';
 
   //////////////////////////******** IMAGES*************/////////////////
 
@@ -58,6 +59,9 @@ class kImages {
 
   static const String notifbell = '$_baseIconAsset/notifbell.svg';
   static const String homesvg = '$_baseIconAsset/homesvg.svg';
+  static const String iamseller = '$_baseIconAsset/iamseller.svg';
+  static const String iambuyer = '$_baseIconAsset/iambuyer.svg';
+
   static const String orderssvg = '$_baseIconAsset/orderssvg.svg';
   static const String walletsvg = '$_baseIconAsset/walletsvg.svg';
   static const String profilesvg = '$_baseIconAsset/profilesvg.svg';
@@ -66,6 +70,8 @@ class kImages {
   static const String fundsvg = '$_baseIconAsset/fundsvg.svg';
   static const String withdrawsvg = '$_baseIconAsset/withdrawsvg.svg';
   static const String copysvg = '$_baseIconAsset/copysvg.svg';
+  static const String depositicon = '$_baseIconAsset/depositicon.svg';
+  static const String withdrawicon = '$_baseIconAsset/withdrawicon.svg';
 
   static const String accounticon = '$_baseIconAsset/accountusericon.svg';
   static const String callcentericon = '$_baseIconAsset/callcentericon.svg';

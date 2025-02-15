@@ -15,11 +15,13 @@ import 'package:trustbridge/Utilities/Functions/greetings_function.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
+import 'package:trustbridge/Utilities/lazy_loader.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/home_balance_widget.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/home_top_widget.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/select_bank_sheet.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/setup_trxn_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/show_add_new_bank_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/show_withdraw_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_screen.dart';
@@ -58,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     var orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      initPrefs();
       authProvider.getUser(context: context);
       authProvider.getNotifcations(context: context);
 
@@ -71,6 +74,26 @@ class _HomeScreenState extends State<HomeScreen> {
       orderProvider.fetchIncomingOrder(context: context);
       orderProvider.fetchTrxns(context: context);
       orderProvider.fetchRecenttrxn(context: context);
+    });
+  }
+
+  void initPrefs() {
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.checkUserPin(context: context).then((value) {
+      if (value == 'success') {
+      } else {
+        showModalBottomSheet(
+          isDismissible: false,
+          isScrollControlled: true,
+          context: context,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              top: Radius.circular(30),
+            ),
+          ),
+          builder: (context) => SetupPinSheet(),
+        );
+      }
     });
   }
 
@@ -128,7 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Height(h: 1.2),
               SizedBox(
-                height: 14 * size.height / 100,
+                height: 16 * size.height / 100,
                 child: PageView(
                   controller: pageviewController,
                   children: [
@@ -164,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 count: 2,
                 controller: pageviewController,
               ),
+
               Height(h: 3),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -284,7 +308,16 @@ class _HomeScreenState extends State<HomeScreen> {
               showIncomingOrder
                   ? orderProvider.fetchIncomingOrderisLoading
                       ? Center(
-                          child: kTxt(text: 'Fetching orders...'),
+                          child: SizedBox(
+                            height: 12 * size.height / 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 3,
+                              itemBuilder: (context, index) {
+                                return IncomingLoader();
+                              },
+                            ),
+                          ),
                         )
                       : orderProvider.incomingOrders.isEmpty
                           ? kTxt(text: 'You have no incoming order')
@@ -324,6 +357,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       orderID:
                                           order['reference_code'].toString(),
                                       userid: order['userid'].toString(),
+                                      description:
+                                          order['description'].toString(),
                                       amount: formatNumberWithCommas(
                                           order['amount'].toString()),
                                       fee: formatNumberWithCommas(
@@ -564,13 +599,16 @@ class _HomeScreenState extends State<HomeScreen> {
               Expanded(
                 child: orderProvider.fetchTrxnsisLoading
                     ? Center(
-                        child: kTxt(text: 'Loading orders...'),
+                        child: OngoingLoader(),
                       )
                     : orderProvider.runningOrders.isEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Image.asset(kImages.emptysvg),
+                              Image.asset(
+                                kImages.emptysvg,
+                                height: 5 * size.height / 100,
+                              ),
                               Height(h: 1),
                               kTxt(
                                 text:

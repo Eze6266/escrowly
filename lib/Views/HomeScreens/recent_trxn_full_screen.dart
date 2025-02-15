@@ -8,6 +8,7 @@ import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 
 class FullRecentOrderScreen extends StatefulWidget {
   FullRecentOrderScreen({
@@ -134,6 +135,7 @@ class _FullRecentOrderScreenState extends State<FullRecentOrderScreen> {
                         //         context, orderProvider.acceptOrderMessage);
                         //   }
                         // });
+                        goTo(context, SupportScreen());
                       },
               ),
               Height(h: 1),

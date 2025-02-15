@@ -284,6 +284,8 @@ class OrderProvider extends ChangeNotifier {
 
   List trns = [];
   List runningOrders = [];
+  List pendingOrders = [];
+  List completedOrders = [];
 
   Future<String?> fetchTrxns({
     required BuildContext context,
@@ -315,6 +317,8 @@ class OrderProvider extends ChangeNotifier {
 
         // Filter and populate runningOrders list
         runningOrders = trns.where((item) => item['status'] == "2").toList();
+        pendingOrders = trns.where((item) => item['status'] == "0").toList();
+        completedOrders = trns.where((item) => item['status'] == "3").toList();
 
         notifyListeners();
         return fetchTrxnsStatus;
@@ -495,6 +499,7 @@ class OrderProvider extends ChangeNotifier {
   var fetchRecenttrxnMessage;
 
   List recenttrxns = [];
+  List topuptrxns = [];
 
   Future<String?> fetchRecenttrxn({
     required BuildContext context,

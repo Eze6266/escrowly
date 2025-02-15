@@ -37,39 +37,46 @@ class _SelectTypeScreenState extends State<SelectTypeScreen> {
                   BckBtn(),
                   Width(w: 26),
                   kTxt(
-                    text: 'Select Type',
+                    text: 'Create order',
                     weight: FontWeight.w500,
                     size: 16,
                   ),
                 ],
               ),
-              Height(h: 30),
-              Center(
-                child: SelectTypeBtn(
-                  txt: 'I AM THE BUYER',
-                  txtColor: kColors.whiteColor,
-                  borderColor: kColors.primaryColor,
-                  btnColor: kColors.primaryColor,
-                  img: kImages.buyer,
-                  onTap: () {
-                    goTo(context, CreateBuyerEscrowScreen());
-                  },
+              Height(h: 2),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: kTxt(
+                  text: 'Choose your role',
+                  color: kColors.textGrey,
+                  weight: FontWeight.w500,
+                  size: 14,
                 ),
               ),
-              Height(h: 3),
-              Material(
-                borderRadius: BorderRadius.circular(8),
-                elevation: 4,
+              Height(h: 5),
+              Center(
                 child: SelectTypeBtn(
-                  txt: 'I AM THE SELLER',
-                  txtColor: kColors.primaryColor,
+                  txt: 'I am the seler',
+                  txtColor: kColors.whiteColor,
+                  iconColor: kColors.whiteColor,
                   borderColor: kColors.primaryColor,
-                  btnColor: kColors.whiteColor,
-                  img: kImages.seller,
+                  btnColor: kColors.primaryColor,
+                  img: kImages.iamseller,
                   onTap: () {
                     goTo(context, CreateSellerEscrowScreen());
                   },
                 ),
+              ),
+              Height(h: 3),
+              SelectTypeBtn(
+                txt: 'I am the buyer',
+                txtColor: kColors.blackColor.withOpacity(0.8),
+                borderColor: kColors.textGrey.withOpacity(0.6),
+                btnColor: kColors.whiteColor,
+                img: kImages.iambuyer,
+                onTap: () {
+                  goTo(context, CreateBuyerEscrowScreen());
+                },
               ),
             ],
           ),

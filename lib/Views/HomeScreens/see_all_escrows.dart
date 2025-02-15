@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
+import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_screen.dart';
+import 'package:trustbridge/Views/HomeScreens/running_orders_full_detail.dart';
 
 class SeeAllescrowsScreen extends StatefulWidget {
   const SeeAllescrowsScreen({super.key});
@@ -51,7 +53,7 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
                   BckBtn(),
                   Width(w: 26),
                   kTxt(
-                    text: 'Escrows',
+                    text: 'Ongoing orders',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
@@ -59,6 +61,7 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
               ),
               Height(h: 2),
               TitleTField(
+                radius: 10,
                 hasTitle: false,
                 hint: 'Search escrows by description or amount',
                 suffixIcon: Icon(
@@ -71,33 +74,55 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
                 },
               ),
               Height(h: 3),
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 2 * size.width / 100,
-                  mainAxisSpacing: 1.2 * size.height / 100,
-                  childAspectRatio: 2 / 1,
-                ),
-                itemCount: filteredTransactions.length,
-                itemBuilder: (context, index) {
-                  var order = filteredTransactions[index];
-
-                  return GestureDetector(
-                    onTap: () {
-                      goTo(context, FullEscrowDetailScreen());
-                    },
-                    child: PendingEscrowsBox(
-                      date: order['created_at'].toString(),
-                      reference: order['id'],
-                      product: order['description'].toString(),
-                      amount: formatNumberWithCommas(
-                        order['amount'].toString(),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: orderProvider.runningOrders.length > 2
+                      ? 2
+                      : orderProvider.runningOrders.length,
+                  itemBuilder: (context, index) {
+                    var order = orderProvider.runningOrders[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: 1.5 * size.width / 100,
+                        bottom: 1.4 * size.height / 100,
                       ),
-                      type: order['role'].toString(),
-                    ),
-                  );
-                },
+                      child: GestureDetector(
+                        onTap: () {
+                          goTo(
+                              context,
+                              FullRunningOrderScreen(
+                                orderid: order['id'].toString(),
+                                amount: formatNumberWithCommas(
+                                    order['amount'].toString()),
+                                fee: formatNumberWithCommas(
+                                    order['fee'].toString()),
+                                date: formatDateTime(order['created_at']),
+                                name: order['role'] == 'Selling'
+                                    ? order['seller']['firstname']
+                                    : order['buyer']['firstname'],
+                                phone: order['role'] == 'Selling'
+                                    ? order['seller']['firstname']
+                                    : order['buyer']['phone'].toString(),
+                                total: formatNumberWithCommas(
+                                    order['total_amount'].toString()),
+                                feepayer: order['escrow_fee_payer'],
+                                type: order['role'],
+                                description: order['description'],
+                              ));
+                        },
+                        child: PendingEscrowsBox(
+                          date: order['created_at'].toString(),
+                          reference: order['reference_code'].toString(),
+                          product: order['description'].toString(),
+                          amount: formatNumberWithCommas(
+                            order['amount'].toString(),
+                          ),
+                          type: order['role'].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ],
           ),

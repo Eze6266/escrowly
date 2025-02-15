@@ -11,8 +11,10 @@ import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/enter_withdraw_pin_sheet.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/select_bank_sheet.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/setup_trxn_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/show_add_new_bank_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/withdraw_processing.dart';
 
@@ -84,7 +86,7 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
     var authProvider = Provider.of<AuthProvider>(context);
     return Container(
       width: 95 * widget.size.width / 100,
-      height: 60 * widget.size.height / 100,
+      height: (trxnProvider.accName == '' ? 60 : 65) * widget.size.height / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: kColors.whiteColor,
@@ -112,8 +114,8 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
             TitleTField(
               hint: 'Enter amount',
               title: 'Enter amount',
-              elevated: true,
               isLoading: isLoading,
+              keyType: TextInputType.number,
               controller: amountCtrler,
               onChanged: (value) {
                 setState(() {
@@ -277,44 +279,87 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
                           color: kColors.primaryColor,
                           size: 15,
                         ),
+                        Width(w: 3),
+                        kTxt(
+                          text: 'Checking bank name',
+                          color: kColors.primaryColor,
+                          size: 10,
+                          weight: FontWeight.w500,
+                        ),
                       ],
                     ),
                   )
                 : SizedBox.shrink(),
             trxnProvider.accName == ''
                 ? SizedBox.shrink()
-                : Align(
-                    alignment: Alignment.centerLeft,
-                    child: SizedBox(
-                      width: 80 * size.width / 100,
-                      child: kTxt(
-                        text: '${trxnProvider.accName}',
-                        color: kColors.primaryColor,
-                        maxLine: 2,
-                        weight: FontWeight.w600,
-                        size: 10,
+                : Container(
+                    decoration: BoxDecoration(
+                      color: kColors.ongoingBg,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 3 * size.width / 100,
+                      vertical: 1.5 * size.height / 100,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: SizedBox(
+                        width: 80 * size.width / 100,
+                        child: kTxt(
+                          text: '${trxnProvider.accName}',
+                          color: kColors.primaryColor,
+                          maxLine: 2,
+                          weight: FontWeight.w600,
+                          size: 10,
+                        ),
                       ),
                     ),
                   ),
             Height(h: 4),
             GenBtn(
               size: widget.size,
-              width: 70,
+              width: 80,
               isLoading: isLoading,
-              borderRadius: 55,
+              borderRadius: 10,
               height: 5,
               btnColor: kColors.primaryColor,
-              btnText: 'Proceed',
+              btnText: 'Confirm',
               borderColor: kColors.primaryColor,
               txtColor: kColors.whiteColor,
               txtWeight: FontWeight.w500,
               tap: () {
-                if (trxnProvider.accName == '') {
-                  showCustomErrorToast(context, 'Unverified account');
+                if (authProvider.checkPinStatus == 'success') {
+                  showModalBottomSheet(
+                    isDismissible: true,
+                    isScrollControlled: true,
+                    context: context,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(30),
+                      ),
+                    ),
+                    builder: (context) => WithdrawalPinSheet(),
+                  );
                 } else {
-                  goBack(context);
-                  showWithdrawProcessingDialog(context, confetticontroller);
+                  showModalBottomSheet(
+                    isDismissible: false,
+                    isScrollControlled: true,
+                    context: context,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(30),
+                      ),
+                    ),
+                    builder: (context) => SetupPinSheet(),
+                  );
                 }
+
+                // if (trxnProvider.accName == '') {
+                //   showCustomErrorToast(context, 'Unverified account');
+                // } else {
+                //   goBack(context);
+                //   showWithdrawProcessingDialog(context, confetticontroller);
+                // }
               },
             ),
           ],

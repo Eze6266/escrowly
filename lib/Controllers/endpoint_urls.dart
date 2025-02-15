@@ -21,9 +21,12 @@ class kUrl {
   static String verifyOtp = '$_baseUrl/auth/check-otp';
   static String fetchIncomingOrder = '$_baseUrl/orders/incoming-orders';
   static String fetchRecenttrxn = '$_baseUrl/transactions/wallet-transaction';
+  static String setPin = '$_baseUrl/user/pin/set';
 
   static String loginUser = '$_baseUrl/auth/login';
   static String getUser = '$_baseUrl/user';
+  static String checkPin = '$_baseUrl/user/pin/check';
+
   static String getNotifcations = '$_baseUrl/user/notification';
 
   static String verifyNin = 'https://api.monnify.com/api/v1/vas/nin-details';

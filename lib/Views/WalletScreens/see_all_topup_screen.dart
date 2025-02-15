@@ -12,16 +12,15 @@ import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/notification_detail_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
-import 'package:trustbridge/Views/WalletScreens/withdraw_detail_screen.dart';
 
-class SeeAllWithdrawScreen extends StatefulWidget {
-  const SeeAllWithdrawScreen({super.key});
+class SeeAllTopupScreen extends StatefulWidget {
+  const SeeAllTopupScreen({super.key});
 
   @override
-  State<SeeAllWithdrawScreen> createState() => _SeeAllWithdrawScreenState();
+  State<SeeAllTopupScreen> createState() => _SeeAllTopupScreenState();
 }
 
-class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
+class _SeeAllTopupScreenState extends State<SeeAllTopupScreen> {
   String _searchQuery = ''; // Store the search query
 
   @override
@@ -30,7 +29,7 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
     var trxnProvider = Provider.of<TransactionProvider>(context);
 
     // Filter the withdraw list based on the search query
-    List filteredWithdrawList = trxnProvider.withdrawlist
+    List filteredWithdrawList = trxnProvider.topupList
         .where((wallet) =>
             wallet['amount']
                 .toString()
@@ -77,12 +76,12 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                 },
               ),
               Height(h: 3),
-              trxnProvider.fetchWithdrawalsIsLoading
+              trxnProvider.fetchWalletTrxnsIsLoading
                   ? Center(
                       child: OngoingLoader(),
                     )
                   : Expanded(
-                      child: trxnProvider.withdrawlist.isEmpty
+                      child: trxnProvider.topupList.isEmpty
                           ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -94,7 +93,7 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                                   Height(h: 1),
                                   kTxt(
                                     text:
-                                        'Your withdrawals are displayed here\n Looks like you dont\'t have any',
+                                        'Your topups are displayed here\n Looks like you dont\'t have any',
                                     textalign: TextAlign.center,
                                     size: 12,
                                   )
@@ -102,67 +101,53 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                               ),
                             )
                           : ListView.builder(
-                              itemCount: trxnProvider.withdrawlist.length > 18
+                              itemCount: trxnProvider.topupList.length > 18
                                   ? 18
-                                  : trxnProvider.withdrawlist.length,
+                                  : trxnProvider.topupList.length,
                               itemBuilder: (context, index) {
-                                var wallet = trxnProvider.withdrawlist[index];
+                                var wallet = trxnProvider.topupList[index];
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: 0.8 * size.height / 100),
                                   child: GestureDetector(
                                     onTap: () {
-                                      goTo(
-                                          context,
-                                          WithdrawDetailScreen(
-                                            amount: formatNumberWithCommas(
-                                                wallet['amount'].toString()),
-                                            statusTxt: getWithdrawStatusTxt(
-                                                wallet['status'].toString()),
-                                            statusColor: getStatusTxtColor(
-                                                wallet['status'].toString()),
-                                            accname: wallet['accountname']
-                                                .toString(),
-                                            accNum: wallet['accountnumber']
-                                                .toString(),
-                                            bankName:
-                                                wallet['bankname'].toString(),
-                                            dateTime:
-                                                '${formatDateTime(wallet['created_at'])}',
-                                            withdrawId: wallet['withdrawalid']
-                                                .toString(),
-                                            description:
-                                                wallet['narration'].toString(),
-                                          ));
+                                      // goTo(
+                                      //     context,
+                                      //     WithdrawDetailScreen(
+                                      //       amount: formatNumberWithCommas(
+                                      //           wallet['amount'].toString()),
+                                      //       statusTxt: getWithdrawStatusTxt(
+                                      //           wallet['status'].toString()),
+                                      //       statusColor: getStatusTxtColor(
+                                      //           wallet['status'].toString()),
+                                      //     ));
                                       // showWithdrawDetailDialog(
-                                      // dateTime:
-                                      //     '${formatDateTime(wallet['created_at'])}',
-                                      // description: wallet['narration'].toString(),
-                                      // accName: wallet['accountname'].toString(),
-                                      // accNumber: wallet['accountnumber'].toString(),
-                                      // bankName: wallet['bankname'].toString(),
+                                      //   dateTime:
+                                      //       '${formatDateTime(wallet['created_at'])}',
+                                      //   description: wallet['narration'].toString(),
+                                      //   accName: wallet['accountname'].toString(),
+                                      //   accNumber: wallet['accountnumber'].toString(),
+                                      //   bankName: wallet['bankname'].toString(),
                                       //   context: context,
-                                      // title: wallet['withdrawalid'].toString(),
+                                      //   title: wallet['withdrawalid'].toString(),
                                       //   status: wallet['status'].toString(),
-                                      //   amount: formatNumberWithCommas(
-                                      //       wallet['amount'].toString()),
+                                      // amount: formatNumberWithCommas(
+                                      //     wallet['amount'].toString()),
                                       // );
                                     },
-                                    child: WalletTransactionTile(
-                                      bank: wallet['bankname'].toString(),
+                                    child: TopupTransactionTile(
                                       status: wallet['status'].toString(),
-                                      type: '2',
                                       amount: formatNumberWithCommas(
                                           wallet['amount'].toString()),
                                       datetime:
                                           '${formatDateTime(wallet['created_at'])}',
-                                      title: '',
+                                      name: wallet['description'],
                                     ),
                                   ),
                                 );
                               },
                             ),
-                    )
+                    ),
             ],
           ),
         ),

@@ -8,6 +8,7 @@ import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 
 class FullRunningOrderScreen extends StatefulWidget {
   FullRunningOrderScreen({
@@ -61,7 +62,7 @@ class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
               Row(
                 children: [
                   isLoading ? SizedBox.shrink() : BckBtn(),
-                  Width(w: 20),
+                  Width(w: 28),
                   kTxt(
                     text: 'Order Details',
                     weight: FontWeight.w600,
@@ -114,10 +115,11 @@ class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
                 size: size,
                 width: 90,
                 isLoading: isLoading,
+                borderColor: kColors.primaryColor,
                 height: 6,
-                btnColor: isLoading ? kColors.textGrey : kColors.red,
+                btnColor: isLoading ? kColors.textGrey : kColors.whiteColor,
                 btnText: 'Raise Dispute',
-                txtColor: kColors.whiteColor,
+                txtColor: kColors.primaryColor,
                 tap: isLoading
                     ? () {}
                     : () {
@@ -134,6 +136,7 @@ class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
                         //         context, orderProvider.acceptOrderMessage);
                         //   }
                         // });
+                        goTo(context, SupportScreen());
                       },
               ),
               Height(h: 1),

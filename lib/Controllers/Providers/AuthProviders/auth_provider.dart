@@ -702,6 +702,121 @@ class AuthProvider extends ChangeNotifier {
   }
 
 /////////////////////**********************CHANGE PASSWORD************//////////////////
+
+  //**********************CHECK PIN*****************//
+  bool checkPinisLoading = false;
+  var checkPinStatus;
+  var checkPinMessage;
+
+  bool checkPin = false;
+
+  Future<String?> checkUserPin({
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    checkPinisLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+    print('$token');
+    try {
+      var response = await http.get(
+        Uri.parse('${kUrl.checkPin}'),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is check pin ${response.statusCode}');
+
+      checkPinisLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        checkPinStatus = jsonDecode(responseString)['status'].toString();
+
+        notifyListeners();
+
+        return checkPinStatus;
+      } else {
+        String responseString = response.body;
+        checkPinStatus = jsonDecode(responseString)['status'].toString();
+        checkPinMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return checkPinStatus;
+      }
+    } catch (error) {
+      checkPinisLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return checkPinStatus;
+  }
+
+///////////////////**********************CHECK PIN*****************////////////////////
+
+  /////////////////////**********************SET PIN************//////////////////
+
+  bool setPinIsLoading = false;
+  var setPinStatus, setPinMessage;
+
+  Future<String?> setPin({
+    required String pin,
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    setPinIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+
+    try {
+      var response = await http.post(
+        Uri.parse('${kUrl.setPin}'),
+        body: {
+          "pin": pin,
+        },
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is set pin status code ${response.statusCode}');
+
+      setPinIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        setPinStatus = jsonDecode(responseString)['status'].toString();
+        setPinMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return setPinStatus;
+      } else {
+        String responseString = response.body;
+        setPinStatus = jsonDecode(responseString)['status'].toString();
+        setPinMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return setPinStatus;
+      }
+    } catch (error) {
+      setPinIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return setPinStatus;
+  }
+
+/////////////////////**********************SET PIN************//////////////////
   void authNotifier() {
     notifyListeners();
   }

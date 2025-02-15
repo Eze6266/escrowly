@@ -36,11 +36,12 @@ class _SupportScreenState extends State<SupportScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0,
         toolbarHeight: 0.001,
-        backgroundColor: Colors.blue,
+        backgroundColor: kColors.primaryColor,
       ),
       body: SafeArea(
         child: Padding(

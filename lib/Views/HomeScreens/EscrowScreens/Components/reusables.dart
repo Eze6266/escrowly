@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 
@@ -11,10 +12,12 @@ class SelectTypeBtn extends StatelessWidget {
     required this.onTap,
     required this.txt,
     required this.txtColor,
+    this.iconColor,
   });
   String txt, img;
   Function() onTap;
   Color btnColor, borderColor, txtColor;
+  Color? iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -24,28 +27,29 @@ class SelectTypeBtn extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.symmetric(
-          horizontal: 2 * size.width / 100,
+          horizontal: 3 * size.width / 100,
           vertical: 0.5 * size.height / 100,
         ),
-        width: 78 * size.width / 100,
+        width: 88 * size.width / 100,
         height: 6 * size.height / 100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(10),
           color: btnColor,
           border: Border.all(color: borderColor),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            SvgPicture.asset(
+              img,
+              color: iconColor ?? kColors.blackColor,
+              height: 2 * size.height / 100,
+            ),
+            Width(w: 3),
             kTxt(
               text: '$txt',
-              weight: FontWeight.w600,
+              weight: FontWeight.w500,
               color: txtColor,
-            ),
-            Width(w: 4),
-            Image.asset(
-              img,
-              height: 3 * size.height / 100,
             ),
           ],
         ),

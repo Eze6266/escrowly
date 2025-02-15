@@ -50,11 +50,14 @@ class TitleTField extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Row(
                     children: [
-                      kTxt(
-                        text: title ?? '',
-                        weight: FontWeight.w500,
-                        size: 13,
-                        color: kColors.blackColor.withOpacity(0.8),
+                      Padding(
+                        padding: EdgeInsets.only(left: 1 * size.width / 100),
+                        child: kTxt(
+                          text: title ?? '',
+                          weight: FontWeight.w500,
+                          size: 13,
+                          color: kColors.blackColor.withOpacity(0.8),
+                        ),
                       ),
                       important ?? false
                           ? kTxt(
@@ -67,58 +70,54 @@ class TitleTField extends StatelessWidget {
                 )
               : SizedBox.shrink(),
           hasTitle ?? true ? Height(h: 0.3) : SizedBox.shrink(),
-          Material(
-            elevation: elevated ?? false ? 1 : 0,
-            borderRadius: BorderRadius.circular(radius ?? 5),
-            child: SizedBox(
-              height: height ?? 7 * size.height / 100,
-              child: TextField(
-                showCursor: true,
-                cursorRadius: Radius.zero,
-                inputFormatters: inputFormatters,
-                onChanged: onChanged,
-                style: TextStyle(
-                  fontSize: 12,
+          SizedBox(
+            height: height ?? 7 * size.height / 100,
+            child: TextField(
+              showCursor: true,
+              cursorRadius: Radius.zero,
+              inputFormatters: inputFormatters,
+              onChanged: onChanged,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+              controller: controller,
+              maxLines: maxLine ?? 1,
+              keyboardType: keyType ?? TextInputType.text,
+              obscureText: obscure ?? false ? true : false,
+              obscuringCharacter: '*',
+              cursorColor: kColors.blackColor,
+              readOnly: isLoading ?? false ? true : false,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.only(left: 2 * size.width / 100),
+                filled: true,
+                fillColor: fillColor ?? kColors.whiteColor,
+                hintText: '$hint',
+                hintStyle: GoogleFonts.poppins(
+                  textStyle: TextStyle(
+                    color: kColors.textGrey,
+                    fontSize: 12,
+                  ),
                 ),
-                controller: controller,
-                maxLines: maxLine ?? 1,
-                keyboardType: keyType ?? TextInputType.text,
-                obscureText: obscure ?? false ? true : false,
-                obscuringCharacter: '*',
-                cursorColor: kColors.blackColor,
-                readOnly: isLoading ?? false ? true : false,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 2 * size.width / 100),
-                  filled: true,
-                  fillColor: fillColor ?? kColors.whiteColor,
-                  hintText: '$hint',
-                  hintStyle: GoogleFonts.poppins(
-                    textStyle: TextStyle(
-                      color: kColors.textGrey,
-                      fontSize: 12,
-                    ),
+                suffixIcon: suffixIcon ?? SizedBox.shrink(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(radius ?? 5),
+                  borderSide: BorderSide(
+                    color: kColors.textGrey,
+                    width: 0.5,
                   ),
-                  suffixIcon: suffixIcon ?? SizedBox.shrink(),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(radius ?? 5),
-                    borderSide: BorderSide(
-                      color: kColors.textGrey,
-                      width: 0.5,
-                    ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(radius ?? 5),
+                  borderSide: BorderSide(
+                    color: kColors.textGrey,
+                    width: 0.5,
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(radius ?? 5),
-                    borderSide: BorderSide(
-                      color: kColors.textGrey,
-                      width: 0.5,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(radius ?? 5),
-                    borderSide: BorderSide(
-                      color: kColors.textGrey,
-                      width: 0.5,
-                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(radius ?? 5),
+                  borderSide: BorderSide(
+                    color: kColors.textGrey,
+                    width: 0.5,
                   ),
                 ),
               ),

@@ -65,7 +65,7 @@ class _SeeAllIncomingOrdersScreenState
                       : BckBtn(),
                   Width(w: 18),
                   kTxt(
-                    text: 'Incoming Escrows',
+                    text: 'Incoming orders',
                     weight: FontWeight.w600,
                     size: 16,
                   ),
@@ -114,6 +114,8 @@ class _SeeAllIncomingOrdersScreenState
                                             ? 93
                                             : null,
                                     orderID: order['reference_code'].toString(),
+                                    description:
+                                        order['description'].toString(),
                                     userid: order['userid'].toString(),
                                     amount: formatNumberWithCommas(
                                         order['amount'].toString()),

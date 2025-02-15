@@ -16,6 +16,8 @@ class kColors {
 
   static Color orange = Colors.orange;
   static Color purple = Colors.purple;
+  static Color dimPink = Color(0xffffe8fd);
+  static Color dimOrange = Color(0xffffe0cd);
 
   static Color starYellow = Color(0xFFe9c51a);
 

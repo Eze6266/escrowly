@@ -193,18 +193,18 @@ class BckBtn extends StatelessWidget {
     return GestureDetector(
       onTap: () => goBack(context),
       child: Container(
-        height: 4.6 * size.height / 100,
-        width: 10.5 * size.width / 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: kColors.primaryColor.withOpacity(0.2),
-        ),
+        // height: 4.6 * size.height / 100,
+        // width: 10.5 * size.width / 100,
+        // decoration: BoxDecoration(
+        //   borderRadius: BorderRadius.circular(8),
+        //   color: kColors.primaryColor.withOpacity(0.2),
+        // ),
         child: Padding(
           padding: EdgeInsets.only(left: 1.3 * size.width / 100),
           child: Icon(
             Icons.arrow_back_ios,
-            color: kColors.primaryColor,
-            size: 18,
+            color: kColors.blackColor,
+            size: 20,
           ),
         ),
       ),
@@ -437,6 +437,89 @@ class GenBtnWSvg extends StatelessWidget {
                   ],
                 ),
               ),
+      ),
+    );
+  }
+}
+
+class HomeCustomDropdown extends StatefulWidget {
+  final String initialValue;
+  final Function(String) onChanged;
+
+  const HomeCustomDropdown({
+    Key? key,
+    required this.initialValue,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  _HomeCustomDropdownState createState() => _HomeCustomDropdownState();
+}
+
+class _HomeCustomDropdownState extends State<HomeCustomDropdown> {
+  late String _selectedValue;
+
+  final List<String> _options = [
+    'All orders',
+    'Pending',
+    'In progress',
+    'Completed',
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.initialValue;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
+    return Container(
+      height: 4 * size.height / 100,
+      padding: EdgeInsets.symmetric(
+        horizontal: 2 * size.width / 100,
+      ),
+      decoration: BoxDecoration(
+        color: kColors.ongoingBg, // Background color matching the image
+        borderRadius: BorderRadius.circular(10), // Rounded corners
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: _selectedValue,
+          icon: Icon(
+            Icons.expand_more_outlined,
+            color: kColors.textGrey,
+          ),
+          items: _options.map((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Width(w: 1),
+                  Text(
+                    value,
+                    style: TextStyle(
+                      fontFamily: 'Rany',
+                      color: kColors.textGrey,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }).toList(),
+          onChanged: (String? newValue) {
+            if (newValue != null) {
+              setState(() {
+                _selectedValue = newValue;
+              });
+              widget.onChanged(newValue);
+            }
+          },
+        ),
       ),
     );
   }

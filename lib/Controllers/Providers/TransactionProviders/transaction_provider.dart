@@ -311,6 +311,7 @@ class TransactionProvider extends ChangeNotifier {
   bool fetchWalletTrxnsIsLoading = false;
   var fetchWalletTrxnsStatus, fetchWalletTrxnsMessage;
   List wallettrxns = [];
+  List topupList = [];
 
   Future<String?> fetchWalletTrxns({
     required BuildContext context,
@@ -333,23 +334,27 @@ class TransactionProvider extends ChangeNotifier {
 
       fetchWalletTrxnsIsLoading = false;
       notifyListeners();
-      var data = response.body;
+      var data = jsonDecode(response.body); // Parse JSON once
       print(data);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        String responseString = response.body;
-        fetchWalletTrxnsStatus =
-            jsonDecode(responseString)['status'].toString();
-        fetchWalletTrxnsMessage = jsonDecode(responseString)['message'];
-        accNumbers = jsonDecode(responseString)['data'];
+        fetchWalletTrxnsStatus = data['status'].toString();
+        fetchWalletTrxnsMessage = data['message'];
+        wallettrxns = data['data']; // Save all transactions
+
+        // Filter transactions with type == 0
+        topupList = wallettrxns
+            .where(
+              (item) => item['type'].toString() == '0',
+            )
+            .toList();
 
         notifyListeners();
 
         return fetchWalletTrxnsStatus;
       } else {
-        String responseString = response.body;
-        fetchWalletTrxnsStatus =
-            jsonDecode(responseString)['status'].toString();
-        fetchWalletTrxnsMessage = jsonDecode(responseString)['message'];
+        fetchWalletTrxnsStatus = data['status'].toString();
+        fetchWalletTrxnsMessage = data['message'];
         notifyListeners();
         return fetchWalletTrxnsStatus;
       }

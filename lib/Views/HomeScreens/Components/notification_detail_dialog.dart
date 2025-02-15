@@ -290,7 +290,7 @@ class _WithdrawDetailDialogState extends State<WithdrawDetailDialog> {
 
     return Container(
       width: 95 * size.width / 100,
-      height: 30 * size.height / 100,
+      height: 31 * size.height / 100,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: kColors.whiteColor,

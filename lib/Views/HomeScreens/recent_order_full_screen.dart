@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
+import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
@@ -24,6 +25,7 @@ class FullRecentOrderScreen extends StatefulWidget {
     required this.orderid,
     required this.description,
     required this.status,
+    required this.reference,
   });
   var amount,
       fee,
@@ -33,6 +35,7 @@ class FullRecentOrderScreen extends StatefulWidget {
       name,
       phone,
       type,
+      reference,
       orderid,
       status,
       description;
@@ -63,16 +66,71 @@ class _FullRecentOrderScreenState extends State<FullRecentOrderScreen> {
               Height(h: 2),
               Row(
                 children: [
-                  isLoading ? SizedBox.shrink() : BckBtn(),
-                  Width(w: 20),
-                  kTxt(
-                    text: 'Order Details',
-                    weight: FontWeight.w600,
-                    size: 16,
+                  isLoading
+                      ? SizedBox.shrink()
+                      : GestureDetector(
+                          onTap: () {
+                            goBack(context);
+                          },
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            size: 22,
+                          ),
+                        ),
+                  Width(w: 3),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      height: 3.5 * size.height / 100,
+                      width: 7.8 * size.width / 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: kColors.textGrey,
+                      ),
+                      child: Center(
+                        child: kTxt(
+                          text: getFirstTwoLetters(widget.name),
+                          size: 11,
+                          weight: FontWeight.w600,
+                          color: kColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Width(w: 1),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      kTxt(
+                        text: widget.name,
+                        size: 14,
+                        weight: FontWeight.w600,
+                        color: kColors.textGrey,
+                      ),
+                      kTxt(
+                        text: widget.reference,
+                        size: 10,
+                        weight: FontWeight.w500,
+                        color: kColors.textGrey,
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Height(h: 5),
+              Height(h: 1),
+              Divider(),
+              Height(h: 1),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: kTxt(
+                  text: 'Order Details',
+                  weight: FontWeight.w600,
+                  size: 14,
+                  color: kColors.blackColor.withOpacity(0.8),
+                ),
+              ),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Amount',
                 rtxt: 'N${widget.amount}',
@@ -119,15 +177,17 @@ class _FullRecentOrderScreenState extends State<FullRecentOrderScreen> {
                 rColor: getStatusTxtColor(widget.status),
               ),
               Height(h: 6),
-              (widget.status == '1' || widget.status == '2')
+              (widget.status == '1' || widget.status == '2') == false
                   ? GenBtn(
                       size: size,
                       width: 90,
                       isLoading: isLoading,
                       height: 6,
-                      btnColor: isLoading ? kColors.textGrey : kColors.red,
+                      btnColor:
+                          isLoading ? kColors.textGrey : kColors.whiteColor,
                       btnText: 'Raise Dispute',
-                      txtColor: kColors.whiteColor,
+                      txtColor: kColors.primaryColor,
+                      borderColor: kColors.primaryColor,
                       tap: isLoading
                           ? () {}
                           : () {

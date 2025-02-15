@@ -154,7 +154,7 @@ class _BottomNavState extends State<BottomNav> {
                   color: kColors.primaryColor,
                 ),
               ),
-              label: 'Settings',
+              label: 'Profile',
               icon: Padding(
                 padding: EdgeInsets.only(bottom: 0.5 * size.height / 100),
                 child: SvgPicture.asset(

@@ -31,6 +31,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
   bool emailError = false;
   bool phoneError = false;
   bool amountError = false;
+  String _selectedOption = 'Option 1';
 
   bool naMe = false;
   bool split = false;
@@ -46,7 +47,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: kColors.whitishGrey,
+      backgroundColor: kColors.whiteColor,
       appBar: AppBar(
         backgroundColor: kColors.primaryColor,
         toolbarHeight: 0.001,
@@ -63,28 +64,20 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                     BckBtn(),
                     Width(w: 22),
                     kTxt(
-                      text: 'Create escrow',
+                      text: 'Create order',
                       weight: FontWeight.w500,
                       size: 16,
                     ),
                   ],
                 ),
-                Height(h: 5),
-                Center(
-                  child: Shimmer.fromColors(
-                    period: Duration(seconds: 8),
-                    baseColor: kColors.red,
-                    highlightColor: kColors.starYellow,
-                    child: Text(
-                      'BUYER',
-                      style: GoogleFonts.acme(
-                        textStyle: TextStyle(
-                          color: kColors.whiteColor,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
+                Height(h: 2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: kTxt(
+                    text: 'Buyer order form',
+                    weight: FontWeight.w600,
+                    color: kColors.textGrey,
+                    size: 15,
                   ),
                 ),
                 Height(h: 1),
@@ -92,7 +85,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                   important: true,
                   radius: 10,
                   hint: 'Enter seller email',
-                  title: 'Seller Email',
+                  title: 'Seller email address',
                   controller: emailCtrler,
                   onChanged: (value) {
                     setState(() {
@@ -118,12 +111,12 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         ),
                       )
                     : SizedBox.shrink(),
-                Height(h: 3),
+                Height(h: 1.5),
                 TitleTField(
                   important: true,
                   radius: 10,
                   hint: 'Enter seller numer',
-                  title: 'Seller Phone',
+                  title: 'Seller phone number',
                   controller: phoneCtrler,
                   keyType: TextInputType.number,
                   onChanged: (value) {
@@ -150,7 +143,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         ),
                       )
                     : SizedBox.shrink(),
-                Height(h: 3),
+                Height(h: 1.5),
                 TitleTField(
                   important: true,
                   radius: 10,
@@ -182,7 +175,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         ),
                       )
                     : SizedBox.shrink(),
-                Height(h: 3),
+                Height(h: 1.5),
                 TitleTField(
                   radius: 8,
                   hint: 'Enter description for order',
@@ -197,6 +190,35 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                 Height(h: 3),
                 Row(
                   children: [
+                    SizedBox(
+                      height: 1 * size.height / 100,
+                      child: Radio<String>(
+                        value: 'Option 1',
+                        groupValue: _selectedOption,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedOption = value!;
+                            print('$_selectedOption $naMe $split');
+
+                            if (_selectedOption == 'Option 1') {
+                              naMe = true;
+                              split = false; // Deselect this option
+                            } else {
+                              naMe = false; // Select this option
+                              split =
+                                  true; // Ensure the other option is deselected
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    kTxt(
+                      text: 'Pay full escrow charge',
+                      size: 13,
+                      weight: FontWeight.w600,
+                      color: kColors.textGrey.withOpacity(0.6),
+                    ),
+                    Width(w: 2),
                     GestureDetector(
                       onTap: () {
                         showFeeDescriptionDialog(context, '1');
@@ -207,27 +229,42 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         color: kColors.orange,
                       ),
                     ),
-                    Width(w: 2),
-                    WhoGoPayFee(
-                      txt: 'I am paying the transaction fee',
-                      naMe: naMe,
-                      onTap: () {
-                        setState(() {
-                          if (naMe) {
-                            naMe = false; // Deselect this option
-                          } else {
-                            naMe = true; // Select this option
-                            split =
-                                false; // Ensure the other option is deselected
-                          }
-                        });
-                      },
-                    ),
                   ],
                 ),
-                Height(h: 1.5),
+                Height(h: 2),
                 Row(
                   children: [
+                    SizedBox(
+                      height: 1 * size.height / 100,
+                      child: Radio<String>(
+                        value: 'Option 2',
+                        groupValue: _selectedOption,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedOption = value!;
+
+                            if (_selectedOption == 'Option 2') {
+                              split = true; // Deselect this option
+                              naMe = false;
+                              print('$_selectedOption $naMe $split');
+                            } else {
+                              print('$_selectedOption $naMe $split');
+
+                              split = false; // Select this option
+                              naMe =
+                                  true; // Ensure the other option is deselected
+                            }
+                          });
+                        },
+                      ),
+                    ),
+                    kTxt(
+                      text: 'Split escrow charge',
+                      size: 13,
+                      weight: FontWeight.w600,
+                      color: kColors.textGrey.withOpacity(0.6),
+                    ),
+                    Width(w: 2),
                     GestureDetector(
                       onTap: () {
                         showFeeDescriptionDialog(context, '2');
@@ -238,27 +275,11 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         color: kColors.orange,
                       ),
                     ),
-                    Width(w: 2),
-                    WhoGoPayFee(
-                      txt: 'Split it',
-                      naMe: split,
-                      onTap: () {
-                        setState(() {
-                          if (split) {
-                            split = false; // Deselect this option
-                          } else {
-                            split = true; // Select this option
-                            naMe =
-                                false; // Ensure the other option is deselected
-                          }
-                        });
-                      },
-                    ),
                   ],
                 ),
-                Height(h: 1.5),
+                Height(h: 2),
                 Padding(
-                  padding: EdgeInsets.only(left: 1 * size.width / 100),
+                  padding: EdgeInsets.only(left: 5 * size.width / 100),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: kTxt(
@@ -275,7 +296,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                   width: 90,
                   height: 6,
                   btnColor: kColors.primaryColor,
-                  btnText: 'Create Escrow',
+                  btnText: 'Send invite link',
                   txtColor: kColors.whiteColor,
                   tap: () {
                     if (emailCtrler.text.isEmpty ||
