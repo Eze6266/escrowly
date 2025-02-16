@@ -134,7 +134,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       ? Center(
                           child: kTxt(
                             text:
-                                'Your incoming orders are are displayed here\n Looks like you dont\'t have any',
+                                'Your incoming orders are displayed here\n Looks like you dont\'t have any',
                             textalign: TextAlign.center,
                             size: 12,
                           ),
@@ -160,6 +160,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   bottom: 1 * size.height / 100,
                                 ),
                                 child: IncomingOrdersBox(
+                                  title: order['title'].toString(),
                                   isAcceptLoading: isAcceptLoading,
                                   isRejectLoading: isRejectLoading,
                                   width:
@@ -280,7 +281,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                       ? Center(
                           child: kTxt(
                             text:
-                                'Your active orders are are displayed here\n Looks like you dont\'t have any',
+                                'Your ongoing orders are displayed here\n Looks like you dont\'t have any',
                             textalign: TextAlign.center,
                             size: 12,
                           ),
@@ -371,7 +372,13 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     )
                   : orderProvider.trns.isEmpty
                       ? Center(
-                          child: kTxt(text: 'No transactions yet'),
+                          child: kTxt(
+                            text:
+                                'Your recent orders are displayed here\n Looks like you dont\'t have any',
+                            textalign: TextAlign.center,
+                            size: 12,
+                            maxLine: 3,
+                          ),
                         )
                       : Expanded(
                           child: ListView.builder(
@@ -423,7 +430,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     type: order['role'],
                                     amount: order['amount'].toString(),
                                     datetime: order['created_at'].toString(),
-                                    title: order['reference_code'],
+                                    title: order['title'],
                                   ),
                                 ),
                               );

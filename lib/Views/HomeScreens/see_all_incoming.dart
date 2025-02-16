@@ -74,7 +74,7 @@ class _SeeAllIncomingOrdersScreenState
               Height(h: 2),
               TitleTField(
                 hasTitle: false,
-                hint: 'Search escrows',
+                hint: 'Search by order reference or name',
                 suffixIcon: Icon(Icons.search),
                 onChanged: (value) {
                   setState(() {
@@ -88,12 +88,27 @@ class _SeeAllIncomingOrdersScreenState
                   : Expanded(
                       child: filteredTransactions.isEmpty
                           ? Center(
-                              child: kTxt(text: 'No incoming orders'),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    kImages.emptysvg,
+                                    height: 5 * size.height / 100,
+                                  ),
+                                  Height(h: 1),
+                                  kTxt(
+                                    text:
+                                        'Your incoming orders are displayed here\n Looks like you dont\'t have any',
+                                    textalign: TextAlign.center,
+                                    size: 12,
+                                  )
+                                ],
+                              ),
                             )
                           : ListView.builder(
-                              itemCount: orderProvider.incomingOrders.length,
+                              itemCount: filteredTransactions.length,
                               itemBuilder: (context, index) {
-                                var order = orderProvider.incomingOrders[index];
+                                var order = filteredTransactions[index];
                                 bool isAcceptLoading = orderProvider
                                         .acceptOrderLoading[order['id']] ??
                                     false;
@@ -107,6 +122,7 @@ class _SeeAllIncomingOrdersScreenState
                                     bottom: 1 * size.height / 100,
                                   ),
                                   child: IncomingOrdersBox(
+                                    title: order['title'].toString(),
                                     isAcceptLoading: isAcceptLoading,
                                     isRejectLoading: isRejectLoading,
                                     width:

@@ -29,9 +29,9 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
     // Filter transactions based on the search query
     List filteredTransactions = orderProvider.runningOrders
         .where((order) =>
-            order['description'].toString().toLowerCase().contains(
+            order['title'].toString().toLowerCase().contains(
                 _searchQuery.toLowerCase()) || // Search by description
-            order['amount']
+            order['reference_code']
                 .toString()
                 .toLowerCase()
                 .contains(_searchQuery.toLowerCase())) // Search by status
@@ -63,7 +63,7 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
               TitleTField(
                 radius: 10,
                 hasTitle: false,
-                hint: 'Search escrows by description or amount',
+                hint: 'Search escrows by title or order reference',
                 suffixIcon: Icon(
                   Icons.search,
                 ),
@@ -75,56 +75,73 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
               ),
               Height(h: 3),
               Expanded(
-                child: ListView.builder(
-                  itemCount: orderProvider.runningOrders.length > 2
-                      ? 2
-                      : orderProvider.runningOrders.length,
-                  itemBuilder: (context, index) {
-                    var order = orderProvider.runningOrders[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        right: 1.5 * size.width / 100,
-                        bottom: 1.4 * size.height / 100,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          goTo(
-                              context,
-                              FullRunningOrderScreen(
-                                title: order['title'].toString(),
-                                orderid: order['id'].toString(),
-                                amount: formatNumberWithCommas(
-                                    order['amount'].toString()),
-                                fee: formatNumberWithCommas(
-                                    order['fee'].toString()),
-                                date: formatDateTime(order['created_at']),
-                                name: order['role'] == 'Selling'
-                                    ? order['seller']['firstname']
-                                    : order['buyer']['firstname'],
-                                phone: order['role'] == 'Selling'
-                                    ? order['seller']['firstname']
-                                    : order['buyer']['phone'].toString(),
-                                total: formatNumberWithCommas(
-                                    order['total_amount'].toString()),
-                                feepayer: order['escrow_fee_payer'],
-                                type: order['role'],
-                                description: order['description'],
-                              ));
-                        },
-                        child: PendingEscrowsBox(
-                          title: order['title'].toString(),
-                          date: order['created_at'].toString(),
-                          reference: order['reference_code'].toString(),
-                          product: order['description'].toString(),
-                          amount: formatNumberWithCommas(
-                            order['amount'].toString(),
-                          ),
-                          type: order['role'].toString(),
+                child: filteredTransactions.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              kImages.emptysvg,
+                              height: 5 * size.height / 100,
+                            ),
+                            Height(h: 1),
+                            kTxt(
+                              text:
+                                  'Your ongoing orders are displayed here\n Looks like you dont\'t have any',
+                              textalign: TextAlign.center,
+                              size: 12,
+                            )
+                          ],
                         ),
+                      )
+                    : ListView.builder(
+                        itemCount: filteredTransactions.length,
+                        itemBuilder: (context, index) {
+                          var order = filteredTransactions[index];
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              right: 1.5 * size.width / 100,
+                              bottom: 1.4 * size.height / 100,
+                            ),
+                            child: GestureDetector(
+                              onTap: () {
+                                goTo(
+                                    context,
+                                    FullRunningOrderScreen(
+                                      title: order['title'].toString(),
+                                      orderid: order['id'].toString(),
+                                      amount: formatNumberWithCommas(
+                                          order['amount'].toString()),
+                                      fee: formatNumberWithCommas(
+                                          order['fee'].toString()),
+                                      date: formatDateTime(order['created_at']),
+                                      name: order['role'] == 'Selling'
+                                          ? order['seller']['firstname']
+                                          : order['buyer']['firstname'],
+                                      phone: order['role'] == 'Selling'
+                                          ? order['seller']['firstname']
+                                          : order['buyer']['phone'].toString(),
+                                      total: formatNumberWithCommas(
+                                          order['total_amount'].toString()),
+                                      feepayer: order['escrow_fee_payer'],
+                                      type: order['role'],
+                                      description: order['description'],
+                                    ));
+                              },
+                              child: PendingEscrowsBox(
+                                title: order['title'].toString(),
+                                date: order['created_at'].toString(),
+                                reference: order['reference_code'].toString(),
+                                product: order['description'].toString(),
+                                amount: formatNumberWithCommas(
+                                  order['amount'].toString(),
+                                ),
+                                type: order['role'].toString(),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),

@@ -171,7 +171,7 @@ class _SeeAllTrxnScreenState extends State<SeeAllTrxnScreen> {
                                       type: order['role'],
                                       amount: order['amount'].toString(),
                                       datetime: order['created_at'].toString(),
-                                      title: order['reference_code'],
+                                      title: order['title'],
                                     ),
                                   ),
                                 );

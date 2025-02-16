@@ -199,9 +199,9 @@ class RecentTransactionTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                width: 40 * size.width / 100,
+                width: 38 * size.width / 100,
                 child: kTxt(
-                  text: 'Service: $description',
+                  text: 'Service: $title',
                   maxLine: 1,
                   color: kColors.textGrey,
                   size: 12,
@@ -720,11 +720,20 @@ class IncomingOrdersBox extends StatelessWidget {
     required this.isAcceptLoading,
     required this.description,
     required this.isRejectLoading,
+    required this.title,
     this.width,
   });
 
   final bool isAcceptLoading, isRejectLoading;
-  final String date, amount, fee, sender, type, orderID, userid, description;
+  final String date,
+      amount,
+      fee,
+      sender,
+      type,
+      orderID,
+      userid,
+      description,
+      title;
   final Function() acceptTap, rejectTap, viewTap;
   final double? width;
 
@@ -792,9 +801,9 @@ class IncomingOrdersBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 40 * size.width / 100,
+                  width: 38 * size.width / 100,
                   child: kTxt(
-                    text: 'Service: $description',
+                    text: 'Service: $title',
                     maxLine: 1,
                     color: kColors.textGrey,
                     size: 12,

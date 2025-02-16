@@ -1,12 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
+import 'package:trustbridge/Views/SettingsScreens/Components/confirm_logout.dart';
 import 'package:trustbridge/Views/SettingsScreens/Components/profile_tiles.dart';
 import 'package:trustbridge/Views/SettingsScreens/account_details_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/change_pwd_screen.dart';
@@ -25,6 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: kColors.whitishGrey.withOpacity(0.2),
@@ -60,13 +64,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             Height(h: 1),
             kTxt(
-              text: 'Emmanuel Ezejiobi',
+              text: '${authProvider.firstName} ${authProvider.lastName}',
               size: 16,
               weight: FontWeight.w600,
             ),
             Height(h: 0.3),
             kTxt(
-              text: 'eze6266@gmail.com',
+              text: '${authProvider.email}',
               size: 14,
               weight: FontWeight.w500,
               color: kColors.textGrey,
@@ -135,8 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               img: kImages.infoicon,
               color: kColors.red,
               onTap: () {
-                goTo(context, LoginScreen());
-                //showConfirmLogoutAccountDialog(context);
+                showConfirmLogoutAccountDialog(context);
               },
             ),
             Height(h: 2),

@@ -350,6 +350,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       bottom: 1 * size.height / 100,
                                     ),
                                     child: IncomingOrdersBox(
+                                      title: order['title'].toString(),
                                       isAcceptLoading: isAcceptLoading,
                                       isRejectLoading: isRejectLoading,
                                       width:
@@ -618,7 +619,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               Height(h: 1),
                               kTxt(
                                 text:
-                                    'Your active orders are are displayed here\n Looks like you dont\'t have any',
+                                    'Your active orders are displayed here\n Looks like you dont\'t have any',
                                 textalign: TextAlign.center,
                                 size: 12,
                               )

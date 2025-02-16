@@ -461,7 +461,7 @@ class _ChatWithBotScreenState extends State<ChatWithBotScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 kTxt(
-                  text: 'Ayodele Emmanuel Ukpong',
+                  text: 'Lizzy Gomez',
                   size: 13,
                   weight: FontWeight.w600,
                 ),

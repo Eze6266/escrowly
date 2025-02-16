@@ -81,7 +81,7 @@ class _SeeAllTopupScreenState extends State<SeeAllTopupScreen> {
                       child: OngoingLoader(),
                     )
                   : Expanded(
-                      child: trxnProvider.topupList.isEmpty
+                      child: filteredWithdrawList.isEmpty
                           ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -101,11 +101,9 @@ class _SeeAllTopupScreenState extends State<SeeAllTopupScreen> {
                               ),
                             )
                           : ListView.builder(
-                              itemCount: trxnProvider.topupList.length > 18
-                                  ? 18
-                                  : trxnProvider.topupList.length,
+                              itemCount: trxnProvider.topupList.length,
                               itemBuilder: (context, index) {
-                                var wallet = trxnProvider.topupList[index];
+                                var wallet = filteredWithdrawList[index];
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: 0.8 * size.height / 100),

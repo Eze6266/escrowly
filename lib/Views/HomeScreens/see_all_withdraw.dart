@@ -56,7 +56,7 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
               Row(
                 children: [
                   BckBtn(),
-                  Width(w: 26),
+                  Width(w: 28),
                   kTxt(
                     text: 'Transactions',
                     weight: FontWeight.w600,
@@ -82,7 +82,7 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                       child: OngoingLoader(),
                     )
                   : Expanded(
-                      child: trxnProvider.withdrawlist.isEmpty
+                      child: filteredWithdrawList.isEmpty
                           ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -102,11 +102,9 @@ class _SeeAllWithdrawScreenState extends State<SeeAllWithdrawScreen> {
                               ),
                             )
                           : ListView.builder(
-                              itemCount: trxnProvider.withdrawlist.length > 18
-                                  ? 18
-                                  : trxnProvider.withdrawlist.length,
+                              itemCount: trxnProvider.withdrawlist.length,
                               itemBuilder: (context, index) {
-                                var wallet = trxnProvider.withdrawlist[index];
+                                var wallet = filteredWithdrawList[index];
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: 0.8 * size.height / 100),

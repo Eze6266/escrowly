@@ -402,9 +402,9 @@ class AuthProvider extends ChangeNotifier {
             jsonDecode(responseString)['data']['access_token'].toString();
         email = jsonDecode(responseString)['data']['email'].toString();
 
-        firstName = jsonDecode(responseString)['data']['first_name'].toString();
+        firstName = jsonDecode(responseString)['data']['firstname'].toString();
         userID = jsonDecode(responseString)['data']['id'].toString();
-        lastName = jsonDecode(responseString)['data']['last_name'].toString();
+        lastName = jsonDecode(responseString)['data']['lastname'].toString();
         userName = jsonDecode(responseString)['data']['username'].toString();
         phone = jsonDecode(responseString)['data']['phone'].toString();
         escrowTag = jsonDecode(responseString)['data']['trust_tag'].toString();

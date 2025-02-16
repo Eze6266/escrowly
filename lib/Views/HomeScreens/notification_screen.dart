@@ -5,6 +5,7 @@ import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.
 import 'package:trustbridge/Utilities/Functions/format_date_function.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/custom_txtfield.dart';
+import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/notification_detail_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/notification_tile.dart';
@@ -47,7 +48,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           },
                           child: Icon(
                             Icons.arrow_back_ios,
-                            size: 16,
+                            size: 20,
                           ),
                         ),
                         Width(w: 1),
@@ -68,56 +69,76 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ),
               Height(h: 2),
-              TitleTField(
-                height: 5 * size.height / 100,
-                hasTitle: false,
-                hint: 'Search notification',
-                suffixIcon: Icon(
-                  Icons.search,
-                  size: 18,
-                ),
-              ),
+              notifProvider.notifcations.isEmpty
+                  ? SizedBox.shrink()
+                  : TitleTField(
+                      height: 5 * size.height / 100,
+                      hasTitle: false,
+                      hint: 'Search notification',
+                      suffixIcon: Icon(
+                        Icons.search,
+                        size: 18,
+                      ),
+                    ),
               Height(h: 1),
               Expanded(
-                child: ListView.builder(
-                  itemCount: notifProvider.notifcations.length,
-                  itemBuilder: (context, index) {
-                    var notif = notifProvider.notifcations[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        bottom: 0.8 * size.height / 100,
-                        left: 1.5 * size.width / 100,
-                        right: 1.5 * size.width / 100,
-                      ),
-                      child: NotificationTile(
-                        viewTap: () {
-                          notifProvider
-                              .readNotification(
-                                  id: notif['id'].toString(), context: context)
-                              .then((value) {
-                            if (value == 'true') {
-                            } else {}
-                          });
-                          showNotificationDetailDialog(
-                            dateTime:
-                                '${formatDateTime(notif['created_at'])} ${formatTime(notif['created_at'])}',
-                            description: notif['description'],
-                            context: context,
-                            title: notif['title'],
-                            type: notif['type'],
+                child: notifProvider.notifcations.isEmpty
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            kImages.emptysvg,
+                            height: 5 * size.height / 100,
+                          ),
+                          Height(h: 1),
+                          kTxt(
+                            text:
+                                'Your notifications are displayed here\n Looks like you dont\'t have any',
+                            textalign: TextAlign.center,
+                            size: 12,
+                          )
+                        ],
+                      )
+                    : ListView.builder(
+                        itemCount: notifProvider.notifcations.length,
+                        itemBuilder: (context, index) {
+                          var notif = notifProvider.notifcations[index];
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: 0.8 * size.height / 100,
+                              left: 1.5 * size.width / 100,
+                              right: 1.5 * size.width / 100,
+                            ),
+                            child: NotificationTile(
+                              viewTap: () {
+                                notifProvider
+                                    .readNotification(
+                                        id: notif['id'].toString(),
+                                        context: context)
+                                    .then((value) {
+                                  if (value == 'true') {
+                                  } else {}
+                                });
+                                showNotificationDetailDialog(
+                                  dateTime:
+                                      '${formatDateTime(notif['created_at'])} ${formatTime(notif['created_at'])}',
+                                  description: notif['description'],
+                                  context: context,
+                                  title: notif['title'],
+                                  type: notif['type'],
+                                );
+                                notifProvider.getNotifcations(context: context);
+                                notifProvider.authNotifier();
+                              },
+                              status: notif['status'],
+                              time: formatTime(notif['created_at']),
+                              description: notif['description'],
+                              date: formatDateTime(notif['created_at']),
+                              title: notif['title'],
+                            ),
                           );
-                          notifProvider.getNotifcations(context: context);
-                          notifProvider.authNotifier();
                         },
-                        status: notif['status'],
-                        time: formatTime(notif['created_at']),
-                        description: notif['description'],
-                        date: formatDateTime(notif['created_at']),
-                        title: notif['title'],
                       ),
-                    );
-                  },
-                ),
               ),
             ],
           ),

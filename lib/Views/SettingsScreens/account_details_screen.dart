@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/SettingsScreens/Components/reusables.dart';
@@ -16,6 +18,7 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -55,12 +58,12 @@ class _AccountProfileScreenState extends State<AccountProfileScreen> {
                 Height(h: 2),
                 BusinesInfoTile(
                   title: 'Full name',
-                  sub: 'Emmanuel Ezejiobi',
+                  sub: '${authProvider.firstName} ${authProvider.lastName}',
                 ),
                 Height(h: 2),
                 BusinesInfoTile(
                   title: 'Email address',
-                  sub: 'eze6266@gmail.com',
+                  sub: '${authProvider.email}',
                 ),
                 Height(h: 2),
               ],
