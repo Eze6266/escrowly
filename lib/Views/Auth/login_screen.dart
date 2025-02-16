@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     )
                   : SizedBox.shrink(),
-              Height(h: 3),
+              Height(h: 2),
               TitleTField(
                 suffixIcon: GestureDetector(
                   onTap: () {
@@ -220,7 +220,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextSpan(
                       text: 'Sign Up',
                       style: TextStyle(
-                        color: kColors.primaryAccent,
+                        color: kColors.primaryColor,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {

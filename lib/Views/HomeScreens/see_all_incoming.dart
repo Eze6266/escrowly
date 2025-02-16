@@ -128,6 +128,8 @@ class _SeeAllIncomingOrdersScreenState
                                       goTo(
                                           context,
                                           FullIncomingOrderScreen(
+                                            userId: order['userid'].toString(),
+                                            title: order['title'].toString(),
                                             orderid: order['id'].toString(),
                                             amount: formatNumberWithCommas(
                                                 order['amount'].toString()),

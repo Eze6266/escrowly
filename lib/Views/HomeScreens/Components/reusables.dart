@@ -20,8 +20,10 @@ class PendingEscrowsBox extends StatelessWidget {
     required this.date,
     required this.reference,
     required this.type,
+    required this.title,
   });
   String product, amount, type, reference, date;
+  String? title;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -71,7 +73,7 @@ class PendingEscrowsBox extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: kTxt(
-                  text: '$product',
+                  text: title ?? product,
                   size: 12,
                   weight: FontWeight.w500,
                   maxLine: 1,

@@ -63,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
       initPrefs();
       authProvider.getUser(context: context);
       authProvider.getNotifcations(context: context);
+      authProvider.checkUserPin(context: context);
 
       trxnProvider.fetchAccNumbers(context: context);
       trxnProvider.fetchWalletTrxns(context: context);
@@ -115,6 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
       onRefresh: () {
         authProvider.getUser(context: context);
         authProvider.getNotifcations(context: context);
+        authProvider.checkUserPin(context: context);
 
         trxnProvider.fetchAccNumbers(context: context);
         trxnProvider.fetchWalletTrxns(context: context);
@@ -125,6 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
         trxnProvider.fetchBankList(context: context);
         orderProvider.fetchIncomingOrder(context: context);
         orderProvider.fetchTrxns(context: context);
+        orderProvider.fetchRecenttrxn(context: context);
 
         return Future.value(false);
       },
@@ -370,6 +373,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         goTo(
                                             context,
                                             FullIncomingOrderScreen(
+                                              title: order['title'].toString(),
+                                              userId:
+                                                  order['userid'].toString(),
                                               orderid: order['id'].toString(),
                                               amount: formatNumberWithCommas(
                                                   order['amount'].toString()),
@@ -583,7 +589,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ? SizedBox.shrink()
                       : GestureDetector(
                           onTap: () {
-                            goTo(context, SeeAllRecentTrxnScreen());
+                            goTo(context, SeeAllescrowsScreen());
                           },
                           child: kTxt(
                             text:
@@ -632,6 +638,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     goTo(
                                         context,
                                         FullRunningOrderScreen(
+                                          title: order['title'].toString(),
                                           orderid: order['id'].toString(),
                                           amount: formatNumberWithCommas(
                                               order['amount'].toString()),
@@ -654,6 +661,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ));
                                   },
                                   child: PendingEscrowsBox(
+                                    title: order['title'].toString(),
                                     date: order['created_at'].toString(),
                                     reference:
                                         order['reference_code'].toString(),

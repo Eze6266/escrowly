@@ -28,12 +28,18 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
   TextEditingController descCtrler = TextEditingController();
   TextEditingController emailCtrler = TextEditingController();
   TextEditingController phoneCtrler = TextEditingController();
+  TextEditingController titleCtrler = TextEditingController();
+
   bool emailError = false;
+  bool titleError = false;
+
   bool phoneError = false;
   bool amountError = false;
   String _selectedOption = 'Option 1';
 
-  bool naMe = false;
+  bool naMe = true;
+  bool seller = false;
+
   bool split = false;
   @override
   void initState() {
@@ -177,6 +183,38 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                     : SizedBox.shrink(),
                 Height(h: 1.5),
                 TitleTField(
+                  important: true,
+                  radius: 10,
+                  hint: 'Enter order title',
+                  title: 'Order title',
+                  controller: titleCtrler,
+                  keyType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {
+                      if (titleCtrler.text.length < 3) {
+                        titleError = true;
+                      } else {
+                        titleError = false;
+                      }
+                    });
+                  },
+                ),
+                titleError
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 2 * size.width / 100),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: kTxt(
+                            text: 'Title must be can\'t be less than 3 char',
+                            color: kColors.red,
+                            size: 12,
+                            weight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                Height(h: 1.5),
+                TitleTField(
                   radius: 8,
                   hint: 'Enter description for order',
                   title: 'Description',
@@ -203,10 +241,12 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                             if (_selectedOption == 'Option 1') {
                               naMe = true;
                               split = false; // Deselect this option
+                              seller = false;
                             } else {
                               naMe = false; // Select this option
                               split =
                                   true; // Ensure the other option is deselected
+                              seller = false;
                             }
                           });
                         },
@@ -246,6 +286,8 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                             if (_selectedOption == 'Option 2') {
                               split = true; // Deselect this option
                               naMe = false;
+                              seller = false;
+
                               print('$_selectedOption $naMe $split');
                             } else {
                               print('$_selectedOption $naMe $split');
@@ -253,6 +295,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                               split = false; // Select this option
                               naMe =
                                   true; // Ensure the other option is deselected
+                              seller = false;
                             }
                           });
                         },
@@ -278,19 +321,70 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                   ],
                 ),
                 Height(h: 2),
-                Padding(
-                  padding: EdgeInsets.only(left: 5 * size.width / 100),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: kTxt(
-                      weight: FontWeight.w400,
-                      text: split
-                          ? 'Fee: ${amountCtrler.text.isEmpty ? '0' : formatNumberWithCommas(splitAmount(calculateTransactionFee(amountCtrler.text)))}'
-                          : 'Fee: ${amountCtrler.text.isEmpty ? '0' : formatNumberWithCommas(calculateTransactionFee(amountCtrler.text))}',
+                Row(
+                  children: [
+                    SizedBox(
+                      height: 1 * size.height / 100,
+                      child: Radio<String>(
+                        value: 'Option 3',
+                        groupValue: _selectedOption,
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedOption = value!;
+
+                            if (_selectedOption == 'Option 3') {
+                              split = false; // Deselect this option
+                              naMe = false;
+                              seller = true;
+
+                              print('$_selectedOption $naMe $split');
+                            } else {
+                              print('$_selectedOption $naMe $split');
+
+                              split = false; // Select this option
+                              naMe =
+                                  false; // Ensure the other option is deselected
+                              seller = true;
+                            }
+                          });
+                        },
+                      ),
                     ),
-                  ),
+                    kTxt(
+                      text: 'Seller pays escrow fee',
+                      size: 13,
+                      weight: FontWeight.w600,
+                      color: kColors.textGrey.withOpacity(0.6),
+                    ),
+                    Width(w: 2),
+                    GestureDetector(
+                      onTap: () {
+                        showFeeDescriptionDialog(context, '4');
+                      },
+                      child: Icon(
+                        Icons.info,
+                        size: 12,
+                        color: kColors.orange,
+                      ),
+                    ),
+                  ],
                 ),
-                Height(h: 10),
+                Height(h: 2),
+                seller
+                    ? SizedBox.shrink()
+                    : Padding(
+                        padding: EdgeInsets.only(left: 5 * size.width / 100),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: kTxt(
+                            weight: FontWeight.w400,
+                            text: split
+                                ? 'Fee: ${amountCtrler.text.isEmpty ? '0' : formatNumberWithCommas(splitAmount(calculateTransactionFee(amountCtrler.text)))}'
+                                : 'Fee: ${amountCtrler.text.isEmpty ? '0' : formatNumberWithCommas(calculateTransactionFee(amountCtrler.text))}',
+                          ),
+                        ),
+                      ),
+                Height(h: 7),
                 GenBtn(
                   size: size,
                   width: 90,
@@ -302,8 +396,10 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                     if (emailCtrler.text.isEmpty ||
                         phoneCtrler.text.isEmpty ||
                         amountCtrler.text.isEmpty ||
+                        titleCtrler.text.isEmpty ||
                         emailError == true ||
                         phoneError == true ||
+                        titleError == true ||
                         amountError == true) {
                       showCustomErrorToast(
                           context, 'Make sure all fields are filled properly');
@@ -312,6 +408,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                         context,
                         FullBuyingDetailScreen(
                           amount: amountCtrler.text,
+                          title: titleCtrler.text,
                           fee: naMe
                               ? formatNumberWithCommas(
                                   calculateTransactionFee(amountCtrler.text))

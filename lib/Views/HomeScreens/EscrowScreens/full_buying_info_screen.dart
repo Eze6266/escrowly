@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/setup_trxn_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/enter_buyer_pay_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/order_success_dialog.dart';
 import 'package:trustbridge/Views/HomeScreens/topup_sheet.dart';
@@ -20,8 +22,16 @@ class FullBuyingDetailScreen extends StatefulWidget {
     required this.description,
     required this.whoPays,
     required this.sellerPhone,
+    required this.title,
   });
-  var dateTime, sellerEmail, sellerPhone, amount, fee, description, whoPays;
+  var dateTime,
+      sellerEmail,
+      sellerPhone,
+      amount,
+      fee,
+      description,
+      whoPays,
+      title;
 
   @override
   State<FullBuyingDetailScreen> createState() => _FullBuyingDetailScreenState();
@@ -34,6 +44,7 @@ class _FullBuyingDetailScreenState extends State<FullBuyingDetailScreen> {
     Size size = MediaQuery.of(context).size;
     var orderProvider = Provider.of<OrderProvider>(context);
     isLoading = Provider.of<OrderProvider>(context).createBuyerOrderIsLoading;
+    var authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,
@@ -117,25 +128,41 @@ class _FullBuyingDetailScreenState extends State<FullBuyingDetailScreen> {
                 txtColor: kColors.whiteColor,
                 btnText: 'Make payment',
                 tap: () {
-                  showModalBottomSheet(
-                    isDismissible: false,
-                    isScrollControlled: true,
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
+                  if (authProvider.checkPinStatus == 'success') {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      isScrollControlled: true,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
                       ),
-                    ),
-                    builder: (context) => BuyerPayPinSheet(
-                      amount: widget.amount,
-                      dateTime: widget.dateTime,
-                      fee: widget.fee,
-                      sellerEmail: widget.sellerEmail,
-                      description: widget.description.toString(),
-                      whoPays: widget.whoPays,
-                      sellerPhone: widget.sellerPhone,
-                    ),
-                  );
+                      builder: (context) => BuyerPayPinSheet(
+                        title: widget.title,
+                        amount: widget.amount,
+                        dateTime: widget.dateTime,
+                        fee: widget.fee,
+                        sellerEmail: widget.sellerEmail,
+                        description: widget.description.toString(),
+                        whoPays: widget.whoPays,
+                        sellerPhone: widget.sellerPhone,
+                      ),
+                    );
+                  } else {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      isScrollControlled: true,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      builder: (context) => SetupPinSheet(),
+                    );
+                  }
+
                   // orderProvider
                   //     .createBuyerOrder(
                   //   email: widget.sellerEmail,

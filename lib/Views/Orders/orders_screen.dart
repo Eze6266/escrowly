@@ -180,6 +180,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     goTo(
                                         context,
                                         FullIncomingOrderScreen(
+                                          userId: order['userid'].toString(),
+                                          title: order['title'].toString(),
                                           orderid: order['id'].toString(),
                                           amount: formatNumberWithCommas(
                                               order['amount'].toString()),
@@ -300,6 +302,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     goTo(
                                         context,
                                         FullRunningOrderScreen(
+                                          title: order['title'].toString(),
                                           orderid: order['id'].toString(),
                                           amount: formatNumberWithCommas(
                                               order['amount'].toString()),
@@ -322,6 +325,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         ));
                                   },
                                   child: PendingEscrowsBox(
+                                    title: order['title'].toString(),
                                     date: order['created_at'].toString(),
                                     reference:
                                         order['reference_code'].toString(),

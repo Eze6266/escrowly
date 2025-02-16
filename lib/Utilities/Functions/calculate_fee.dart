@@ -4,7 +4,7 @@ String calculateTransactionFee(String amount) {
     double parsedAmount = double.parse(amount);
 
     // Calculate 2.5% of the amount
-    double fee = parsedAmount * 0.025;
+    double fee = parsedAmount * 0.02;
 
     // Format the fee as a string with 2 decimal places
     return fee.toStringAsFixed(2);

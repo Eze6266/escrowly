@@ -352,6 +352,7 @@ class OrderProvider extends ChangeNotifier {
     required String description,
     required String amount,
     required String payer,
+    required String title,
     required BuildContext context,
   }) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -362,6 +363,7 @@ class OrderProvider extends ChangeNotifier {
 
     var payload = {
       "buyerEmail": '',
+      "title": title,
       "sellerEmail": email,
       "buyerPhone": '',
       "sellerPhone": phone,
@@ -428,6 +430,7 @@ class OrderProvider extends ChangeNotifier {
     required String description,
     required String amount,
     required String payer,
+    required String title,
     required BuildContext context,
   }) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -438,6 +441,7 @@ class OrderProvider extends ChangeNotifier {
 
     var payload = {
       "buyerEmail": email,
+      "title": title,
       "sellerEmail": '',
       "buyerPhone": phone,
       "sellerPhone": '',

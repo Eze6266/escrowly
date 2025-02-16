@@ -21,6 +21,7 @@ class FullRunningOrderScreen extends StatefulWidget {
     required this.phone,
     required this.total,
     required this.type,
+    required this.title,
     required this.orderid,
     required this.description,
   });
@@ -31,6 +32,7 @@ class FullRunningOrderScreen extends StatefulWidget {
       date,
       name,
       phone,
+      title,
       type,
       orderid,
       description;
@@ -71,6 +73,11 @@ class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
                 ],
               ),
               Height(h: 5),
+              RowTxtWitUnderline(
+                lTxt: 'Title',
+                rtxt: 'N${widget.title}',
+              ),
+              Height(h: 3),
               RowTxtWitUnderline(
                 lTxt: 'Amount',
                 rtxt: 'N${widget.amount}',

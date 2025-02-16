@@ -17,9 +17,17 @@ class FullSellingDetailScreen extends StatefulWidget {
     required this.buyerEmail,
     required this.description,
     required this.whoPays,
+    required this.title,
     required this.buyerPhone,
   });
-  var dateTime, buyerEmail, buyerPhone, amount, fee, description, whoPays;
+  var dateTime,
+      buyerEmail,
+      buyerPhone,
+      amount,
+      fee,
+      description,
+      whoPays,
+      title;
 
   @override
   State<FullSellingDetailScreen> createState() =>
@@ -118,6 +126,7 @@ class _FullSellingDetailScreenState extends State<FullSellingDetailScreen> {
                 tap: () {
                   orderProvider
                       .createSellerOrder(
+                    title: widget.title,
                     email: widget.buyerEmail,
                     phone: widget.buyerPhone,
                     description: widget.description,

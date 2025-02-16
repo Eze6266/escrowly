@@ -20,8 +20,10 @@ class FullIncomingOrderScreen extends StatefulWidget {
     required this.phone,
     required this.total,
     required this.type,
+    required this.title,
     required this.orderid,
     required this.description,
+    required this.userId,
   });
   var amount,
       fee,
@@ -31,7 +33,9 @@ class FullIncomingOrderScreen extends StatefulWidget {
       name,
       phone,
       type,
+      title,
       orderid,
+      userId,
       description;
   @override
   State<FullIncomingOrderScreen> createState() =>
@@ -81,6 +85,11 @@ class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
               ),
               Height(h: 5),
               RowTxtWitUnderline(
+                lTxt: 'Title',
+                rtxt: 'N${widget.title}',
+              ),
+              Height(h: 3),
+              RowTxtWitUnderline(
                 lTxt: 'Amount',
                 rtxt: 'N${widget.amount}',
               ),
@@ -120,60 +129,95 @@ class _FullIncomingOrderScreenState extends State<FullIncomingOrderScreen> {
                 rtxt: '${widget.description}',
               ),
               Height(h: 6),
-              GenBtn(
-                size: size,
-                width: 90,
-                isLoading: acceptIsLoading,
-                height: 6,
-                btnColor:
-                    rejectIsLoading ? kColors.textGrey : kColors.primaryColor,
-                btnText: 'Accept Order',
-                txtColor: kColors.whiteColor,
-                tap: (rejectIsLoading || acceptIsLoading)
-                    ? () {}
-                    : () {
-                        orderProvider
-                            .acceptOrder(
-                                orderid: widget.orderid, context: context)
-                            .then((value) {
-                          if (value == 'success') {
-                            goBack(context);
-                            orderProvider.fetchIncomingOrder(context: context);
-                            authProvider.getUser(context: context);
-                          } else {
-                            showCustomErrorToast(
-                                context, orderProvider.acceptOrderMessage);
-                          }
-                        });
-                      },
-              ),
+              (widget.userId == Provider.of<AuthProvider>(context).userID)
+                  ? SizedBox()
+                  : GenBtn(
+                      size: size,
+                      width: 90,
+                      isLoading: acceptIsLoading,
+                      height: 6,
+                      btnColor: rejectIsLoading
+                          ? kColors.textGrey
+                          : kColors.primaryColor,
+                      btnText: 'Accept Order',
+                      txtColor: kColors.whiteColor,
+                      tap: (rejectIsLoading || acceptIsLoading)
+                          ? () {}
+                          : () {
+                              orderProvider
+                                  .acceptOrder(
+                                      orderid: widget.orderid, context: context)
+                                  .then((value) {
+                                if (value == 'success') {
+                                  goBack(context);
+                                  orderProvider.fetchIncomingOrder(
+                                      context: context);
+                                  authProvider.getUser(context: context);
+                                } else {
+                                  showCustomErrorToast(context,
+                                      orderProvider.acceptOrderMessage);
+                                }
+                              });
+                            },
+                    ),
               Height(h: 1),
-              GenBtn(
-                size: size,
-                width: 90,
-                isLoading: rejectIsLoading,
-                height: 6,
-                btnColor: acceptIsLoading ? kColors.textGrey : kColors.red,
-                btnText: 'Reject Order',
-                txtColor: kColors.whiteColor,
-                tap: (acceptIsLoading || rejectIsLoading)
-                    ? () {}
-                    : () {
-                        orderProvider
-                            .rejectOrder(
-                                orderid: widget.orderid, context: context)
-                            .then((value) {
-                          if (value == 'success') {
-                            goBack(context);
-                            orderProvider.fetchIncomingOrder(context: context);
-                            authProvider.getUser(context: context);
-                          } else {
-                            showCustomErrorToast(
-                                context, orderProvider.acceptOrderMessage);
-                          }
-                        });
-                      },
-              ),
+              (widget.userId == Provider.of<AuthProvider>(context).userID)
+                  ? GenBtn(
+                      size: size,
+                      width: 90,
+                      isLoading: rejectIsLoading,
+                      height: 6,
+                      btnColor:
+                          acceptIsLoading ? kColors.textGrey : kColors.red,
+                      btnText: 'Cancel Order',
+                      txtColor: kColors.whiteColor,
+                      tap: (acceptIsLoading || rejectIsLoading)
+                          ? () {}
+                          : () {
+                              orderProvider
+                                  .rejectOrder(
+                                      orderid: widget.orderid, context: context)
+                                  .then((value) {
+                                if (value == 'success') {
+                                  goBack(context);
+                                  orderProvider.fetchIncomingOrder(
+                                      context: context);
+                                  authProvider.getUser(context: context);
+                                } else {
+                                  showCustomErrorToast(context,
+                                      orderProvider.acceptOrderMessage);
+                                }
+                              });
+                            },
+                    )
+                  : GenBtn(
+                      size: size,
+                      width: 90,
+                      isLoading: rejectIsLoading,
+                      height: 6,
+                      btnColor:
+                          acceptIsLoading ? kColors.textGrey : kColors.red,
+                      btnText: 'Reject Order',
+                      txtColor: kColors.whiteColor,
+                      tap: (acceptIsLoading || rejectIsLoading)
+                          ? () {}
+                          : () {
+                              orderProvider
+                                  .rejectOrder(
+                                      orderid: widget.orderid, context: context)
+                                  .then((value) {
+                                if (value == 'success') {
+                                  goBack(context);
+                                  orderProvider.fetchIncomingOrder(
+                                      context: context);
+                                  authProvider.getUser(context: context);
+                                } else {
+                                  showCustomErrorToast(context,
+                                      orderProvider.acceptOrderMessage);
+                                }
+                              });
+                            },
+                    ),
             ],
           ),
         ),

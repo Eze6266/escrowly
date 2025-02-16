@@ -25,8 +25,16 @@ class BuyerPayPinSheet extends StatefulWidget {
     required this.description,
     required this.whoPays,
     required this.sellerPhone,
+    required this.title,
   });
-  var dateTime, sellerEmail, sellerPhone, amount, fee, description, whoPays;
+  var dateTime,
+      sellerEmail,
+      sellerPhone,
+      amount,
+      fee,
+      description,
+      whoPays,
+      title;
 
   @override
   State<BuyerPayPinSheet> createState() => _BuyerPayPinSheetState();
@@ -132,6 +140,7 @@ class _BuyerPayPinSheetState extends State<BuyerPayPinSheet> {
               tap: () {
                 orderProvider
                     .createBuyerOrder(
+                  title: widget.title,
                   email: widget.sellerEmail,
                   phone: widget.sellerPhone,
                   description: widget.description,
@@ -145,7 +154,16 @@ class _BuyerPayPinSheetState extends State<BuyerPayPinSheet> {
                 )
                     .then((value) {
                   if (value == 'success') {
+                    authProvider.getNotifcations(context: context);
+
+                    goBack(context);
                     showCashoutSuccessDialog(context, widget.sellerEmail);
+                    trxnProvider.fetchWalletTrxns(context: context);
+
+                    trxnProvider.fetchBalances(context: context);
+                    trxnProvider.fetchWithdrawals(context: context);
+                    orderProvider.fetchIncomingOrder(context: context);
+                    orderProvider.fetchTrxns(context: context);
                   } else {
                     goBack(context);
                     showCustomErrorToast(
