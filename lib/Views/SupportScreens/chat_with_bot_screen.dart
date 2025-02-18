@@ -18,7 +18,7 @@ class _ChatWithBotScreenState extends State<ChatWithBotScreen> {
       {
         'question': 'What is your inquiry about?',
         'options': <String>[
-          'Favorites',
+          'Orders',
           'Change Profile Picture',
           'Delete Account',
           'Change Password',
@@ -27,20 +27,20 @@ class _ChatWithBotScreenState extends State<ChatWithBotScreen> {
         ],
       },
     ],
-    'Favorites': [
+    'Orders': [
       {
         'question': 'What would you like to do?',
-        'options': <String>['Add a new favorite', 'View my favorites'],
+        'options': <String>['Create an order', 'View my orders'],
       },
     ],
-    'Add a new favorite': [
+    'Create an order': [
       {
         'question':
             'Adding an item to favorite is quite simple. All you have to do is go on to the FMCG screen and click on the item you wish to add to favorites. Now you should see a screen showing a detailed info of the product. Scroll to the bottom where you should see a heart icon, click on the icon and the product would automatically be added to your favorite list.',
         'options': <String>['Understood'],
       },
     ],
-    'View my favorites': [
+    'View my orders': [
       {
         'question':
             'After adding items to favorite and want to see them, here is how to go about it. Log in to your Escrowly account as a user, and on the homepage just beside the notifications icon at the top right you would see a heart icon. Click on that icon and you should be navigated to the screen where you would see all your favorited items.',

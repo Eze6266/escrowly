@@ -118,7 +118,9 @@ class _PaySellerpaymentInfoSheetState extends State<PaySellerpaymentInfoSheet> {
                           top: Radius.circular(30),
                         ),
                       ),
-                      builder: (context) => PaySellerPinSheet(),
+                      builder: (context) => PaySellerPinSheet(
+                        orderid: widget.orderid,
+                      ),
                     );
                   } else {
                     showModalBottomSheet(

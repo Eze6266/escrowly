@@ -134,6 +134,20 @@ class _WithdrawFundsDialogState extends State<WithdrawFundsDialog> {
                     ),
                   )
                 : SizedBox.shrink(),
+            isLessThan100
+                ? SizedBox.shrink()
+                : Padding(
+                    padding: EdgeInsets.only(left: 2 * size.width / 100),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: kTxt(
+                        text: '1.5% withdrawal fee (N200 cap)',
+                        size: 9,
+                        color: kColors.orange,
+                        weight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
             Height(h: 2.5),
             RowDropDown(
               txtColor: kColors.blackColor,

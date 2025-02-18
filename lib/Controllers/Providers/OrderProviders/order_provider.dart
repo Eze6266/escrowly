@@ -555,4 +555,67 @@ class OrderProvider extends ChangeNotifier {
   }
 
 ///////////////////**********************FETCH RECENT TRXNS*****************////////////////////
+
+  /////////////////////**********************MARK ORDER COMPLETED************//////////////////
+
+  bool completeOrderIsLoading = false;
+  var completeOrderStatus, completeOrderMessage;
+
+  Future<String?> completeOrder({
+    required String orderid,
+    required String pin,
+    required BuildContext context,
+  }) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    completeOrderIsLoading = true;
+    notifyListeners();
+    var token = pref.getString('token');
+
+    var payload = {
+      "ID": orderid,
+      "pin": pin,
+    };
+    print(payload);
+    try {
+      var response = await http.post(
+        Uri.parse('${kUrl.createOrder}'),
+        body: payload,
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      print('this is complete order status code ${response.statusCode}');
+
+      completeOrderIsLoading = false;
+      notifyListeners();
+      var data = response.body;
+      print(data);
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        String responseString = response.body;
+        completeOrderStatus = jsonDecode(responseString)['status'].toString();
+        completeOrderMessage = jsonDecode(responseString)['message'];
+
+        notifyListeners();
+
+        return completeOrderStatus;
+      } else {
+        String responseString = response.body;
+        completeOrderStatus = jsonDecode(responseString)['status'].toString();
+        completeOrderMessage = jsonDecode(responseString)['message'];
+        notifyListeners();
+        return completeOrderStatus;
+      }
+    } catch (error) {
+      completeOrderIsLoading = false;
+      notifyListeners();
+      ErrorHandler.handleError(error, context);
+      print(error);
+    }
+    notifyListeners();
+    return completeOrderStatus;
+  }
+
+/////////////////////**********************MARK ORDER COMPLETED************//////////////////
 }

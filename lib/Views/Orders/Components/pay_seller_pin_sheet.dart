@@ -1,4 +1,5 @@
 import 'package:clipboard/clipboard.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,33 +15,23 @@ import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/Components/otp_boxes.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/order_success_dialog.dart';
+import 'package:trustbridge/Views/Orders/Components/order_completed_dialog.dart';
 
 class PaySellerPinSheet extends StatefulWidget {
   PaySellerPinSheet({
     super.key,
-    // required this.amount,
-    // required this.dateTime,
-    // required this.fee,
-    // required this.sellerEmail,
-    // required this.description,
-    // required this.whoPays,
-    // required this.sellerPhone,
-    // required this.title,
+    required this.orderid,
   });
-  // var dateTime,
-  //     sellerEmail,
-  //     sellerPhone,
-  //     amount,
-  //     fee,
-  //     description,
-  //     whoPays,
-  //     title;
-
+  var orderid;
   @override
   State<PaySellerPinSheet> createState() => _PaySellerPinSheetState();
 }
 
 class _PaySellerPinSheetState extends State<PaySellerPinSheet> {
+  final confetticontroller = ConfettiController();
+
+  String enteredPin = '';
+
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
@@ -48,7 +39,7 @@ class _PaySellerPinSheetState extends State<PaySellerPinSheet> {
     var trxnProvider = Provider.of<TransactionProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
     var orderProvider = Provider.of<OrderProvider>(context);
-    isLoading = Provider.of<OrderProvider>(context).createBuyerOrderIsLoading;
+    isLoading = Provider.of<OrderProvider>(context).completeOrderIsLoading;
 
     return Padding(
       padding:
@@ -120,6 +111,7 @@ class _PaySellerPinSheetState extends State<PaySellerPinSheet> {
                 onSubmit: (text) {
                   setState(() {
                     print('Entered pin is $text');
+                    enteredPin = text;
                   });
                 },
                 onChange: (text) {},
@@ -145,7 +137,22 @@ class _PaySellerPinSheetState extends State<PaySellerPinSheet> {
                 btnColor: kColors.primaryColor,
                 btnText: 'Done',
                 txtColor: kColors.whiteColor,
-                tap: () {},
+                tap: () {
+                  orderProvider
+                      .completeOrder(
+                          orderid: widget.orderid,
+                          pin: enteredPin,
+                          context: context)
+                      .then((value) {
+                    if (value == 'success') {
+                      goBack(context);
+                      showOrderCompletedDialog(context, confetticontroller);
+                    } else {
+                      showCustomErrorToast(
+                          context, orderProvider.completeOrderMessage);
+                    }
+                  });
+                },
               ),
             ],
           ),
