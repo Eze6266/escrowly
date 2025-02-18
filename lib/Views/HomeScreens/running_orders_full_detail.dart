@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:text_scroll/text_scroll.dart';
 import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
+import 'package:trustbridge/Utilities/Functions/get_first_letters.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/Orders/Components/pay_seller_payinfo_sheet.dart';
 import 'package:trustbridge/Views/SupportScreens/support_screen.dart';
 
 class FullRunningOrderScreen extends StatefulWidget {
@@ -24,6 +26,8 @@ class FullRunningOrderScreen extends StatefulWidget {
     required this.title,
     required this.orderid,
     required this.description,
+    required this.status,
+    required this.reference,
   });
   var amount,
       fee,
@@ -32,10 +36,13 @@ class FullRunningOrderScreen extends StatefulWidget {
       date,
       name,
       phone,
+      status,
+      reference,
       title,
       type,
       orderid,
       description;
+
   @override
   State<FullRunningOrderScreen> createState() => _FullRunningOrderScreenState();
 }
@@ -63,89 +70,186 @@ class _FullRunningOrderScreenState extends State<FullRunningOrderScreen> {
               Height(h: 2),
               Row(
                 children: [
-                  isLoading ? SizedBox.shrink() : BckBtn(),
-                  Width(w: 28),
-                  kTxt(
-                    text: 'Order Details',
-                    weight: FontWeight.w600,
-                    size: 16,
+                  GestureDetector(
+                    onTap: () {
+                      goBack(context);
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      size: 22,
+                    ),
+                  ),
+                  Width(w: 3),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Container(
+                      height: 3.5 * size.height / 100,
+                      width: 7.8 * size.width / 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        color: kColors.textGrey,
+                      ),
+                      child: Center(
+                        child: kTxt(
+                          text: getFirstTwoLetters(widget.name),
+                          size: 11,
+                          weight: FontWeight.w600,
+                          color: kColors.whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Width(w: 1),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      kTxt(
+                        text: widget.name,
+                        size: 14,
+                        weight: FontWeight.w600,
+                        color: kColors.textGrey,
+                      ),
+                      kTxt(
+                        text: widget.reference,
+                        size: 10,
+                        weight: FontWeight.w500,
+                        color: kColors.textGrey,
+                      ),
+                    ],
                   ),
                 ],
               ),
-              Height(h: 5),
+              Height(h: 1),
+              Divider(),
+              Height(h: 1),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: kTxt(
+                  text: 'Order Details',
+                  weight: FontWeight.w600,
+                  size: 14,
+                  color: kColors.blackColor.withOpacity(0.8),
+                ),
+              ),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Title',
                 rtxt: 'N${widget.title}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Amount',
                 rtxt: 'N${widget.amount}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Escrowly Fee',
                 rtxt: 'N${widget.fee}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Total Amount',
                 rtxt: 'N${widget.total}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Escrowly Fee Payer',
                 rtxt: '${widget.feepayer}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: 'Date',
                 rtxt: '${widget.date}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: '${widget.type == 'Selling' ? 'Seller' : 'Buyer'} Name',
                 rtxt: '${widget.name}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderline(
                 lTxt: '${widget.type == 'Selling' ? 'Seller' : 'Buyer'} Phone',
                 rtxt: '${widget.phone}',
               ),
-              Height(h: 3),
+              Height(h: 2),
               RowTxtWitUnderlineScrolling(
                 lTxt: 'Description',
                 rtxt: '${widget.description}',
               ),
-              Height(h: 6),
-              GenBtn(
-                size: size,
-                width: 90,
-                isLoading: isLoading,
-                borderColor: kColors.primaryColor,
-                height: 6,
-                btnColor: isLoading ? kColors.textGrey : kColors.whiteColor,
-                btnText: 'Raise Dispute',
-                txtColor: kColors.primaryColor,
-                tap: isLoading
-                    ? () {}
-                    : () {
-                        // orderProvider
-                        //     .acceptOrder(
-                        //         orderid: widget.orderid, context: context)
-                        //     .then((value) {
-                        //   if (value == 'success') {
-                        //     goBack(context);
-                        //     orderProvider.fetchIncomingOrder(context: context);
-                        //     authProvider.getUser(context: context);
-                        //   } else {
-                        //     showCustomErrorToast(
-                        //         context, orderProvider.acceptOrderMessage);
-                        //   }
-                        // });
+              Height(h: 2),
+              RowTxtWitUnderline(
+                lTxt: 'Status',
+                rtxt: '${getStatusTxt(widget.status)}',
+                rColor: getStatusTxtColor(widget.status),
+              ),
+              Height(h: 1),
+              Divider(),
+              Height(h: 1),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: kTxt(
+                  text: 'Payment Details',
+                  weight: FontWeight.w600,
+                  size: 14,
+                  color: kColors.blackColor.withOpacity(0.8),
+                ),
+              ),
+              Height(h: 2),
+              RowTxtWitUnderline(lTxt: 'Amount', rtxt: 'N${widget.amount}'),
+              Height(h: 1.5),
+              RowTxtWitUnderline(lTxt: 'Fee', rtxt: 'N${widget.fee}'),
+              Height(h: 1.5),
+              RowTxtWitUnderline(lTxt: 'Total', rtxt: 'N${widget.total}'),
+              widget.status == '2' ? Height(h: 3) : Height(h: 0),
+              widget.status == '2'
+                  ? Align(
+                      alignment: Alignment.centerRight,
+                      child: GenBtn(
+                        size: size,
+                        borderRadius: 10,
+                        width: 43,
+                        height: 5,
+                        btnColor: kColors.primaryColor,
+                        btnText: 'Pay seller',
+                        txtColor: kColors.whiteColor,
+                        tap: () {
+                          showModalBottomSheet(
+                            isDismissible: true,
+                            isScrollControlled: true,
+                            context: context,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(30),
+                              ),
+                            ),
+                            builder: (context) => PaySellerpaymentInfoSheet(
+                              amount: widget.amount,
+                              fee: widget.fee,
+                              total: widget.total,
+                              orderid: widget.orderid,
+                            ),
+                          );
+                        },
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              Height(h: 2),
+              widget.status == '2'
+                  ? GenBtn(
+                      size: size,
+                      borderRadius: 10,
+                      width: 88,
+                      borderColor: kColors.primaryColor,
+                      height: 5,
+                      btnColor: kColors.whiteColor,
+                      btnText: 'Raise Dispute',
+                      txtColor: kColors.primaryColor,
+                      tap: () {
                         goTo(context, SupportScreen());
                       },
-              ),
+                    )
+                  : SizedBox.shrink(),
               Height(h: 1),
             ],
           ),

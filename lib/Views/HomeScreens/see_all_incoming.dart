@@ -14,6 +14,7 @@ import 'package:trustbridge/Views/HomeScreens/EscrowScreens/full_escrow_detail_s
 import 'package:trustbridge/Views/HomeScreens/full_incoming_trxn.dart';
 import 'package:trustbridge/Views/HomeScreens/recent_order_full_screen.dart';
 import 'package:trustbridge/Views/HomeScreens/trxn_full_detail_screen.dart';
+import 'package:trustbridge/Views/Orders/Components/order_payment_info_sheet.dart';
 
 class SeeAllIncomingOrdersScreen extends StatefulWidget {
   const SeeAllIncomingOrdersScreen({super.key});
@@ -122,6 +123,7 @@ class _SeeAllIncomingOrdersScreenState
                                     bottom: 1 * size.height / 100,
                                   ),
                                   child: IncomingOrdersBox(
+                                    createdTime: order['created_at'].toString(),
                                     title: order['title'].toString(),
                                     isAcceptLoading: isAcceptLoading,
                                     isRejectLoading: isRejectLoading,
@@ -144,6 +146,9 @@ class _SeeAllIncomingOrdersScreenState
                                       goTo(
                                           context,
                                           FullIncomingOrderScreen(
+                                            status: order['status'].toString(),
+                                            reference: order['reference_code']
+                                                .toString(),
                                             userId: order['userid'].toString(),
                                             title: order['title'].toString(),
                                             orderid: order['id'].toString(),
@@ -169,23 +174,51 @@ class _SeeAllIncomingOrdersScreenState
                                           ));
                                     },
                                     acceptTap: () {
-                                      orderProvider
-                                          .acceptOrder(
-                                              orderid: order['id'],
-                                              context: context)
-                                          .then((value) {
-                                        if (value == 'success') {
-                                          trxnProvider.fetchWalletTrxns(
-                                              context: context);
-                                          trxnProvider.fetchBalances(
-                                              context: context);
-                                          orderProvider.fetchIncomingOrder(
-                                              context: context);
-                                        } else {
-                                          showCustomErrorToast(context,
-                                              orderProvider.acceptOrderMessage);
-                                        }
-                                      });
+                                      if (order['role'].toString() ==
+                                          'Seller') {
+                                        orderProvider
+                                            .acceptOrder(
+                                                orderid: order['id'].toString(),
+                                                pin: '',
+                                                context: context)
+                                            .then((value) {
+                                          if (value == 'success') {
+                                            trxnProvider.fetchWalletTrxns(
+                                                context: context);
+                                            trxnProvider.fetchBalances(
+                                                context: context);
+                                            orderProvider.fetchIncomingOrder(
+                                                context: context);
+                                          } else {
+                                            showCustomErrorToast(
+                                                context,
+                                                orderProvider
+                                                    .acceptOrderMessage);
+                                          }
+                                        });
+                                      } else {
+                                        showModalBottomSheet(
+                                          isDismissible: true,
+                                          isScrollControlled: true,
+                                          context: context,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.vertical(
+                                              top: Radius.circular(30),
+                                            ),
+                                          ),
+                                          builder: (context) =>
+                                              OrderPaymentInfoSheet(
+                                            amount: formatNumberWithCommas(
+                                                order['amount'].toString()),
+                                            fee: formatNumberWithCommas(
+                                                order['fee'].toString()),
+                                            total: formatNumberWithCommas(
+                                                order['total_amount']
+                                                    .toString()),
+                                            orderid: order['id'].toString(),
+                                          ),
+                                        );
+                                      }
                                     },
                                     rejectTap: () {
                                       orderProvider

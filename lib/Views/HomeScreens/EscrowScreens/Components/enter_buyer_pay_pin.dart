@@ -50,129 +50,133 @@ class _BuyerPayPinSheetState extends State<BuyerPayPinSheet> {
     var orderProvider = Provider.of<OrderProvider>(context);
     isLoading = Provider.of<OrderProvider>(context).createBuyerOrderIsLoading;
 
-    return Container(
-      height: 38 * size.height / 100,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+    return Padding(
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Container(
+        height: 38 * size.height / 100,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+          color: kColors.whiteColor,
         ),
-        color: kColors.whiteColor,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: 4 * size.width / 100,
-        vertical: 2 * size.height / 100,
-      ),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                GenBtn(
-                  size: size,
-                  width: 15,
-                  height: 0.3,
-                  btnColor: kColors.textGrey.withOpacity(0.5),
-                  btnText: '',
-                ),
-                Width(w: 31),
-                GestureDetector(
-                  onTap: () {
-                    isLoading ? null : goBack(context);
-                  },
-                  child: Icon(
-                    Icons.close_rounded,
-                    color: kColors.red,
+        padding: EdgeInsets.symmetric(
+          horizontal: 4 * size.width / 100,
+          vertical: 2 * size.height / 100,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GenBtn(
+                    size: size,
+                    width: 15,
+                    height: 0.3,
+                    btnColor: kColors.textGrey.withOpacity(0.5),
+                    btnText: '',
                   ),
-                ),
-                Width(w: 2),
-              ],
-            ),
-            Height(h: 3),
-            kTxt(
-              text: 'Input transaction pin',
-              size: 18,
-              weight: FontWeight.w500,
-              color: kColors.blackColor.withOpacity(0.8),
-            ),
-            Height(h: 1),
-            kTxt(
-              text: 'Kindly input your transaction pin',
-              size: 13,
-              weight: FontWeight.w500,
-              color: kColors.textGrey.withOpacity(0.9),
-            ),
-            Height(h: 3),
-            OtpPinField(
-              autoFocus: true,
-              autoFillEnable: true,
-              textInputAction: TextInputAction.done,
-              onSubmit: (text) {
-                setState(() {
-                  print('Entered pin is $text');
-                });
-              },
-              onChange: (text) {},
-              otpPinFieldStyle: OtpPinFieldStyle(
-                filledFieldBorderColor: kColors.primaryColor,
-                fieldBorderWidth: 1.5,
-                activeFieldBorderColor: kColors.textGrey,
+                  Width(w: 31),
+                  GestureDetector(
+                    onTap: () {
+                      isLoading ? null : goBack(context);
+                    },
+                    child: Icon(
+                      Icons.close_rounded,
+                      color: kColors.red,
+                    ),
+                  ),
+                  Width(w: 2),
+                ],
               ),
-              maxLength: 4,
-              showCursor: true,
-              cursorColor: kColors.primaryColor,
-              cursorWidth: 1,
-              otpPinFieldDecoration:
-                  OtpPinFieldDecoration.defaultPinBoxDecoration,
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-            Height(h: 5),
-            GenBtn(
-              size: size,
-              width: 85,
-              isLoading: isLoading,
-              height: 5.5,
-              btnColor: kColors.primaryColor,
-              btnText: 'Done',
-              txtColor: kColors.whiteColor,
-              tap: () {
-                orderProvider
-                    .createBuyerOrder(
-                  title: widget.title,
-                  email: widget.sellerEmail,
-                  phone: widget.sellerPhone,
-                  description: widget.description,
-                  amount: widget.amount,
-                  payer: widget.whoPays == 'Seller'
-                      ? 'seller'
-                      : widget.fee == 'Me'
-                          ? 'buyer'
-                          : 'split',
-                  context: context,
-                )
-                    .then((value) {
-                  if (value == 'success') {
-                    authProvider.getNotifcations(context: context);
+              Height(h: 3),
+              kTxt(
+                text: 'Input transaction pin',
+                size: 18,
+                weight: FontWeight.w500,
+                color: kColors.blackColor.withOpacity(0.8),
+              ),
+              Height(h: 1),
+              kTxt(
+                text: 'Kindly input your transaction pin',
+                size: 13,
+                weight: FontWeight.w500,
+                color: kColors.textGrey.withOpacity(0.9),
+              ),
+              Height(h: 3),
+              OtpPinField(
+                autoFocus: true,
+                autoFillEnable: true,
+                textInputAction: TextInputAction.done,
+                onSubmit: (text) {
+                  setState(() {
+                    print('Entered pin is $text');
+                  });
+                },
+                onChange: (text) {},
+                otpPinFieldStyle: OtpPinFieldStyle(
+                  filledFieldBorderColor: kColors.primaryColor,
+                  fieldBorderWidth: 1.5,
+                  activeFieldBorderColor: kColors.textGrey,
+                ),
+                maxLength: 4,
+                showCursor: true,
+                cursorColor: kColors.primaryColor,
+                cursorWidth: 1,
+                otpPinFieldDecoration:
+                    OtpPinFieldDecoration.defaultPinBoxDecoration,
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              Height(h: 5),
+              GenBtn(
+                size: size,
+                width: 85,
+                isLoading: isLoading,
+                height: 5.5,
+                btnColor: kColors.primaryColor,
+                btnText: 'Done',
+                txtColor: kColors.whiteColor,
+                tap: () {
+                  orderProvider
+                      .createBuyerOrder(
+                    title: widget.title,
+                    email: widget.sellerEmail,
+                    phone: widget.sellerPhone,
+                    description: widget.description,
+                    amount: widget.amount,
+                    payer: widget.whoPays == 'Seller'
+                        ? 'seller'
+                        : widget.fee == 'Me'
+                            ? 'buyer'
+                            : 'split',
+                    context: context,
+                  )
+                      .then((value) {
+                    if (value == 'success') {
+                      authProvider.getNotifcations(context: context);
 
-                    goBack(context);
-                    showCashoutSuccessDialog(context, widget.sellerEmail);
-                    trxnProvider.fetchWalletTrxns(context: context);
+                      goBack(context);
+                      showCashoutSuccessDialog(context, widget.sellerEmail);
+                      trxnProvider.fetchWalletTrxns(context: context);
 
-                    trxnProvider.fetchBalances(context: context);
-                    trxnProvider.fetchWithdrawals(context: context);
-                    orderProvider.fetchIncomingOrder(context: context);
-                    orderProvider.fetchTrxns(context: context);
-                  } else {
-                    goBack(context);
-                    showCustomErrorToast(
-                        context, orderProvider.createBuyerOrderMessage);
-                  }
-                });
-              },
-            ),
-          ],
+                      trxnProvider.fetchBalances(context: context);
+                      trxnProvider.fetchWithdrawals(context: context);
+                      orderProvider.fetchIncomingOrder(context: context);
+                      orderProvider.fetchTrxns(context: context);
+                    } else {
+                      goBack(context);
+                      showCustomErrorToast(
+                          context, orderProvider.createBuyerOrderMessage);
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

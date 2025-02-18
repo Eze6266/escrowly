@@ -108,6 +108,9 @@ class _SeeAllescrowsScreenState extends State<SeeAllescrowsScreen> {
                                 goTo(
                                     context,
                                     FullRunningOrderScreen(
+                                      status: order['status'].toString(),
+                                      reference:
+                                          order['reference_code'].toString(),
                                       title: order['title'].toString(),
                                       orderid: order['id'].toString(),
                                       amount: formatNumberWithCommas(

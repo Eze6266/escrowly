@@ -153,38 +153,6 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                 TitleTField(
                   important: true,
                   radius: 10,
-                  hint: 'Enter amount for product/escrow',
-                  title: 'Amount',
-                  controller: amountCtrler,
-                  keyType: TextInputType.number,
-                  onChanged: (value) {
-                    setState(() {
-                      if (int.parse(amountCtrler.text) < 1000) {
-                        amountError = true;
-                      } else {
-                        amountError = false;
-                      }
-                    });
-                  },
-                ),
-                amountError
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 2 * size.width / 100),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: kTxt(
-                            text: 'Amount can\'t be less than N1000',
-                            color: kColors.red,
-                            size: 12,
-                            weight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                Height(h: 1.5),
-                TitleTField(
-                  important: true,
-                  radius: 10,
                   hint: 'Enter order title',
                   title: 'Order title',
                   controller: titleCtrler,
@@ -206,6 +174,38 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                           alignment: Alignment.centerLeft,
                           child: kTxt(
                             text: 'Title must be can\'t be less than 3 char',
+                            color: kColors.red,
+                            size: 12,
+                            weight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                Height(h: 1.5),
+                TitleTField(
+                  important: true,
+                  radius: 10,
+                  hint: 'Enter amount for product/escrow',
+                  title: 'Amount',
+                  controller: amountCtrler,
+                  keyType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      if (int.parse(amountCtrler.text) < 1000) {
+                        amountError = true;
+                      } else {
+                        amountError = false;
+                      }
+                    });
+                  },
+                ),
+                amountError
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 2 * size.width / 100),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: kTxt(
+                            text: 'Amount can\'t be less than N1000',
                             color: kColors.red,
                             size: 12,
                             weight: FontWeight.w600,
@@ -384,7 +384,7 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                           ),
                         ),
                       ),
-                Height(h: 7),
+                Height(h: 5),
                 GenBtn(
                   size: size,
                   width: 90,

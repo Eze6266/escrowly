@@ -65,6 +65,8 @@ class kImages {
   static const String orderssvg = '$_baseIconAsset/orderssvg.svg';
   static const String walletsvg = '$_baseIconAsset/walletsvg.svg';
   static const String profilesvg = '$_baseIconAsset/profilesvg.svg';
+  static const String checksvgblue = '$_baseIconAsset/checksvgblue.svg';
+
   static const String callsvg = '$_baseIconAsset/callsvg.svg';
   static const String createordersvg = '$_baseIconAsset/createordersvg.svg';
   static const String fundsvg = '$_baseIconAsset/fundsvg.svg';

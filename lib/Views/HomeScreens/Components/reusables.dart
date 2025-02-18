@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -704,7 +706,7 @@ class RowTxtWitUnderline extends StatelessWidget {
   }
 }
 
-class IncomingOrdersBox extends StatelessWidget {
+class IncomingOrdersBox extends StatefulWidget {
   IncomingOrdersBox({
     super.key,
     required this.amount,
@@ -721,6 +723,7 @@ class IncomingOrdersBox extends StatelessWidget {
     required this.description,
     required this.isRejectLoading,
     required this.title,
+    required this.createdTime,
     this.width,
   });
 
@@ -732,11 +735,17 @@ class IncomingOrdersBox extends StatelessWidget {
       type,
       orderID,
       userid,
+      createdTime,
       description,
       title;
   final Function() acceptTap, rejectTap, viewTap;
   final double? width;
 
+  @override
+  State<IncomingOrdersBox> createState() => _IncomingOrdersBoxState();
+}
+
+class _IncomingOrdersBoxState extends State<IncomingOrdersBox> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -749,7 +758,7 @@ class IncomingOrdersBox extends StatelessWidget {
           horizontal: 3 * size.width / 100,
           vertical: 0.6 * size.height / 100,
         ),
-        width: (width ?? 84) * size.width / 100,
+        width: (widget.width ?? 84) * size.width / 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: kColors.ongoingBg,
@@ -762,14 +771,14 @@ class IncomingOrdersBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 kTxt(
-                  text: '$orderID',
+                  text: '${widget.orderID}',
                   maxLine: 1,
                   color: kColors.textGrey,
                   size: 12,
                   weight: FontWeight.w500,
                 ),
                 GestureDetector(
-                  onTap: viewTap,
+                  onTap: widget.viewTap,
                   child: kTxt(
                     text: 'View',
                     maxLine: 1,
@@ -786,9 +795,10 @@ class IncomingOrdersBox extends StatelessWidget {
               child: SizedBox(
                 width: 80 * size.width / 100,
                 child: kTxt(
-                  text: (userid == Provider.of<AuthProvider>(context).userID)
-                      ? 'Order to $sender'
-                      : 'Order From $sender',
+                  text: (widget.userid ==
+                          Provider.of<AuthProvider>(context).userID)
+                      ? 'Order to ${widget.sender}'
+                      : 'Order From ${widget.sender}',
                   maxLine: 2,
                   color: kColors.blackColor,
                   size: 13,
@@ -803,7 +813,7 @@ class IncomingOrdersBox extends StatelessWidget {
                 SizedBox(
                   width: 38 * size.width / 100,
                   child: kTxt(
-                    text: 'Service: $title',
+                    text: 'Service: ${widget.title}',
                     maxLine: 1,
                     color: kColors.textGrey,
                     size: 12,
@@ -812,7 +822,7 @@ class IncomingOrdersBox extends StatelessWidget {
                   ),
                 ),
                 kTxt(
-                  text: '- N${formatNumberWithCommas(amount)}',
+                  text: '- N${formatNumberWithCommas(widget.amount)}',
                   maxLine: 1,
                   color: kColors.textGrey,
                   size: 12,
@@ -824,7 +834,7 @@ class IncomingOrdersBox extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: kTxt(
-                text: 'Order Fee: N${formatNumberWithCommas(fee)}',
+                text: 'Order Fee: N${formatNumberWithCommas(widget.fee)}',
                 maxLine: 1,
                 color: kColors.textGrey,
                 size: 12,
@@ -835,7 +845,7 @@ class IncomingOrdersBox extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: kTxt(
-                text: 'Sent on $date',
+                text: 'Sent on ${widget.date}',
                 maxLine: 1,
                 color: kColors.textGrey,
                 size: 12,
@@ -847,7 +857,7 @@ class IncomingOrdersBox extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                isAcceptLoading
+                widget.isAcceptLoading
                     ? Center(
                         child: SizedBox(
                           height: 1.8 * size.height / 100,
@@ -857,10 +867,11 @@ class IncomingOrdersBox extends StatelessWidget {
                           ),
                         ),
                       )
-                    : (userid == Provider.of<AuthProvider>(context).userID)
+                    : (widget.userid ==
+                            Provider.of<AuthProvider>(context).userID)
                         ? SizedBox.shrink()
                         : GestureDetector(
-                            onTap: acceptTap,
+                            onTap: widget.acceptTap,
                             child: kTxt(
                               text: '  Accept',
                               size: 13,
@@ -869,7 +880,7 @@ class IncomingOrdersBox extends StatelessWidget {
                               maxLine: 1,
                             ),
                           ),
-                isRejectLoading
+                widget.isRejectLoading
                     ? Center(
                         child: SizedBox(
                           height: 1.8 * size.height / 100,
@@ -879,19 +890,19 @@ class IncomingOrdersBox extends StatelessWidget {
                           ),
                         ),
                       )
-                    : GestureDetector(
-                        onTap: rejectTap,
-                        child: kTxt(
-                          text: (userid ==
-                                  Provider.of<AuthProvider>(context).userID)
-                              ? 'Cancel'
-                              : 'Reject  ',
-                          size: 13,
-                          color: kColors.red,
-                          weight: FontWeight.w500,
-                          maxLine: 1,
-                        ),
-                      ),
+                    : (widget.userid ==
+                            Provider.of<AuthProvider>(context).userID)
+                        ? SizedBox.shrink()
+                        : GestureDetector(
+                            onTap: widget.rejectTap,
+                            child: kTxt(
+                              text: 'Reject',
+                              size: 13,
+                              color: kColors.red,
+                              weight: FontWeight.w500,
+                              maxLine: 1,
+                            ),
+                          ),
               ],
             ),
           ],

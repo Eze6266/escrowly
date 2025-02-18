@@ -19,6 +19,7 @@ import 'package:trustbridge/Views/HomeScreens/running_orders_full_detail.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_escrows.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_incoming.dart';
 import 'package:trustbridge/Views/HomeScreens/see_all_trxn_screen.dart';
+import 'package:trustbridge/Views/Orders/Components/order_payment_info_sheet.dart';
 
 class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
@@ -160,6 +161,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                   bottom: 1 * size.height / 100,
                                 ),
                                 child: IncomingOrdersBox(
+                                  createdTime: order['created_at'].toString(),
                                   title: order['title'].toString(),
                                   isAcceptLoading: isAcceptLoading,
                                   isRejectLoading: isRejectLoading,
@@ -181,6 +183,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     goTo(
                                         context,
                                         FullIncomingOrderScreen(
+                                          status: order['status'].toString(),
+                                          reference: order['reference_code']
+                                              .toString(),
                                           userId: order['userid'].toString(),
                                           title: order['title'].toString(),
                                           orderid: order['id'].toString(),
@@ -205,23 +210,47 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                         ));
                                   },
                                   acceptTap: () {
-                                    orderProvider
-                                        .acceptOrder(
-                                            orderid: order['id'].toString(),
-                                            context: context)
-                                        .then((value) {
-                                      if (value == 'success') {
-                                        trxnProvider.fetchWalletTrxns(
-                                            context: context);
-                                        trxnProvider.fetchBalances(
-                                            context: context);
-                                        orderProvider.fetchIncomingOrder(
-                                            context: context);
-                                      } else {
-                                        showCustomErrorToast(context,
-                                            orderProvider.acceptOrderMessage);
-                                      }
-                                    });
+                                    if (order['role'].toString() == 'Seller') {
+                                      orderProvider
+                                          .acceptOrder(
+                                              orderid: order['id'].toString(),
+                                              pin: '',
+                                              context: context)
+                                          .then((value) {
+                                        if (value == 'success') {
+                                          trxnProvider.fetchWalletTrxns(
+                                              context: context);
+                                          trxnProvider.fetchBalances(
+                                              context: context);
+                                          orderProvider.fetchIncomingOrder(
+                                              context: context);
+                                        } else {
+                                          showCustomErrorToast(context,
+                                              orderProvider.acceptOrderMessage);
+                                        }
+                                      });
+                                    } else {
+                                      showModalBottomSheet(
+                                        isDismissible: true,
+                                        isScrollControlled: true,
+                                        context: context,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(30),
+                                          ),
+                                        ),
+                                        builder: (context) =>
+                                            OrderPaymentInfoSheet(
+                                          amount: formatNumberWithCommas(
+                                              order['amount'].toString()),
+                                          fee: formatNumberWithCommas(
+                                              order['fee'].toString()),
+                                          total: formatNumberWithCommas(
+                                              order['total_amount'].toString()),
+                                          orderid: order['id'].toString(),
+                                        ),
+                                      );
+                                    }
                                   },
                                   rejectTap: () {
                                     orderProvider
@@ -303,6 +332,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                                     goTo(
                                         context,
                                         FullRunningOrderScreen(
+                                          status: order['status'].toString(),
+                                          reference: order['reference_code']
+                                              .toString(),
                                           title: order['title'].toString(),
                                           orderid: order['id'].toString(),
                                           amount: formatNumberWithCommas(

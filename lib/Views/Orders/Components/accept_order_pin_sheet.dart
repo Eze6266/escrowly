@@ -16,27 +16,29 @@ import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/Components/otp_boxes.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/withdraw_processing.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/order_success_dialog.dart';
+import 'package:trustbridge/Views/Orders/Components/accept_order_payment_success_sheet.dart';
 
-class WithdrawalPinSheet extends StatefulWidget {
-  WithdrawalPinSheet({
+class AcceptOrderPinSheet extends StatefulWidget {
+  AcceptOrderPinSheet({
     super.key,
+    required this.orderid,
   });
-
+  var orderid;
   @override
-  State<WithdrawalPinSheet> createState() => _WithdrawalPinSheetState();
+  State<AcceptOrderPinSheet> createState() => _AcceptOrderPinSheetState();
 }
 
-class _WithdrawalPinSheetState extends State<WithdrawalPinSheet> {
+class _AcceptOrderPinSheetState extends State<AcceptOrderPinSheet> {
   final confetticontroller = ConfettiController();
-
+  String enteredPin = '';
   bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var trxnProvider = Provider.of<TransactionProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
     var orderProvider = Provider.of<OrderProvider>(context);
-    isLoading = Provider.of<OrderProvider>(context).createBuyerOrderIsLoading;
+    isLoading =
+        orderProvider.acceptOrderLoading[widget.orderid.toString()] ?? false;
 
     return Padding(
       padding:
@@ -103,6 +105,7 @@ class _WithdrawalPinSheetState extends State<WithdrawalPinSheet> {
                 onSubmit: (text) {
                   setState(() {
                     print('Entered pin is $text');
+                    enteredPin = text;
                   });
                 },
                 onChange: (text) {},
@@ -129,12 +132,34 @@ class _WithdrawalPinSheetState extends State<WithdrawalPinSheet> {
                 btnText: 'Done',
                 txtColor: kColors.whiteColor,
                 tap: () {
-                  goBack(context);
-                  if (trxnProvider.accName == '') {
-                    showCustomErrorToast(context, 'Unverified account');
+                  if (enteredPin.length < 4) {
+                    showCustomErrorToast(context, 'Enter complete pin');
                   } else {
-                    goBack(context);
-                    showWithdrawProcessingDialog(context, confetticontroller);
+                    orderProvider
+                        .acceptOrder(
+                      orderid: widget.orderid,
+                      pin: enteredPin,
+                      context: context,
+                    )
+                        .then((value) {
+                      if (value == 'success') {
+                        goBack(context);
+                        showModalBottomSheet(
+                          isDismissible: false,
+                          isScrollControlled: true,
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30),
+                            ),
+                          ),
+                          builder: (context) => AcceptOrderSuccessSheet(),
+                        );
+                      } else {
+                        showCustomErrorToast(
+                            context, orderProvider.acceptOrderMessage);
+                      }
+                    });
                   }
                 },
               ),

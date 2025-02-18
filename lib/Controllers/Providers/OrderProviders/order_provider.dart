@@ -75,6 +75,7 @@ class OrderProvider extends ChangeNotifier {
 
   Future<String?> acceptOrder({
     required String orderid,
+    required String pin,
     required BuildContext context,
   }) async {
     acceptOrderLoading[orderid] = true; // Set loading for this specific order
@@ -88,7 +89,7 @@ class OrderProvider extends ChangeNotifier {
         Uri.parse('${kUrl.acceptOrder}'),
         body: {
           "ID": orderid,
-          "pin": '1234',
+          "pin": pin,
         },
         headers: {
           'Accept': 'application/json',

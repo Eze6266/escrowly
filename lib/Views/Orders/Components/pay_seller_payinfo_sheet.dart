@@ -14,35 +14,41 @@ import 'package:trustbridge/Utilities/custom_txtfield.dart';
 import 'package:trustbridge/Utilities/image_constants.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/Components/otp_boxes.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/reusables.dart';
+import 'package:trustbridge/Views/HomeScreens/Components/setup_trxn_pin.dart';
 import 'package:trustbridge/Views/HomeScreens/Components/withdraw_processing.dart';
 import 'package:trustbridge/Views/HomeScreens/EscrowScreens/Components/order_success_dialog.dart';
+import 'package:trustbridge/Views/Orders/Components/accept_order_pin_sheet.dart';
+import 'package:trustbridge/Views/Orders/Components/pay_seller_pin_sheet.dart';
 
-class WithdrawalPinSheet extends StatefulWidget {
-  WithdrawalPinSheet({
+class PaySellerpaymentInfoSheet extends StatefulWidget {
+  PaySellerpaymentInfoSheet({
     super.key,
+    required this.amount,
+    required this.fee,
+    required this.total,
+    required this.orderid,
   });
-
+  var amount, fee, total, orderid;
   @override
-  State<WithdrawalPinSheet> createState() => _WithdrawalPinSheetState();
+  State<PaySellerpaymentInfoSheet> createState() =>
+      _PaySellerpaymentInfoSheetState();
 }
 
-class _WithdrawalPinSheetState extends State<WithdrawalPinSheet> {
+class _PaySellerpaymentInfoSheetState extends State<PaySellerpaymentInfoSheet> {
   final confetticontroller = ConfettiController();
 
-  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var trxnProvider = Provider.of<TransactionProvider>(context);
     var authProvider = Provider.of<AuthProvider>(context);
-    var orderProvider = Provider.of<OrderProvider>(context);
-    isLoading = Provider.of<OrderProvider>(context).createBuyerOrderIsLoading;
 
     return Padding(
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
-        height: 38 * size.height / 100,
+        height: 47 * size.height / 100,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
@@ -58,83 +64,74 @@ class _WithdrawalPinSheetState extends State<WithdrawalPinSheet> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  GenBtn(
-                    size: size,
-                    width: 15,
-                    height: 0.3,
-                    btnColor: kColors.textGrey.withOpacity(0.5),
-                    btnText: '',
-                  ),
-                  Width(w: 31),
-                  GestureDetector(
-                    onTap: () {
-                      isLoading ? null : goBack(context);
-                    },
-                    child: Icon(
-                      Icons.close_rounded,
-                      color: kColors.red,
-                    ),
-                  ),
-                  Width(w: 2),
-                ],
+              GenBtn(
+                size: size,
+                width: 15,
+                height: 0.3,
+                btnColor: kColors.textGrey.withOpacity(0.5),
+                btnText: '',
               ),
               Height(h: 3),
               kTxt(
-                text: 'Input transaction pin',
+                text: 'Payment confirmation',
                 size: 18,
                 weight: FontWeight.w500,
                 color: kColors.blackColor.withOpacity(0.8),
               ),
               Height(h: 1),
-              kTxt(
-                text: 'Kindly input your transaction pin',
-                size: 13,
-                weight: FontWeight.w500,
-                color: kColors.textGrey.withOpacity(0.9),
+              SizedBox(
+                width: 90 * size.width / 100,
+                child: kTxt(
+                  text:
+                      'Please make sure you have confirmed receipt of this order/service. Proceeding releases the funds to the seller and closes this transaction.',
+                  maxLine: 3,
+                  textalign: TextAlign.center,
+                  size: 12,
+                  weight: FontWeight.w500,
+                  color: kColors.textGrey.withOpacity(0.9),
+                ),
               ),
               Height(h: 3),
-              OtpPinField(
-                autoFocus: true,
-                autoFillEnable: true,
-                textInputAction: TextInputAction.done,
-                onSubmit: (text) {
-                  setState(() {
-                    print('Entered pin is $text');
-                  });
-                },
-                onChange: (text) {},
-                otpPinFieldStyle: OtpPinFieldStyle(
-                  filledFieldBorderColor: kColors.primaryColor,
-                  fieldBorderWidth: 1.5,
-                  activeFieldBorderColor: kColors.textGrey,
-                ),
-                maxLength: 4,
-                showCursor: true,
-                cursorColor: kColors.primaryColor,
-                cursorWidth: 1,
-                otpPinFieldDecoration:
-                    OtpPinFieldDecoration.defaultPinBoxDecoration,
-                mainAxisAlignment: MainAxisAlignment.center,
-              ),
-              Height(h: 5),
+              RowTxtWitUnderline(lTxt: 'Amount', rtxt: 'N${widget.amount}'),
+              Height(h: 1.8),
+              RowTxtWitUnderline(lTxt: 'Fee', rtxt: 'N${widget.fee}'),
+              Height(h: 1.8),
+              RowTxtWitUnderline(lTxt: 'Total', rtxt: 'N${widget.total}'),
+              Height(h: 6),
               GenBtn(
                 size: size,
-                width: 85,
-                isLoading: isLoading,
-                height: 5.5,
+                width: 90,
+                borderRadius: 10,
+                height: 5.8,
                 btnColor: kColors.primaryColor,
                 btnText: 'Done',
                 txtColor: kColors.whiteColor,
                 tap: () {
-                  goBack(context);
-                  if (trxnProvider.accName == '') {
-                    showCustomErrorToast(context, 'Unverified account');
-                  } else {
+                  if (authProvider.checkPinStatus == 'success') {
                     goBack(context);
-                    showWithdrawProcessingDialog(context, confetticontroller);
+                    showModalBottomSheet(
+                      isDismissible: true,
+                      isScrollControlled: true,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      builder: (context) => PaySellerPinSheet(),
+                    );
+                  } else {
+                    showModalBottomSheet(
+                      isDismissible: false,
+                      isScrollControlled: true,
+                      context: context,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
+                        ),
+                      ),
+                      builder: (context) => SetupPinSheet(),
+                    );
                   }
                 },
               ),
