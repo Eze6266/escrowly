@@ -231,17 +231,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Height(h: 6),
-              biometricApi.isBiometricSupported
-                  ? Width(w: 2)
-                  : SizedBox.shrink(),
-              biometricApi.isBiometricSupported
-                  ? GestureDetector(
-                      onTap: () {
-                        goTo(context, BottomNav(chosenmyIndex: 0));
-                      },
-                      child: BiometricScan(),
-                    )
-                  : SizedBox.shrink(),
+              // biometricApi.isBiometricSupported
+              //     ? Width(w: 2)
+              //     : SizedBox.shrink(),
+              // biometricApi.isBiometricSupported
+              //     ? GestureDetector(
+              //         onTap: () {
+              //           goTo(context, BottomNav(chosenmyIndex: 0));
+              //         },
+              //         child: BiometricScan(),
+              //       )
+              //     : SizedBox.shrink(),
             ],
           ),
         ),
