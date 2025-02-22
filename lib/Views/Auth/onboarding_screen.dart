@@ -55,6 +55,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(
         'hasViewedOnboarding', true); // Mark onboarding as viewed
+    print('marked as seen');
   }
 
   @override

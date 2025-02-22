@@ -39,8 +39,10 @@ class _SplashScreenState extends State<SplashScreen> {
     goTo(context, OnBoardingScreen());
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? hasViewedOnboarding = prefs.getBool('hasViewedOnboarding');
+    print('ths is the has seen onboard $hasViewedOnboarding ');
 
     String? token = prefs.getString('token'); // Get the token from storage
+    print('ths is the has seen onboard $token ');
 
     if (hasViewedOnboarding == true) {
       // Check if the token exists and is not empty
@@ -48,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
         // Navigate to login if token is missing or invalid
         goTo(context, LoginScreen());
       } else {
+        goTo(context, LoginScreen());
+
         // Token exists, set it and try to fetch user data
       }
     } else {
