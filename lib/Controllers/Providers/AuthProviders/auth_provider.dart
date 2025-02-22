@@ -16,6 +16,7 @@ class AuthProvider extends ChangeNotifier {
   Future<String?> senOtp({
     required String email,
     required String password,
+    required String referCode,
     required BuildContext context,
   }) async {
     senOtpIsLoading = true;
@@ -27,6 +28,7 @@ class AuthProvider extends ChangeNotifier {
         body: {
           "email": email,
           "password": password,
+          "referral_code": referCode,
         },
         headers: {
           'Accept': 'application/json',
@@ -368,7 +370,7 @@ class AuthProvider extends ChangeNotifier {
   var getUserStatus;
   var getUserMessage;
 
-  var email, firstName, lastName, phone, userID, userName, escrowTag;
+  var email, firstName, lastName, phone, userID, userName, escrowTag, referCode;
   bool hasPin = false;
   bool phoneVerified = false;
 
@@ -409,6 +411,8 @@ class AuthProvider extends ChangeNotifier {
         phone = jsonDecode(responseString)['data']['phone'].toString();
         escrowTag = jsonDecode(responseString)['data']['trust_tag'].toString();
         hasPin = jsonDecode(responseString)['data']['has_pin'];
+        referCode = jsonDecode(responseString)['data']['referral_code'];
+
         phoneVerified = jsonDecode(responseString)['data']['number_verified'];
 
         notifyListeners();

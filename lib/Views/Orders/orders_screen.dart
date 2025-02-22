@@ -78,9 +78,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     },
                     child: kTxt(
                       text: 'Create order',
-                      size: 12,
+                      size: 14,
                       color: kColors.primaryColor,
-                      weight: FontWeight.w500,
+                      weight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -508,8 +508,9 @@ class OrdersChip extends StatelessWidget {
             alignment: Alignment.centerLeft,
             child: kTxt(
               text: '$title',
-              size: 12,
+              size: 13,
               color: kColors.textGrey,
+              weight: FontWeight.w500,
             ),
           ),
           Height(h: 0.5),

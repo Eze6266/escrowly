@@ -30,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   TextEditingController confPwdCtrler = TextEditingController();
   TextEditingController phoneCtrler = TextEditingController();
   TextEditingController ninCtrler = TextEditingController();
+  TextEditingController referCtrler = TextEditingController();
 
   bool pwd = true;
   bool confirmPwd = true;
@@ -107,7 +108,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     )
                   : SizedBox.shrink(),
-              Height(h: 3),
+              Height(h: 2),
               TitleTField(
                 width: 93 * size.width / 100,
                 elevated: false,
@@ -342,6 +343,19 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                     )
                   : SizedBox.shrink(),
+              Height(h: 2),
+              TitleTField(
+                width: 93 * size.width / 100,
+                elevated: false,
+                radius: 10,
+                title: 'Referral Code (Optional)',
+                hint: 'Enter refferal code',
+                controller: referCtrler,
+                isLoading: isLoading,
+                keyType: TextInputType.text,
+                onChanged: (value) {},
+              ),
+
               Height(h: 4),
               GenBtn(
                 size: size,
@@ -384,18 +398,18 @@ class _SignupScreenState extends State<SignupScreen> {
                         context, 'Make sure all fields are filled');
                   } else {
                     if (pwdCtrler.text == confPwdCtrler.text) {
+                      goTo(
+                          context,
+                          NinScreen(
+                            email: emailCtrler.text,
+                            firstName: firstNameCtrler.text,
+                            lastName: lastNameCtrler.text,
+                            number: ninCtrler.text,
+                            password: pwdCtrler.text,
+                          ));
                     } else {
                       showCustomErrorToast(context, 'Passwords don\'t match');
                     }
-                    goTo(
-                        context,
-                        NinScreen(
-                          email: emailCtrler.text,
-                          firstName: firstNameCtrler.text,
-                          lastName: lastNameCtrler.text,
-                          number: ninCtrler.text,
-                          password: pwdCtrler.text,
-                        ));
 
                     // if (pwdCtrler.text == confPwdCtrler.text) {
                     //   authProvider.generateToken().then((value) {
@@ -450,7 +464,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: TextStyle(
                     fontFamily: 'Rany',
                     color: kColors.blackColor,
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                   children: [

@@ -182,39 +182,39 @@ class _SupportScreenState extends State<SupportScreen> {
                 ),
               ),
               Height(h: 1.5),
-              GestureDetector(
-                onTap: () {
-                  goTo(context, ChatWithBotScreen());
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 3 * size.width / 100,
-                    vertical: 2 * size.height / 100,
-                  ),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
-                    border:
-                        Border.all(color: kColors.whitishGrey.withOpacity(0.5)),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      kTxt(
-                        text: 'Chat with Escrowly-Bot',
-                        size: 13,
-                        weight: FontWeight.w700,
-                        color: Color.fromARGB(255, 5, 48, 82),
-                      ),
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundImage: AssetImage(kImages.appicon),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: () {
+              //     goTo(context, ChatWithBotScreen());
+              //   },
+              //   child: Container(
+              //     padding: EdgeInsets.symmetric(
+              //       horizontal: 3 * size.width / 100,
+              //       vertical: 2 * size.height / 100,
+              //     ),
+              //     width: double.infinity,
+              //     decoration: BoxDecoration(
+              //       borderRadius: BorderRadius.circular(12),
+              //       color: Colors.white,
+              //       border:
+              //           Border.all(color: kColors.whitishGrey.withOpacity(0.5)),
+              //     ),
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //       children: [
+              //         kTxt(
+              //           text: 'Chat with Escrowly-Bot',
+              //           size: 13,
+              //           weight: FontWeight.w700,
+              //           color: Color.fromARGB(255, 5, 48, 82),
+              //         ),
+              //         CircleAvatar(
+              //           radius: 12,
+              //           backgroundImage: AssetImage(kImages.appicon),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

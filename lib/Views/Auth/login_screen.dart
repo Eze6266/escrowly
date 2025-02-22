@@ -161,10 +161,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              Height(h: 10),
+              Height(h: 5),
               GenBtn(
                 size: size,
-                width: 80,
+                width: 85,
                 height: 6,
                 btnColor: emailCtrler.text.isEmpty ||
                         emailError == true ||
@@ -210,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     fontFamily: 'Rany',
                     color: kColors.blackColor,
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
                   children: [

@@ -258,7 +258,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   kTxt(
                     text: '  Show Incoming Escrows',
-                    size: 12,
+                    size: 13,
                     weight: FontWeight.w500,
                   ),
                   Switch(

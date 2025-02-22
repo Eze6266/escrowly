@@ -90,6 +90,38 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                 TitleTField(
                   important: true,
                   radius: 10,
+                  hint: 'E.g Software development, For clothing',
+                  title: 'Order title',
+                  controller: titleCtrler,
+                  keyType: TextInputType.text,
+                  onChanged: (value) {
+                    setState(() {
+                      if (titleCtrler.text.length < 3) {
+                        titleError = true;
+                      } else {
+                        titleError = false;
+                      }
+                    });
+                  },
+                ),
+                titleError
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 2 * size.width / 100),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: kTxt(
+                            text: 'Title must be can\'t be less than 3 char',
+                            color: kColors.red,
+                            size: 12,
+                            weight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                Height(h: 1.5),
+                TitleTField(
+                  important: true,
+                  radius: 10,
                   hint: 'Enter seller email',
                   title: 'Seller email address',
                   controller: emailCtrler,
@@ -142,38 +174,6 @@ class _CreateBuyerEscrowScreenState extends State<CreateBuyerEscrowScreen> {
                           alignment: Alignment.centerLeft,
                           child: kTxt(
                             text: 'Enter a valid phone number',
-                            color: kColors.red,
-                            size: 12,
-                            weight: FontWeight.w600,
-                          ),
-                        ),
-                      )
-                    : SizedBox.shrink(),
-                Height(h: 1.5),
-                TitleTField(
-                  important: true,
-                  radius: 10,
-                  hint: 'Enter order title',
-                  title: 'Order title',
-                  controller: titleCtrler,
-                  keyType: TextInputType.text,
-                  onChanged: (value) {
-                    setState(() {
-                      if (titleCtrler.text.length < 3) {
-                        titleError = true;
-                      } else {
-                        titleError = false;
-                      }
-                    });
-                  },
-                ),
-                titleError
-                    ? Padding(
-                        padding: EdgeInsets.only(left: 2 * size.width / 100),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: kTxt(
-                            text: 'Title must be can\'t be less than 3 char',
                             color: kColors.red,
                             size: 12,
                             weight: FontWeight.w600,

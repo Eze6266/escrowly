@@ -80,8 +80,7 @@ class _NotificationDetailDialogState extends State<NotificationDetailDialog> {
                     ),
                     child: Center(
                       child: kTxt(
-                        text:
-                            '${widget.type == '0' ? 'Deposit' : widget.type == '1' ? 'Withdrawal' : widget.type == '2' ? 'Order' : 'Profile'}',
+                        text: '${widget.title}',
                         size: 12,
                         weight: FontWeight.w600,
                       ),

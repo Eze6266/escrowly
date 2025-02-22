@@ -8,16 +8,16 @@ import 'package:trustbridge/Utilities/app_colors.dart';
 void goTo(BuildContext context, Widget screen) {
   final random = Random();
   final animations = [
-    _fadeTransition,
-    _scaleTransition,
+    // _fadeTransition,
+    // _scaleTransition,
+    _slideTransition, // Added slide transition
   ];
   final randomAnimation = animations[random.nextInt(animations.length)];
 
   Navigator.push(
     context,
     PageRouteBuilder(
-      transitionDuration:
-          const Duration(milliseconds: 700), // Adjust duration for emphasis
+      transitionDuration: const Duration(milliseconds: 700),
       pageBuilder: (context, animation, secondaryAnimation) => screen,
       transitionsBuilder: randomAnimation,
     ),
@@ -43,6 +43,21 @@ Widget _scaleTransition(BuildContext context, Animation<double> animation,
 
   return ScaleTransition(
     scale: scaleAnimation,
+    child: child,
+  );
+}
+
+Widget _slideTransition(BuildContext context, Animation<double> animation,
+    Animation<double> secondaryAnimation, Widget child) {
+  const begin = Offset(1.0, 0.0); // Start from right
+  const end = Offset.zero; // End at normal position
+  const curve = Curves.easeInOut;
+
+  var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+  var offsetAnimation = animation.drive(tween);
+
+  return SlideTransition(
+    position: offsetAnimation,
     child: child,
   );
 }

@@ -51,12 +51,12 @@ class HomeTopWidget extends StatelessWidget {
               children: [
                 kTxt(
                   text: '${getGreetingMessage()}',
-                  size: 12,
+                  size: 13,
                   weight: FontWeight.w500,
                 ),
                 kTxt(
                   text: '$name',
-                  size: 13,
+                  size: 14,
                   weight: FontWeight.w600,
                   textalign: TextAlign.left,
                 ),

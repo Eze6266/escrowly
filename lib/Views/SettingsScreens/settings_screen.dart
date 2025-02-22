@@ -11,6 +11,7 @@ import 'package:trustbridge/Utilities/reusables.dart';
 import 'package:trustbridge/Views/Auth/login_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/Components/confirm_logout.dart';
 import 'package:trustbridge/Views/SettingsScreens/Components/profile_tiles.dart';
+import 'package:trustbridge/Views/SettingsScreens/Components/referal_box.dart';
 import 'package:trustbridge/Views/SettingsScreens/account_details_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/change_pwd_screen.dart';
 import 'package:trustbridge/Views/SettingsScreens/preference_screen.dart';
@@ -53,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   child: Center(
                     child: kTxt(
-                      text: getFirstTwoLetters('Emmanuel Eze'),
+                      text: getFirstTwoLetters(
+                          '${authProvider.firstName} ${authProvider.lastName}'),
                       size: 20,
                       weight: FontWeight.w600,
                       color: kColors.whiteColor,
@@ -74,6 +76,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
               size: 14,
               weight: FontWeight.w500,
               color: kColors.textGrey,
+            ),
+            Height(h: 2),
+            ReferAndEarnWidget(
+              size: size,
+              onTap: () {
+                showReferDialog(context, authProvider.referCode);
+              },
             ),
             Height(h: 5),
             ProfileScreenTile(

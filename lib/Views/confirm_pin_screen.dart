@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:otp_pin_field/otp_pin_field.dart';
 import 'package:provider/provider.dart';
 import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
+import 'package:trustbridge/Controllers/Providers/OrderProviders/order_provider.dart';
+import 'package:trustbridge/Controllers/Providers/TransactionProviders/transaction_provider.dart';
 import 'package:trustbridge/Utilities/Functions/show_toast.dart';
 import 'package:trustbridge/Utilities/app_colors.dart';
 import 'package:trustbridge/Utilities/reusables.dart';
@@ -24,6 +26,8 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
     Size size = MediaQuery.of(context).size;
     var authProvider = Provider.of<AuthProvider>(context);
     isLoading = Provider.of<AuthProvider>(context).setPinIsLoading;
+    var trxnProvider = Provider.of<TransactionProvider>(context, listen: false);
+    var orderProvider = Provider.of<OrderProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,
@@ -129,6 +133,21 @@ class _ConfirmPinScreenState extends State<ConfirmPinScreen> {
                             context, 'Pin set successfully!');
                         goBack(context);
                         goBack(context);
+
+                        authProvider.getUser(context: context);
+                        authProvider.getNotifcations(context: context);
+                        authProvider.checkUserPin(context: context);
+
+                        trxnProvider.fetchAccNumbers(context: context);
+                        trxnProvider.fetchWalletTrxns(context: context);
+
+                        trxnProvider.fetchBalances(context: context);
+                        trxnProvider.fetchWithdrawals(context: context);
+
+                        trxnProvider.fetchBankList(context: context);
+                        orderProvider.fetchIncomingOrder(context: context);
+                        orderProvider.fetchTrxns(context: context);
+                        orderProvider.fetchRecenttrxn(context: context);
                       } else {
                         showCustomErrorToast(
                             context, authProvider.setPinMessage);

@@ -22,8 +22,10 @@ class VerifyOtpScreen extends StatefulWidget {
     required this.password,
     required this.firstName,
     required this.lastName,
+    this.referCode,
   });
   String email, number, nin, password, firstName, lastName;
+  String? referCode;
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
 }
@@ -246,6 +248,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                   .senOtp(
                                       email: widget.email,
                                       password: widget.password,
+                                      referCode: widget.referCode ?? '',
                                       context: context)
                                   .then((value) {
                                 if (value == 'success') {

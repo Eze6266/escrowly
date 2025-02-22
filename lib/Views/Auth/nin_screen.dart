@@ -16,8 +16,10 @@ class NinScreen extends StatefulWidget {
     required this.password,
     required this.firstName,
     required this.lastName,
+    this.referCode,
   });
   String email, number, password, firstName, lastName;
+  String? referCode;
 
   @override
   State<NinScreen> createState() => _NinScreenState();
@@ -47,7 +49,7 @@ class _NinScreenState extends State<NinScreen> {
           padding: EdgeInsets.symmetric(horizontal: 4 * size.width / 100),
           child: Column(
             children: [
-              Height(h: 1),
+              Height(h: 2),
               isLoading
                   ? SizedBox.shrink()
                   : Align(
@@ -69,7 +71,7 @@ class _NinScreenState extends State<NinScreen> {
                     color: kColors.textGrey,
                     text:
                         'To complete your account setup and confirm it\'s really you, we need to verify your NIN',
-                    size: 12,
+                    size: 13,
                     weight: FontWeight.w500,
                     textalign: TextAlign.center,
                     maxLine: 7,
@@ -135,9 +137,11 @@ class _NinScreenState extends State<NinScreen> {
                             if (value == 'success') {
                               authProvider
                                   .senOtp(
-                                      email: widget.email,
-                                      password: widget.password,
-                                      context: context)
+                                email: widget.email,
+                                password: widget.password,
+                                referCode: widget.referCode ?? '',
+                                context: context,
+                              )
                                   .then((value) {
                                 if (value == 'success') {
                                   goTo(
