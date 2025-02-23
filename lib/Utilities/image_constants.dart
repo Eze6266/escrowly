@@ -52,6 +52,7 @@ class kImages {
   static const String cardcross = '$_baseImageAsset/cardcross.png';
   static const String emptysvg = '$_baseImageAsset/emptysvg.png';
   static const String box = '$_baseImageAsset/box.png';
+  static const String coin = '$_baseImageAsset/coin.jpg';
 
   //////////////////////////******** IMAGES*************/////////////////
 

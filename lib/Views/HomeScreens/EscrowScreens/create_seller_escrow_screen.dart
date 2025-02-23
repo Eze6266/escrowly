@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:text_scroll/text_scroll.dart';
+import 'package:trustbridge/Controllers/Providers/AuthProviders/auth_provider.dart';
 import 'package:trustbridge/Utilities/Functions/add_comma_tostring_number.dart';
 import 'package:trustbridge/Utilities/Functions/calculate_fee.dart';
 import 'package:trustbridge/Utilities/Functions/check_email_function.dart';
@@ -49,6 +52,7 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: kColors.whiteColor,
@@ -75,14 +79,37 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
                   ],
                 ),
                 Height(h: 2),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: kTxt(
-                    text: 'Seller order form',
-                    weight: FontWeight.w600,
-                    color: kColors.textGrey,
-                    size: 15,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    kTxt(
+                      text: 'Seller order form',
+                      weight: FontWeight.w600,
+                      color: kColors.textGrey,
+                      size: 15,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        kTxt(
+                          text: 'Bonus points:  ',
+                          weight: FontWeight.w500,
+                          color: kColors.textGrey,
+                          size: 12,
+                        ),
+                        kTxt(
+                          text: '${authProvider.bonusCount}',
+                          weight: FontWeight.w500,
+                          color: kColors.textGrey,
+                          size: 13,
+                        ),
+                        Image.asset(
+                          kImages.coin,
+                          height: 1.8 * size.height / 100,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 Height(h: 1),
                 TitleTField(
@@ -381,6 +408,32 @@ class _CreateSellerEscrowScreenState extends State<CreateSellerEscrowScreen> {
                           ),
                         ),
                       ),
+                Height(h: 1.5),
+                SizedBox(
+                  width: 90 * size.width / 100,
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: TextScroll(
+                      'If you have any bonus points available, we will automatically apply a discounted charge of 1.5% instead of the standard 2%. This ensures you get the best possible rate while making use of your available bonuses. 🚀',
+                      mode: TextScrollMode.endless,
+                      velocity: Velocity(pixelsPerSecond: Offset(70, 0)),
+                      delayBefore: Duration(seconds: 4),
+                      numberOfReps: null,
+                      style: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: 11,
+                          color: kColors.primaryColor.withOpacity(0.8),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      textAlign: TextAlign.end,
+                      selectable: true,
+                      fadedBorder: true,
+                      fadedBorderWidth: 0.05,
+                      fadeBorderVisibility: FadeBorderVisibility.auto,
+                    ),
+                  ),
+                ),
                 Height(h: 5),
                 GenBtn(
                   size: size,

@@ -370,7 +370,15 @@ class AuthProvider extends ChangeNotifier {
   var getUserStatus;
   var getUserMessage;
 
-  var email, firstName, lastName, phone, userID, userName, escrowTag, referCode;
+  var email,
+      firstName,
+      lastName,
+      phone,
+      userID,
+      userName,
+      escrowTag,
+      referCode,
+      bonusCount;
   bool hasPin = false;
   bool phoneVerified = false;
 
@@ -412,6 +420,8 @@ class AuthProvider extends ChangeNotifier {
         escrowTag = jsonDecode(responseString)['data']['trust_tag'].toString();
         hasPin = jsonDecode(responseString)['data']['has_pin'];
         referCode = jsonDecode(responseString)['data']['referral_code'];
+        bonusCount =
+            jsonDecode(responseString)['data']['referral_count'].toString();
 
         phoneVerified = jsonDecode(responseString)['data']['number_verified'];
 
